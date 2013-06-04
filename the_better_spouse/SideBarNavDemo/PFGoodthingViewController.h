@@ -15,10 +15,12 @@
     UIImageView     *_numberImage;
     UILabel         *_pointLabel;
     UIView          *_inputView;
-    NSArray  *_tagArray;
+    NSArray         *_tagArray;
     NSInteger        _tagNum;
+    NSInteger       selectRow;
 }
 
 @property (nonatomic, strong) UILabel *btnLabel;
+@property (nonatomic, strong) NSMutableArray *dataSourceArray;
 
 @end

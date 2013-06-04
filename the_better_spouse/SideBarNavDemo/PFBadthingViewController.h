@@ -7,12 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface PFBadthingViewController :UIViewController<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>{
+#import "PFGoodCell.h"
+@interface PFBadthingViewController :UIViewController<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,goodCelldelegate>{
     UITableView     *_goodthingTable;
     UITextField     *_inputTextfiled;
     UIButton        *_NumBtn;
     UIImageView     *_numberImage;
     UILabel         *_pointLabel;
+    NSInteger        _tagNum;
+
 }
+@property (nonatomic, strong) NSMutableArray *BadSourceArray;
+
 @end

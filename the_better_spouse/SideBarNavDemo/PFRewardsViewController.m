@@ -7,7 +7,7 @@
 //
 
 #import "PFRewardsViewController.h"
-#import "PFDailyTrackerViewController.h"
+#import "LeftSideBarViewController.h"
 #import "SidebarViewController.h"
 @interface PFRewardsViewController ()
 

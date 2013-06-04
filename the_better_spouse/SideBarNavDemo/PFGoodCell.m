@@ -8,45 +8,60 @@
 
 #import "PFGoodCell.h"
 #import "PFGoodthingViewController.h"
+#import "PFBadthingViewController.h"
+
+@interface PFGoodCell ()
+@property (nonatomic, strong) PFGoodthingViewController *goodView;
+@property (nonatomic, strong) PFBadthingViewController *badView;
+@end
+
 @implementation PFGoodCell
 @synthesize beDelegate;
+@synthesize NumBtn;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        _identifier = reuseIdentifier;
+         _goodView = [[PFGoodthingViewController alloc] init];
+        _badView = [[PFBadthingViewController alloc] init];
         self.imageView.image = [UIImage imageNamed:@"blank_list2.png"];
         _inputTextfiled = [[UITextField alloc] initWithFrame:CGRectMake(50.0f, 10.0f, 180.0f, 38.0f)];
         _inputTextfiled.delegate = self;
         _inputTextfiled.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         _inputTextfiled.borderStyle = UITableViewCellStyleDefault;
         _inputTextfiled.returnKeyType = UIReturnKeySend;
-        //_inputTextfiled.text = @"take the trash out";
         [self.contentView addSubview:_inputTextfiled];
         
-        _NumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        //[_NumBtn setTitle:@"2" forState:UIControlStateNormal];
-        [_NumBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        _NumBtn.frame = CGRectMake(272.0f, 11.0f, 38.0f, 40.0f);
-        [_NumBtn addTarget:self action:@selector(buttonPressedAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:_NumBtn];
-        
+        NumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [NumBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        NumBtn.frame = CGRectMake(272.0f, 11.0f, 38.0f, 40.0f);
+        [NumBtn addTarget:self action:@selector(buttonPressedAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:NumBtn];
+                
         _smileImg = [[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 34, 34)];
-        _smileImg.image = [UIImage imageNamed:@"smile1.png"];
         _smileImg.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:_smileImg];
-//        _Label = [[UILabel alloc] initWithFrame:CGRectMake(272.0f, 11.0f, 38.0f, 40.0f)];
-//        _Label.backgroundColor = [UIColor grayColor];
-//        _Label.textAlignment = UITextAlignmentCenter;
-//        [self.contentView addSubview:_Label];
+        
+        UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        addBtn.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"plus_sign.png"]];
+        addBtn.frame = CGRectMake(228.0f, 17.0f, 25.0f, 25.0f);
+        [addBtn addTarget:self action:@selector(buttonPressedClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview: addBtn];
     }
     return self;
 }
 
-- (void)setcontentWith:(UIImage *)image task:(NSString *)task number:(int)number
+- (void)setcontentWithImage:(UIImage *)image task:(NSString *)task number:(int)number
 {
-    [_NumBtn setTitle:[NSString stringWithFormat:@"%d",number] forState:UIControlStateNormal];
-    NSLog(@"____%d",number);
+    [NumBtn setTitle:[NSString stringWithFormat:@"%d", number] forState:UIControlStateNormal];
+    _smileImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"smile%@.png",NumBtn.titleLabel.text]];
+}
+
+- (void)buttonPressedClicked
+{
+    [beDelegate buttonPressedAction];
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
@@ -58,12 +73,21 @@
 {
     [textField resignFirstResponder];
     [beDelegate tableViewCGpointNormal];
+    if ([_identifier isEqualToString:@"ID"]) {
+       
+        [_goodView.dataSourceArray addObject:_inputTextfiled.text];
+        NSLog(@"good:%@",_goodView.dataSourceArray);
+    }else{
+        [_badView.BadSourceArray addObject:_inputTextfiled.text];
+        NSLog(@"bad:%@",_badView.BadSourceArray);
+    }
     return YES;
 }
 
 - (void)buttonPressedAction:(UIButton *)sender
 {
-    [beDelegate showNumberImage];
+    int btnTag = ((UIButton *)sender).tag;
+    [beDelegate showNumberImage:btnTag];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

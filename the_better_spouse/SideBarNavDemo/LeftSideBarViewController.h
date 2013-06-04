@@ -13,6 +13,7 @@
 @interface LeftSideBarViewController : UIViewController
 {
     UIButton *_themBtn;
+    UIImageView *_dailyBack;
 }
 
 @property (assign,nonatomic)id<SideBarSelectDelegate>delegate;

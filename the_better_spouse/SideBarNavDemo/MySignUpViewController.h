@@ -4,6 +4,8 @@
 //
 //  Created by Mattieu Gamache-Asselin on 6/15/12.
 //
+#import <Parse/Parse.h>
+
 @class PFSignUpViewController;
 @interface MySignUpViewController : UIViewController<PFSignUpViewControllerDelegate,UITextFieldDelegate>
 

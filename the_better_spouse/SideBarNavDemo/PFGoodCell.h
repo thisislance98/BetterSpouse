@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+
 @protocol goodCelldelegate <NSObject>
-- (void)showNumberImage;
+- (void)showNumberImage:(int)btnTag;
 - (void)tableViewCGpointChange;
 - (void)tableViewCGpointNormal;
-
+- (void)buttonPressedAction;
 
 @end
 
@@ -23,5 +24,8 @@
 @property (nonatomic, strong) UIImageView *smileImg;
 @property (nonatomic, strong) NSMutableArray *imaegArray;
 @property (nonatomic, strong) UITextField *inputTextfiled;
-- (void)setcontentWith:(UIImage *)image task:(NSString *)task number:(int)number;
+@property (nonatomic, strong) NSString *identifier;
+
+
+- (void)setcontentWithImage:(UIImage *)image task:(NSString *)task number:(int)number;
 @end

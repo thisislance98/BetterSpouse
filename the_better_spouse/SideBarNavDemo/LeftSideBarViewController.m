@@ -41,12 +41,12 @@
         _selectIdnex = 0;
     }
     
-    UIImage *image = [UIImage imageNamed:@"daily_tracker_bg.png"];
-    UIImageView *dailyBack = [[UIImageView alloc] initWithImage:image];//[image stretchableImageWithLeftCapWidth:14 topCapHeight:21]];
+    UIImage *image = [UIImage imageNamed:@"daily_tracker_bg2.png"];
+    _dailyBack = [[UIImageView alloc] initWithImage:image];//[image stretchableImageWithLeftCapWidth:14 topCapHeight:21]];
     //self.view.backgroundColor = [UIColor colorWithPatternImage:image];
-    dailyBack.Frame = CGRectMake(0, 0, dailyBack.image.size.width, 460);
+    _dailyBack.Frame = CGRectMake(0, 0, _dailyBack.image.size.width, 460);
    //dailyBack.center = CGPointMake(dailyBack.image.size.width/2,self.view.frame.size.height/2);
-    [self.view addSubview:dailyBack];
+    [self.view addSubview:_dailyBack];
     
     UILabel *youLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, self.view.frame.size.height - 190, 120, 25)];
     youLabel.text = @"Your Points";
@@ -79,21 +79,21 @@
     
     UIImageView *themBtnimg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"user_btn1.png"]];
     themBtnimg.frame = (CGRect){CGPointZero, themBtnimg.image.size};
-    themBtnimg.center = CGPointMake(themBtnimg.image.size.width/2, themBtnimg.image.size.height*4 +16);
+    themBtnimg.center = CGPointMake(themBtnimg.image.size.width/2, themBtnimg.image.size.height*4 +22);
     [self.view addSubview:themBtnimg];
     
     UIButton *youBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     youBtn.frame = CGRectMake(0, 0, youBtnimg.frame.size.width,youBtnimg.frame.size.height);
     youBtn.center = CGPointMake(youBtnimg.image.size.width/2, youBtnimg.image.size.height*3 +7);
-    [youBtn setTitle:@"You" forState:UIControlStateNormal];
+    [youBtn setTitle:@"Your Habits" forState:UIControlStateNormal];
     [youBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [youBtn addTarget:self action:@selector(youBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:youBtn];
     
     _themBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _themBtn.frame = CGRectMake(0, 0, youBtnimg.frame.size.width,youBtnimg.frame.size.height);
-    _themBtn.center = CGPointMake(themBtnimg.image.size.width/2, themBtnimg.image.size.height*4 +16);
-    [_themBtn setTitle:@"Them" forState:UIControlStateNormal];
+    _themBtn.center = CGPointMake(themBtnimg.image.size.width/2, themBtnimg.image.size.height*4 +22);
+    [_themBtn setTitle:@"Them Habits" forState:UIControlStateNormal];
     [_themBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_themBtn addTarget:self action:@selector(themBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_themBtn];
@@ -139,13 +139,14 @@
 
 - (void)youBtnClicked
 {
-    NSLog(@"here");
+    UIImage *image = [UIImage imageNamed:@"daily_tracker_bg.png"];
+    _dailyBack.image = image;
 }
-
 
 - (void)themBtnClicked
 {
-    NSLog(@"here");
+    UIImage *image = [UIImage imageNamed:@"daily_tracker_bg2.png"];
+    _dailyBack.image = image;
 }
 
 - (void)didReceiveMemoryWarning

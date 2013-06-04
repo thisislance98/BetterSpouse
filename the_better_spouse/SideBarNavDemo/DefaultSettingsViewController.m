@@ -25,19 +25,14 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if (![PFUser currentUser]) { // No user logged in
-        // Create the log in view controller
+    if (![PFUser currentUser]) {
+        // Customize the Log In View Controller
         PFLogInViewController *logInViewController = [[PFLogInViewController alloc] init];
-        [logInViewController setDelegate:self]; // Set ourselves as the delegate
+        [logInViewController setDelegate:self];
+        [logInViewController setFacebookPermissions:[NSArray arrayWithObjects:@"friends_about_me", nil]];
+        [logInViewController setFields: PFLogInFieldsTwitter | PFLogInFieldsFacebook | PFLogInFieldsDismissButton];
         
-        // Create the sign up view controller
-        PFSignUpViewController *signUpViewController = [[PFSignUpViewController alloc] init];
-        [signUpViewController setDelegate:self]; // Set ourselves as the delegate
-        
-        // Assign our sign up controller to be displayed from the login controller
-        [logInViewController setSignUpController:signUpViewController];
-        
-        // Present the log in view controller
+        // Present Log In View Controller
         [self presentViewController:logInViewController animated:YES completion:NULL];
     }else{
         PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];

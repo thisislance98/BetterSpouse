@@ -27,10 +27,18 @@
 		077F25FA1678605C004908EB /* SecondViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 077F25F81678605C004908EB /* SecondViewController.xib */; };
 		077F260416786A00004908EB /* SidebarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 077F260216786A00004908EB /* SidebarViewController.m */; };
 		077F260516786A00004908EB /* SidebarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 077F260316786A00004908EB /* SidebarViewController.xib */; };
+		5605FB93175C984300B36E43 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5605FB92175C984300B36E43 /* AdSupport.framework */; };
+		5616C947175D891F00596113 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5616C828175D891E00596113 /* Accounts.framework */; };
+		5616C948175D891F00596113 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5616C82A175D891E00596113 /* FacebookSDK.framework */; };
+		5616C9F5175D891F00596113 /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5616C945175D891F00596113 /* FacebookSDKResources.bundle */; };
+		5616CA13175D908100596113 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5616CA12175D908100596113 /* libsqlite3.0.dylib */; };
+		5616CA1E175D951D00596113 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5616CA1D175D951D00596113 /* AddressBook.framework */; };
+		5616CA29175D952200596113 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5616CA28175D952200596113 /* AddressBookUI.framework */; };
+		5616CA2B175D997900596113 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5616CA2A175D997900596113 /* Social.framework */; };
+		56B74374175DD32200D03931 /* PointsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B74373175DD32200D03931 /* PointsModel.m */; };
 		56FC4D0C1758327D00C06C41 /* DefaultSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56FC4D011758327D00C06C41 /* DefaultSettingsViewController.m */; };
 		56FC4D0D1758327D00C06C41 /* MySignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56FC4D031758327D00C06C41 /* MySignUpViewController.m */; };
 		56FC4D0E1758327D00C06C41 /* PFBadthingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56FC4D051758327D00C06C41 /* PFBadthingViewController.m */; };
-		56FC4D0F1758327D00C06C41 /* PFDailyTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56FC4D071758327D00C06C41 /* PFDailyTrackerViewController.m */; };
 		56FC4D101758327D00C06C41 /* PFGoodthingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56FC4D091758327D00C06C41 /* PFGoodthingViewController.m */; };
 		56FC4D111758327D00C06C41 /* PFRewardsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56FC4D0B1758327D00C06C41 /* PFRewardsViewController.m */; };
 		56FC4D13175832A000C06C41 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56FC4D12175832A000C06C41 /* Parse.framework */; };
@@ -85,15 +93,15 @@
 		56FC4DC01758358400C06C41 /* reward_item2.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D4D1758358300C06C41 /* reward_item2.png */; };
 		56FC4DC11758358400C06C41 /* rewards.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D4E1758358300C06C41 /* rewards.png */; };
 		56FC4DC21758358400C06C41 /* smile1.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D4F1758358300C06C41 /* smile1.png */; };
-		56FC4DC31758358400C06C41 /* smile10.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D501758358300C06C41 /* smile10.png */; };
+		56FC4DC31758358400C06C41 /* smile-5.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D501758358300C06C41 /* smile-5.png */; };
 		56FC4DC41758358400C06C41 /* smile2.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D511758358300C06C41 /* smile2.png */; };
 		56FC4DC51758358400C06C41 /* smile3.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D521758358300C06C41 /* smile3.png */; };
 		56FC4DC61758358400C06C41 /* smile4.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D531758358300C06C41 /* smile4.png */; };
 		56FC4DC71758358400C06C41 /* smile5.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D541758358300C06C41 /* smile5.png */; };
-		56FC4DC81758358400C06C41 /* smile6.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D551758358300C06C41 /* smile6.png */; };
-		56FC4DC91758358400C06C41 /* smile7.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D561758358300C06C41 /* smile7.png */; };
-		56FC4DCA1758358400C06C41 /* smile8.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D571758358300C06C41 /* smile8.png */; };
-		56FC4DCB1758358400C06C41 /* smile9.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D581758358400C06C41 /* smile9.png */; };
+		56FC4DC81758358400C06C41 /* smile-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D551758358300C06C41 /* smile-1.png */; };
+		56FC4DC91758358400C06C41 /* smile-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D561758358300C06C41 /* smile-2.png */; };
+		56FC4DCA1758358400C06C41 /* smile-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D571758358300C06C41 /* smile-3.png */; };
+		56FC4DCB1758358400C06C41 /* smile-4.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D581758358400C06C41 /* smile-4.png */; };
 		56FC4DCC1758358400C06C41 /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D591758358400C06C41 /* title.png */; };
 		56FC4DCD1758358400C06C41 /* user_btn0.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D5A1758358400C06C41 /* user_btn0.png */; };
 		56FC4DCE1758358400C06C41 /* user_btn1.png in Resources */ = {isa = PBXBuildFile; fileRef = 56FC4D5B1758358400C06C41 /* user_btn1.png */; };
@@ -190,14 +198,22 @@
 		077F260116786A00004908EB /* SidebarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidebarViewController.h; sourceTree = "<group>"; };
 		077F260216786A00004908EB /* SidebarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SidebarViewController.m; sourceTree = "<group>"; };
 		077F260316786A00004908EB /* SidebarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SidebarViewController.xib; sourceTree = "<group>"; };
+		5605FB92175C984300B36E43 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		5616C828175D891E00596113 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Accounts.framework; sourceTree = "<group>"; };
+		5616C82A175D891E00596113 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
+		5616C945175D891F00596113 /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FacebookSDKResources.bundle; sourceTree = "<group>"; };
+		5616CA12175D908100596113 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = System/Library/Frameworks/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		5616CA1D175D951D00596113 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		5616CA28175D952200596113 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		5616CA2A175D997900596113 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Social.framework; sourceTree = "<group>"; };
+		56B74372175DD32200D03931 /* PointsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointsModel.h; sourceTree = "<group>"; };
+		56B74373175DD32200D03931 /* PointsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointsModel.m; sourceTree = "<group>"; };
 		56FC4D001758327D00C06C41 /* DefaultSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultSettingsViewController.h; sourceTree = "<group>"; };
 		56FC4D011758327D00C06C41 /* DefaultSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DefaultSettingsViewController.m; sourceTree = "<group>"; };
 		56FC4D021758327D00C06C41 /* MySignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MySignUpViewController.h; sourceTree = "<group>"; };
 		56FC4D031758327D00C06C41 /* MySignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MySignUpViewController.m; sourceTree = "<group>"; };
 		56FC4D041758327D00C06C41 /* PFBadthingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFBadthingViewController.h; sourceTree = "<group>"; };
 		56FC4D051758327D00C06C41 /* PFBadthingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFBadthingViewController.m; sourceTree = "<group>"; };
-		56FC4D061758327D00C06C41 /* PFDailyTrackerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFDailyTrackerViewController.h; sourceTree = "<group>"; };
-		56FC4D071758327D00C06C41 /* PFDailyTrackerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFDailyTrackerViewController.m; sourceTree = "<group>"; };
 		56FC4D081758327D00C06C41 /* PFGoodthingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFGoodthingViewController.h; sourceTree = "<group>"; };
 		56FC4D091758327D00C06C41 /* PFGoodthingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFGoodthingViewController.m; sourceTree = "<group>"; };
 		56FC4D0A1758327D00C06C41 /* PFRewardsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFRewardsViewController.h; sourceTree = "<group>"; };
@@ -254,15 +270,15 @@
 		56FC4D4D1758358300C06C41 /* reward_item2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reward_item2.png; sourceTree = "<group>"; };
 		56FC4D4E1758358300C06C41 /* rewards.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rewards.png; sourceTree = "<group>"; };
 		56FC4D4F1758358300C06C41 /* smile1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smile1.png; sourceTree = "<group>"; };
-		56FC4D501758358300C06C41 /* smile10.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smile10.png; sourceTree = "<group>"; };
+		56FC4D501758358300C06C41 /* smile-5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "smile-5.png"; sourceTree = "<group>"; };
 		56FC4D511758358300C06C41 /* smile2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smile2.png; sourceTree = "<group>"; };
 		56FC4D521758358300C06C41 /* smile3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smile3.png; sourceTree = "<group>"; };
 		56FC4D531758358300C06C41 /* smile4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smile4.png; sourceTree = "<group>"; };
 		56FC4D541758358300C06C41 /* smile5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smile5.png; sourceTree = "<group>"; };
-		56FC4D551758358300C06C41 /* smile6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smile6.png; sourceTree = "<group>"; };
-		56FC4D561758358300C06C41 /* smile7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smile7.png; sourceTree = "<group>"; };
-		56FC4D571758358300C06C41 /* smile8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smile8.png; sourceTree = "<group>"; };
-		56FC4D581758358400C06C41 /* smile9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smile9.png; sourceTree = "<group>"; };
+		56FC4D551758358300C06C41 /* smile-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "smile-1.png"; sourceTree = "<group>"; };
+		56FC4D561758358300C06C41 /* smile-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "smile-2.png"; sourceTree = "<group>"; };
+		56FC4D571758358300C06C41 /* smile-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "smile-3.png"; sourceTree = "<group>"; };
+		56FC4D581758358400C06C41 /* smile-4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "smile-4.png"; sourceTree = "<group>"; };
 		56FC4D591758358400C06C41 /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		56FC4D5A1758358400C06C41 /* user_btn0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user_btn0.png; sourceTree = "<group>"; };
 		56FC4D5B1758358400C06C41 /* user_btn1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user_btn1.png; sourceTree = "<group>"; };
@@ -334,6 +350,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5616CA29175D952200596113 /* AddressBookUI.framework in Frameworks */,
+				5616CA1E175D951D00596113 /* AddressBook.framework in Frameworks */,
+				5616CA13175D908100596113 /* libsqlite3.0.dylib in Frameworks */,
+				5605FB93175C984300B36E43 /* AdSupport.framework in Frameworks */,
 				56FC4D23175832FB00C06C41 /* SystemConfiguration.framework in Frameworks */,
 				56FC4D21175832F200C06C41 /* StoreKit.framework in Frameworks */,
 				56FC4D1F175832E900C06C41 /* Security.framework in Frameworks */,
@@ -347,6 +367,9 @@
 				07472EFE1677260E00BB51EA /* Foundation.framework in Frameworks */,
 				07472F001677260E00BB51EA /* CoreGraphics.framework in Frameworks */,
 				56FC4D13175832A000C06C41 /* Parse.framework in Frameworks */,
+				5616C947175D891F00596113 /* Accounts.framework in Frameworks */,
+				5616C948175D891F00596113 /* FacebookSDK.framework in Frameworks */,
+				5616CA2B175D997900596113 /* Social.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +396,14 @@
 		07472EFA1677260E00BB51EA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5616CA28175D952200596113 /* AddressBookUI.framework */,
+				5616CA1D175D951D00596113 /* AddressBook.framework */,
+				5616CA2A175D997900596113 /* Social.framework */,
+				5616CA12175D908100596113 /* libsqlite3.0.dylib */,
+				5616C828175D891E00596113 /* Accounts.framework */,
+				5616C829175D891E00596113 /* FacebookSDK */,
+				5616C945175D891F00596113 /* FacebookSDKResources.bundle */,
+				5605FB92175C984300B36E43 /* AdSupport.framework */,
 				56FC4D22175832FB00C06C41 /* SystemConfiguration.framework */,
 				56FC4D20175832F200C06C41 /* StoreKit.framework */,
 				56FC4D1E175832E900C06C41 /* Security.framework */,
@@ -430,6 +461,14 @@
 			path = Sidebar;
 			sourceTree = "<group>";
 		};
+		5616C829175D891E00596113 /* FacebookSDK */ = {
+			isa = PBXGroup;
+			children = (
+				5616C82A175D891E00596113 /* FacebookSDK.framework */,
+			);
+			path = FacebookSDK;
+			sourceTree = "<group>";
+		};
 		56FC4D241758358300C06C41 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
@@ -476,15 +515,15 @@
 				56FC4D4D1758358300C06C41 /* reward_item2.png */,
 				56FC4D4E1758358300C06C41 /* rewards.png */,
 				56FC4D4F1758358300C06C41 /* smile1.png */,
-				56FC4D501758358300C06C41 /* smile10.png */,
+				56FC4D501758358300C06C41 /* smile-5.png */,
 				56FC4D511758358300C06C41 /* smile2.png */,
 				56FC4D521758358300C06C41 /* smile3.png */,
 				56FC4D531758358300C06C41 /* smile4.png */,
 				56FC4D541758358300C06C41 /* smile5.png */,
-				56FC4D551758358300C06C41 /* smile6.png */,
-				56FC4D561758358300C06C41 /* smile7.png */,
-				56FC4D571758358300C06C41 /* smile8.png */,
-				56FC4D581758358400C06C41 /* smile9.png */,
+				56FC4D551758358300C06C41 /* smile-1.png */,
+				56FC4D561758358300C06C41 /* smile-2.png */,
+				56FC4D571758358300C06C41 /* smile-3.png */,
+				56FC4D581758358400C06C41 /* smile-4.png */,
 				56FC4D591758358400C06C41 /* title.png */,
 				56FC4D5A1758358400C06C41 /* user_btn0.png */,
 				56FC4D5B1758358400C06C41 /* user_btn1.png */,
@@ -600,8 +639,6 @@
 				07770B7F167727BE00B984AD /* LeftSideBarViewController.xib */,
 				56FC4D041758327D00C06C41 /* PFBadthingViewController.h */,
 				56FC4D051758327D00C06C41 /* PFBadthingViewController.m */,
-				56FC4D061758327D00C06C41 /* PFDailyTrackerViewController.h */,
-				56FC4D071758327D00C06C41 /* PFDailyTrackerViewController.m */,
 				56FC4D081758327D00C06C41 /* PFGoodthingViewController.h */,
 				56FC4D091758327D00C06C41 /* PFGoodthingViewController.m */,
 				56FC4D0A1758327D00C06C41 /* PFRewardsViewController.h */,
@@ -635,6 +672,8 @@
 		56FC4E1517586EC600C06C41 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				56B74372175DD32200D03931 /* PointsModel.h */,
+				56B74373175DD32200D03931 /* PointsModel.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -674,6 +713,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				he,
 			);
 			mainGroup = 07472EEC1677260E00BB51EA;
 			productRefGroup = 07472EF81677260E00BB51EA /* Products */;
@@ -742,15 +782,15 @@
 				56FC4DC01758358400C06C41 /* reward_item2.png in Resources */,
 				56FC4DC11758358400C06C41 /* rewards.png in Resources */,
 				56FC4DC21758358400C06C41 /* smile1.png in Resources */,
-				56FC4DC31758358400C06C41 /* smile10.png in Resources */,
+				56FC4DC31758358400C06C41 /* smile-5.png in Resources */,
 				56FC4DC41758358400C06C41 /* smile2.png in Resources */,
 				56FC4DC51758358400C06C41 /* smile3.png in Resources */,
 				56FC4DC61758358400C06C41 /* smile4.png in Resources */,
 				56FC4DC71758358400C06C41 /* smile5.png in Resources */,
-				56FC4DC81758358400C06C41 /* smile6.png in Resources */,
-				56FC4DC91758358400C06C41 /* smile7.png in Resources */,
-				56FC4DCA1758358400C06C41 /* smile8.png in Resources */,
-				56FC4DCB1758358400C06C41 /* smile9.png in Resources */,
+				56FC4DC81758358400C06C41 /* smile-1.png in Resources */,
+				56FC4DC91758358400C06C41 /* smile-2.png in Resources */,
+				56FC4DCA1758358400C06C41 /* smile-3.png in Resources */,
+				56FC4DCB1758358400C06C41 /* smile-4.png in Resources */,
 				56FC4DCC1758358400C06C41 /* title.png in Resources */,
 				56FC4DCD1758358400C06C41 /* user_btn0.png in Resources */,
 				56FC4DCE1758358400C06C41 /* user_btn1.png in Resources */,
@@ -813,6 +853,7 @@
 				56FC4E071758358400C06C41 /* user_info@2x.png in Resources */,
 				56FC4E081758358400C06C41 /* welcome@2x.png in Resources */,
 				56FC4E091758358400C06C41 /* winning@2x.png in Resources */,
+				5616C9F5175D891F00596113 /* FacebookSDKResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -833,10 +874,10 @@
 				56FC4D0C1758327D00C06C41 /* DefaultSettingsViewController.m in Sources */,
 				56FC4D0D1758327D00C06C41 /* MySignUpViewController.m in Sources */,
 				56FC4D0E1758327D00C06C41 /* PFBadthingViewController.m in Sources */,
-				56FC4D0F1758327D00C06C41 /* PFDailyTrackerViewController.m in Sources */,
 				56FC4D101758327D00C06C41 /* PFGoodthingViewController.m in Sources */,
 				56FC4D111758327D00C06C41 /* PFRewardsViewController.m in Sources */,
 				56FC4E1417586C8800C06C41 /* PFGoodCell.m in Sources */,
+				56B74374175DD32200D03931 /* PointsModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -908,14 +949,24 @@
 		07472F1C1677260E00BB51EA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jack zhang (8MEEFR4MSJ)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../../../../Desktop/FaceBook\"",
+					"\"$(SRCROOT)/FacebookSDK\"",
+					"\"$(SRCROOT)/../../../FacebookSDK\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SideBarNavDemo/the_better_spouse-Prefix.pch";
 				INFOPLIST_FILE = "SideBarNavDemo/the_better_spouse-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/Frameworks\"",
+				);
 				PRODUCT_NAME = the_better_spouse;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F4695580-7DC0-4689-9A96-1125FA41491A";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -926,10 +977,18 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../../../../Desktop/FaceBook\"",
+					"\"$(SRCROOT)/FacebookSDK\"",
+					"\"$(SRCROOT)/../../../FacebookSDK\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SideBarNavDemo/the_better_spouse-Prefix.pch";
 				INFOPLIST_FILE = "SideBarNavDemo/the_better_spouse-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/Frameworks\"",
+				);
 				PRODUCT_NAME = the_better_spouse;
 				WRAPPER_EXTENSION = app;
 			};

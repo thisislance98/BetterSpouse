@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <FacebookSDK/FacebookSDK.h>
 @class SidebarViewController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>

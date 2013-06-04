@@ -20,11 +20,11 @@
     CGFloat currentTranslate;
 }
 @property (strong,nonatomic)LeftSideBarViewController *leftSideBarViewController;
-@property (strong,nonatomic)RightSideBarViewController *rightSideBarViewController;
+//@property (strong,nonatomic)RightSideBarViewController *rightSideBarViewController;
 @end
 
 @implementation SidebarViewController
-@synthesize leftSideBarViewController,rightSideBarViewController,contentView,navBackView;
+@synthesize leftSideBarViewController,contentView,navBackView;
 
 static SidebarViewController *rootViewCon;
 const int ContentOffset=257;
@@ -63,15 +63,15 @@ const float MoveAnimationDuration = 0.3;
     _leftCon.delegate = self;
     self.leftSideBarViewController = _leftCon;
     
-    RightSideBarViewController *_rightCon = [[RightSideBarViewController alloc] initWithNibName:@"RightSideBarViewController" bundle:nil];
-    self.rightSideBarViewController = _rightCon;
+    //RightSideBarViewController *_rightCon = [[RightSideBarViewController alloc] initWithNibName:@"RightSideBarViewController" bundle:nil];
+    //self.rightSideBarViewController = _rightCon;
     
     [self addChildViewController:self.leftSideBarViewController];
-    [self addChildViewController:self.rightSideBarViewController];
+    //[self addChildViewController:self.rightSideBarViewController];
     self.leftSideBarViewController.view.frame = self.navBackView.bounds;
-    self.rightSideBarViewController.view.frame = self.navBackView.bounds;
+    //self.rightSideBarViewController.view.frame = self.navBackView.bounds;
     [self.navBackView addSubview:self.leftSideBarViewController.view];
-    [self.navBackView addSubview:self.rightSideBarViewController.view];
+    //[self.navBackView addSubview:self.rightSideBarViewController.view];
     
     _panGestureReconginzer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panInContentView:)];
     [self.contentView addGestureRecognizer:_panGestureReconginzer];
@@ -106,7 +106,7 @@ const float MoveAnimationDuration = 0.3;
             view = self.leftSideBarViewController.view;
         }else
         {
-            view = self.rightSideBarViewController.view;
+          //  view = self.rightSideBarViewController.view;
         }
         [self.navBackView bringSubviewToFront:view];
         
@@ -224,9 +224,6 @@ const float MoveAnimationDuration = 0.3;
         if (direction == SideBarShowDirectionLeft)
         {
             view = self.leftSideBarViewController.view;
-        }else
-        {
-            view = self.rightSideBarViewController.view;
         }
         [self.navBackView bringSubviewToFront:view];
     }
@@ -253,7 +250,7 @@ const float MoveAnimationDuration = 0.3;
                 break;
             case SideBarShowDirectionRight:
             {
-                self.contentView.transform  = CGAffineTransformMakeTranslation(-ContentOffset, 0);
+                self.contentView.transform  = CGAffineTransformMakeTranslation(0, 0);
             }
                 break;
             default:

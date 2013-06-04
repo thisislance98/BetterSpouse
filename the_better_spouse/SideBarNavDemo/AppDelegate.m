@@ -7,23 +7,42 @@
 //
 
 #import "AppDelegate.h"
-#import <Parse/Parse.h>
 #import "SidebarViewController.h"
+#import <Parse/Parse.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-    [Parse setApplicationId:@"GC8Zbs9bF8k7O1GUrLPf3tZUJXlNjrCV2FYpjtEK"
+    [Parse setApplicationId:@"GC8Zbs9bF8k7O1GUrGC8Zbs9bF8k7O1GUrLPf3tZUJXlNjrCV2FYpjtEKLPf3tZUJXlNjrCV2FYpjtEK"
                   clientKey:@"yPc5QFaUttLncyyhgSIxusL49M6cBGgklRBhk599"];
+    [PFFacebookUtils initializeFacebook];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    //    App ID/API Key
+    //    374120159366168
+    //    App Secret
+    //    f82f121a4354523f4f4542b44d8e52c1
+    //    Sandbox Mode
+    //    开
+    //    Listed Platforms
+    //    Website with Facebook Login， App on Facebook
+    
     // Override point for customization after application launch.
     self.viewController = [[SidebarViewController alloc] initWithNibName:@"SidebarViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    return [PFFacebookUtils handleOpenURL:url];
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [PFFacebookUtils handleOpenURL:url];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -34,7 +53,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
