@@ -12,6 +12,8 @@
 #import "PFRewardsViewController.h"
 #import "PFGoodthingViewController.h"
 #import "PFBadthingViewController.h"
+#import "GoodViewController.h"
+#import "BadViewController.h"
 
 @interface LeftSideBarViewController ()
 {
@@ -87,6 +89,7 @@
     youBtn.center = CGPointMake(youBtnimg.image.size.width/2, youBtnimg.image.size.height*3 +7);
     [youBtn setTitle:@"Your Habits" forState:UIControlStateNormal];
     [youBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    youBtn.tag = 10;
     [youBtn addTarget:self action:@selector(youBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:youBtn];
     
@@ -94,23 +97,24 @@
     _themBtn.frame = CGRectMake(0, 0, youBtnimg.frame.size.width,youBtnimg.frame.size.height);
     _themBtn.center = CGPointMake(themBtnimg.image.size.width/2, themBtnimg.image.size.height*4 +22);
     [_themBtn setTitle:@"Them Habits" forState:UIControlStateNormal];
+    _themBtn.tag = 20;
     [_themBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_themBtn addTarget:self action:@selector(themBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_themBtn];
     
-    UIButton *goodBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    goodBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     goodBtn.frame = CGRectMake(65, themBtnimg.image.size.height*6, 105, 30);
     [goodBtn addTarget:self action:@selector(rewardsBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     goodBtn.tag = 1;
     [self.view addSubview:goodBtn];
     
-    UIButton *badBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    badBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     badBtn.frame = CGRectMake(65, themBtnimg.image.size.height*8-5, 105, 30);
     [badBtn addTarget:self action:@selector(rewardsBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     badBtn.tag = 2;
     [self.view addSubview:badBtn];
     
-    UIButton *rewardBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    rewardBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     rewardBtn.frame = CGRectMake(65, themBtnimg.image.size.height*10, 105, 30);
     [rewardBtn addTarget:self action:@selector(rewardsBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     rewardBtn.tag = 3;
@@ -141,12 +145,17 @@
 {
     UIImage *image = [UIImage imageNamed:@"daily_tracker_bg.png"];
     _dailyBack.image = image;
+    goodBtn.tag = 1;
+    badBtn.tag = 2;
+    rewardBtn.tag = 3;
 }
 
 - (void)themBtnClicked
 {
     UIImage *image = [UIImage imageNamed:@"daily_tracker_bg2.png"];
     _dailyBack.image = image;
+    goodBtn.tag = 4;
+    badBtn.tag = 5;
 }
 
 - (void)didReceiveMemoryWarning
@@ -165,7 +174,8 @@
         UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
         nav.navigationBar.hidden = YES;
         return nav ;
-    }else if (index == 1){
+    }else
+        if (index == 1){
     PFGoodthingViewController *con = [[PFGoodthingViewController alloc] initWithNibName:nil bundle:nil];
     UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
     nav.navigationBar.hidden = YES;
@@ -176,13 +186,23 @@
         UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
         nav.navigationBar.hidden = YES;
         return nav ;
-
-    }else{
+    }else if(index == 3){
         PFRewardsViewController *con = [[PFRewardsViewController alloc] initWithNibName:nil bundle:nil];
         UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
         nav.navigationBar.hidden = YES;
         return nav ;
+    }else if(index == 4){
+        GoodViewController *con = [[GoodViewController alloc] initWithNibName:nil bundle:nil];
+        UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
+        nav.navigationBar.hidden = YES;
+        return nav ;
+    }else {
+        BadViewController *con = [[BadViewController alloc] initWithNibName:nil bundle:nil];
+        UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
+        nav.navigationBar.hidden = YES;
+        return nav ;
     }
+    
 }
 
 @end

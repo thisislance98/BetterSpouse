@@ -10,7 +10,7 @@
 
 @interface PointsModel : NSObject
 
-@property (nonatomic, assign) NSInteger point;
+@property (nonatomic, assign) NSInteger points;
 @property (nonatomic, strong) NSString *goodHabits;
 @property (nonatomic, strong) NSString *badHabits;
 

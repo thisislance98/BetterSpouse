@@ -14,7 +14,7 @@
 - (void)tableViewCGpointChange;
 - (void)tableViewCGpointNormal;
 - (void)buttonPressedAction;
-
+- (void)getTaskString:(NSString *)inputText;
 @end
 
 @interface PFGoodCell : UITableViewCell<UITextFieldDelegate>

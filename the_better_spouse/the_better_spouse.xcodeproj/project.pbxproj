@@ -28,6 +28,8 @@
 		077F260416786A00004908EB /* SidebarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 077F260216786A00004908EB /* SidebarViewController.m */; };
 		077F260516786A00004908EB /* SidebarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 077F260316786A00004908EB /* SidebarViewController.xib */; };
 		5605FB93175C984300B36E43 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5605FB92175C984300B36E43 /* AdSupport.framework */; };
+		56126F27175F39C600142E5B /* GoodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56126F26175F39C600142E5B /* GoodViewController.m */; };
+		56126F2A175F3DDE00142E5B /* BadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56126F29175F3DDE00142E5B /* BadViewController.m */; };
 		5616C947175D891F00596113 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5616C828175D891E00596113 /* Accounts.framework */; };
 		5616C948175D891F00596113 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5616C82A175D891E00596113 /* FacebookSDK.framework */; };
 		5616C9F5175D891F00596113 /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5616C945175D891F00596113 /* FacebookSDKResources.bundle */; };
@@ -199,6 +201,10 @@
 		077F260216786A00004908EB /* SidebarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SidebarViewController.m; sourceTree = "<group>"; };
 		077F260316786A00004908EB /* SidebarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SidebarViewController.xib; sourceTree = "<group>"; };
 		5605FB92175C984300B36E43 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		56126F25175F39C600142E5B /* GoodViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoodViewController.h; sourceTree = "<group>"; };
+		56126F26175F39C600142E5B /* GoodViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoodViewController.m; sourceTree = "<group>"; };
+		56126F28175F3DDD00142E5B /* BadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BadViewController.h; sourceTree = "<group>"; };
+		56126F29175F3DDE00142E5B /* BadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BadViewController.m; sourceTree = "<group>"; };
 		5616C828175D891E00596113 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Accounts.framework; sourceTree = "<group>"; };
 		5616C82A175D891E00596113 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		5616C945175D891F00596113 /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FacebookSDKResources.bundle; sourceTree = "<group>"; };
@@ -461,6 +467,17 @@
 			path = Sidebar;
 			sourceTree = "<group>";
 		};
+		56126F24175F37A900142E5B /* Them_Good_Bad_Rewards */ = {
+			isa = PBXGroup;
+			children = (
+				56126F25175F39C600142E5B /* GoodViewController.h */,
+				56126F26175F39C600142E5B /* GoodViewController.m */,
+				56126F28175F3DDD00142E5B /* BadViewController.h */,
+				56126F29175F3DDE00142E5B /* BadViewController.m */,
+			);
+			name = Them_Good_Bad_Rewards;
+			sourceTree = "<group>";
+		};
 		5616C829175D891E00596113 /* FacebookSDK */ = {
 			isa = PBXGroup;
 			children = (
@@ -600,9 +617,10 @@
 		56FC4E0C1758697700C06C41 /* Class */ = {
 			isa = PBXGroup;
 			children = (
+				56FC4E0F17586A2C00C06C41 /* You_Good_Bad_Rewards */,
+				56126F24175F37A900142E5B /* Them_Good_Bad_Rewards */,
 				56FC4E0E175869FC00C06C41 /* LoginController */,
 				56FC4E1117586A9900C06C41 /* SignController */,
-				56FC4E0F17586A2C00C06C41 /* Good_Bad_Rewards */,
 				56FC4E1017586A7E00C06C41 /* Other */,
 			);
 			name = Class;
@@ -629,7 +647,7 @@
 			name = LoginController;
 			sourceTree = "<group>";
 		};
-		56FC4E0F17586A2C00C06C41 /* Good_Bad_Rewards */ = {
+		56FC4E0F17586A2C00C06C41 /* You_Good_Bad_Rewards */ = {
 			isa = PBXGroup;
 			children = (
 				56FC4E1217586C8800C06C41 /* PFGoodCell.h */,
@@ -644,7 +662,7 @@
 				56FC4D0A1758327D00C06C41 /* PFRewardsViewController.h */,
 				56FC4D0B1758327D00C06C41 /* PFRewardsViewController.m */,
 			);
-			name = Good_Bad_Rewards;
+			name = You_Good_Bad_Rewards;
 			sourceTree = "<group>";
 		};
 		56FC4E1017586A7E00C06C41 /* Other */ = {
@@ -878,6 +896,8 @@
 				56FC4D111758327D00C06C41 /* PFRewardsViewController.m in Sources */,
 				56FC4E1417586C8800C06C41 /* PFGoodCell.m in Sources */,
 				56B74374175DD32200D03931 /* PointsModel.m in Sources */,
+				56126F27175F39C600142E5B /* GoodViewController.m in Sources */,
+				56126F2A175F3DDE00142E5B /* BadViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

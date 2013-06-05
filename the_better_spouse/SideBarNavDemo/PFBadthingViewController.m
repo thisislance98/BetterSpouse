@@ -192,6 +192,13 @@
     [_goodthingTable reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
+- (void)getTaskString:(NSString *)inputText
+{
+    [_BadSourceArray addObject:inputText];
+    NSLog(@"bad:%@",_BadSourceArray);
+}
+
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

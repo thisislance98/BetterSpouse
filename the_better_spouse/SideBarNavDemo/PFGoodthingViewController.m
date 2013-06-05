@@ -166,7 +166,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    [cell setSelected:NO];
+    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];  
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
 - (void)buttonPressedAction
@@ -217,6 +218,13 @@
     NSArray *indexArray=[NSArray arrayWithObject:indexPath_1];
     [_goodthingTable reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationAutomatic];
     _numberView.hidden = YES;
+    _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];
+}
+
+- (void)getTaskString:(NSString *)inputText
+{
+    [_dataSourceArray addObject:inputText];
+    NSLog(@"bad:%@",_dataSourceArray);
 }
 
 - (void)didReceiveMemoryWarning

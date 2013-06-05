@@ -7,12 +7,9 @@
 //
 
 #import "PFGoodCell.h"
-#import "PFGoodthingViewController.h"
-#import "PFBadthingViewController.h"
+#import "PointsModel.h"
 
 @interface PFGoodCell ()
-@property (nonatomic, strong) PFGoodthingViewController *goodView;
-@property (nonatomic, strong) PFBadthingViewController *badView;
 @end
 
 @implementation PFGoodCell
@@ -24,8 +21,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _identifier = reuseIdentifier;
-         _goodView = [[PFGoodthingViewController alloc] init];
-        _badView = [[PFBadthingViewController alloc] init];
+         
         self.imageView.image = [UIImage imageNamed:@"blank_list2.png"];
         _inputTextfiled = [[UITextField alloc] initWithFrame:CGRectMake(50.0f, 10.0f, 180.0f, 38.0f)];
         _inputTextfiled.delegate = self;
@@ -73,13 +69,13 @@
 {
     [textField resignFirstResponder];
     [beDelegate tableViewCGpointNormal];
+    PointsModel *points = [[PointsModel alloc] init];
     if ([_identifier isEqualToString:@"ID"]) {
-       
-        [_goodView.dataSourceArray addObject:_inputTextfiled.text];
-        NSLog(@"good:%@",_goodView.dataSourceArray);
+        points.goodHabits = _inputTextfiled.text;
+        [beDelegate getTaskString:points.goodHabits];
     }else{
-        [_badView.BadSourceArray addObject:_inputTextfiled.text];
-        NSLog(@"bad:%@",_badView.BadSourceArray);
+        points.badHabits = _inputTextfiled.text;
+        [beDelegate getTaskString:points.badHabits];
     }
     return YES;
 }

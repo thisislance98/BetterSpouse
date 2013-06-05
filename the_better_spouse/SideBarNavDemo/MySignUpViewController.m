@@ -17,12 +17,10 @@
 
 @synthesize fieldsBackground;
 
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"list_background2.png"]]];
+    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"list_background.png"]]];
     
     UIImageView *welcomeIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"welcome.png"]];
     welcomeIcon.Frame = (CGRect){CGPointZero, welcomeIcon.image.size};
@@ -108,7 +106,6 @@
     BOOL informationComplete = YES;
     for (id key in info) {
         NSString *field = [info objectForKey:key];
-        NSLog(@"_______%@",field);
         if (!field || field.length == 0) {
             informationComplete = NO;
             break;

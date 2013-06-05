@@ -14,6 +14,10 @@
 {
     UIButton *_themBtn;
     UIImageView *_dailyBack;
+    UIButton *goodBtn;
+    UIButton *badBtn;
+    UIButton *rewardBtn;
+    
 }
 
 @property (assign,nonatomic)id<SideBarSelectDelegate>delegate;
