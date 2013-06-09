@@ -9,7 +9,8 @@
 #import "GoodViewController.h"
 
 @interface GoodViewController ()
-
+@property (nonatomic, strong) NSMutableArray *dataSourceArray;
+@property (nonatomic, strong) NSMutableArray *numberSourceArray;
 @end
 
 @implementation GoodViewController
@@ -18,7 +19,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"rw"]];
+        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"ne"]];
     }
     return self;
 }
@@ -70,7 +72,7 @@
 #pragma tableView delegate---------------
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    return _dataSourceArray.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -90,20 +92,20 @@
     cell.imageView.image = [UIImage imageNamed:@"blank_list2.png"];
     
     UILabel *taskLabel = [[UILabel alloc] initWithFrame:CGRectMake(50.0f, 10.0f, 180.0f, 38.0f)];
-    taskLabel.backgroundColor = [UIColor grayColor];
+    taskLabel.backgroundColor = [UIColor clearColor];
     taskLabel.textAlignment = UITextAlignmentCenter;
-    taskLabel.text = @"Wash Bow";
+    taskLabel.text = [_dataSourceArray objectAtIndex:indexPath.row];
     [cell.contentView addSubview:taskLabel];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(272.0f, 11.0f, 38.0f, 40.0f)];
-    label.backgroundColor = [UIColor grayColor];
+    label.backgroundColor = [UIColor clearColor];
     label.textAlignment = UITextAlignmentCenter;
-    label.text = @"3";
+    label.text = [_numberSourceArray objectAtIndex:indexPath.row];
     [cell.contentView addSubview:label];
     
-    UIImageView *smileImg = [[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 34, 34)];
+    UIImageView *smileImg = [[UIImageView alloc] initWithFrame:CGRectMake(11, 12, 35, 35)];
     smileImg.backgroundColor = [UIColor clearColor];
-    smileImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"smile%@.png",label.text]];
+    smileImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"smile%d.png",[[_numberSourceArray objectAtIndex:indexPath.row] intValue]]];
     [cell.contentView addSubview:smileImg];
     return cell;
 }

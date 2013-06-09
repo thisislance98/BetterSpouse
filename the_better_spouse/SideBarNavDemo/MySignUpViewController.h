@@ -7,7 +7,7 @@
 #import <Parse/Parse.h>
 
 @class PFSignUpViewController;
-@interface MySignUpViewController : UIViewController<PFSignUpViewControllerDelegate,UITextFieldDelegate>
+@interface MySignUpViewController : UIViewController<PFSignUpViewControllerDelegate,UITextFieldDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, strong) UITextField *passwordField;
 @property (nonatomic, strong) UITextField *usernameField;

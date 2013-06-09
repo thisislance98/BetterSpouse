@@ -8,7 +8,8 @@
 #import "MySignUpViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "PFGoodthingViewController.h"
-
+#import <Parse/PFUser.h>
+#import "FirstViewController.h"
 @interface MySignUpViewController ()
 @property (nonatomic, strong) UIImageView *fieldsBackground;
 @end
@@ -33,7 +34,7 @@
     [self.view addSubview:betterIcon];
     
     fieldsBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"user_info.png"]];
-    fieldsBackground.backgroundColor = [UIColor redColor];
+    fieldsBackground.backgroundColor = [UIColor clearColor];
     fieldsBackground.userInteractionEnabled = YES;
     [self.view addSubview:fieldsBackground];
     
@@ -41,7 +42,7 @@
     [_usernameField setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     _usernameField.returnKeyType = UIReturnKeyNext;
     _usernameField.delegate = self;
-    _usernameField.backgroundColor = [UIColor grayColor];
+    _usernameField.backgroundColor = [UIColor clearColor];
     [fieldsBackground addSubview:_usernameField];
     
     _passwordField = [[UITextField alloc] initWithFrame:CGRectMake(93, 38, fieldsBackground.frame.size.width - 95, fieldsBackground.frame.size.height / 4)];
@@ -49,7 +50,7 @@
     _passwordField.returnKeyType = UIReturnKeyDone;
     _passwordField.secureTextEntry = YES;
     _passwordField.delegate = self;
-    _passwordField.backgroundColor = [UIColor grayColor];
+    _passwordField.backgroundColor = [UIColor clearColor];
     [fieldsBackground addSubview:_passwordField];
     
     _confirmTF = [[UITextField alloc] initWithFrame:CGRectMake(93, 74, fieldsBackground.frame.size.width - 95, fieldsBackground.frame.size.height / 4)];
@@ -57,7 +58,7 @@
     _confirmTF.returnKeyType = UIReturnKeyNext;
     _confirmTF.secureTextEntry = YES;
     _confirmTF.delegate = self;
-    _confirmTF.backgroundColor = [UIColor grayColor];
+    _confirmTF.backgroundColor = [UIColor clearColor];
     [fieldsBackground addSubview:_confirmTF];
     
     _numCountBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -65,37 +66,63 @@
     [_numCountBtn setImage:[UIImage imageNamed:@"create_account1.png"] forState:UIControlStateHighlighted];
     [_numCountBtn addTarget:self action:@selector(newCountBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_numCountBtn];
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [button setFrame:CGRectMake(10, 5, 40, 40)];
+    [button addTarget:self action:@selector(comeBackClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+}
+
+- (void)comeBackClicked
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)newCountBtnClicked
 {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setObject:_usernameField.text forKey:@"usernameField"];
-    [dic setObject:_passwordField.text forKey:@"_passwordField"];
-    [dic setObject:_confirmTF.text forKey:@"confirm"];
+    [dic setObject:_usernameField.text forKey:@"username"];
+    [dic setObject:_passwordField.text forKey:@"password"];
     [self signUpViewController:(PFSignUpViewController *)self shouldBeginSignUp:dic];
+    
+    PFUser *user =[PFUser user];
+    user.username = self.usernameField.text;
+    user.password = self.passwordField.text;
+    
+    if (_confirmTF.text == _passwordField.text) {
+        [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if(!error){
+                PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
+                [self.navigationController pushViewController:googView animated:YES];
+            }
+        }];
+    }else{
+        UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:@"Error" message:@"Twice Password is different" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alertView show];
+    }
 }
-
+     
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    
-    // Move all fields down on smaller screen sizes
-    //[self.signUpView.dismissButton setFrame:CGRectMake(10.0f, 10.0f, 87.5f, 45.5f)];
-    //[self.signUpView.logo setFrame:CGRectMake(66.5f, 70.0f, 187.0f, 58.5f)];
+
      [_numCountBtn setFrame:CGRectMake(self.view.frame.size.width/7, self.view.frame.size.height / 1.3, 238, 41)];
-    //[self.fieldsBackground setFrame:CGRectMake(35.0f, fieldFrame.origin.y + yOffset, 250.0f, 174.0f)];
-    self.fieldsBackground.frame = (CGRect){CGPointZero, fieldsBackground.image.size};
-    self.fieldsBackground.center = CGPointMake(self.view.frame.size.width / 2, fieldsBackground.frame.size.height*2.8);
-    
+    self.fieldsBackground.frame = CGRectMake(20, fieldsBackground.frame.size.height*2.3, 281, 98);
+   // self.fieldsBackground.center = CGPointMake(self.view.frame.size.width / 2, fieldsBackground.frame.size.height*2.8);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField;
+{
+      self.fieldsBackground.frame = CGRectMake(20, self.view.frame.size.height/2 - 15 - 100, 281, 98);
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+     self.fieldsBackground.frame = CGRectMake(20, self.view.frame.size.height/2 - 15, 281, 98);
     return YES;
 }
 
@@ -134,6 +161,5 @@
 - (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController {
     NSLog(@"User dismissed the signUpViewController");
 }
-
 
 @end

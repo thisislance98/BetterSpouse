@@ -57,12 +57,12 @@
     _pointLabel.textAlignment = UITextAlignmentCenter;
     [_remainPoint addSubview:_pointLabel];
     
-    _goodthingTable  = [[UITableView alloc] initWithFrame:CGRectMake(0, _badImage.frame.size.height+26, 320, self.view.frame.size.height -_badImage.frame.size.height - _remainPoint.frame.size.height-32) style:UITableViewStylePlain];
-    _goodthingTable.backgroundColor = [UIColor clearColor];
-    _goodthingTable.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _goodthingTable.delegate = self;
-    _goodthingTable.dataSource = self;
-    [self.view addSubview:_goodthingTable];
+    _badthingTable  = [[UITableView alloc] initWithFrame:CGRectMake(0, _badImage.frame.size.height+26, 320, self.view.frame.size.height -_badImage.frame.size.height - _remainPoint.frame.size.height-32) style:UITableViewStylePlain];
+    _badthingTable.backgroundColor = [UIColor clearColor];
+    _badthingTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _badthingTable.delegate = self;
+    _badthingTable.dataSource = self;
+    [self.view addSubview:_badthingTable];
     
     UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     dailyBtn.Frame = (CGRect){CGPointZero, _badImage.image.size};
@@ -149,7 +149,7 @@
 - (void)buttonPressedAction
 {
     _tagNum ++;
-    [_goodthingTable reloadData];
+    [_badthingTable reloadData];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -165,7 +165,7 @@
     }
 }
 
-- (void)showNumberImage:(int)btnTag
+- (void)showNumberImage:(UIButton *)sender
 {
     [UIView animateWithDuration:0.5f animations:^{
         _numberView.hidden = !_numberView.hidden;
@@ -174,22 +174,22 @@
 
 - (void)tableViewCGpointChange;
 {
-    _goodthingTable.frame = CGRectMake(0, _badImage.frame.size.height+26 , 320, self.view.frame.size.height -_badImage.frame.size.height - _remainPoint.frame.size.height-32- 160);
+    _badthingTable.frame = CGRectMake(0, _badImage.frame.size.height+26 , 320, self.view.frame.size.height -_badImage.frame.size.height - _remainPoint.frame.size.height-32- 160);
 }
 
 - (void)tableViewCGpointNormal
 {
-    _goodthingTable.frame = CGRectMake(0, _badImage.frame.size.height+26, 320, self.view.frame.size.height -_badImage.frame.size.height - _remainPoint.frame.size.height-32);
+    _badthingTable.frame = CGRectMake(0, _badImage.frame.size.height+26, 320, self.view.frame.size.height -_badImage.frame.size.height - _remainPoint.frame.size.height-32);
 }
 
 - (void)numberofButtonClicked:(id)sender
 {
     _number = ((UIButton *)sender).tag;
     UITableViewCell* buttonCell = (UITableViewCell*)[sender superview];
-    NSUInteger row = [[_goodthingTable indexPathForCell:buttonCell]row];
+    NSUInteger row = [[_badthingTable indexPathForCell:buttonCell]row];
     NSIndexPath *indexPath_1=[NSIndexPath indexPathForRow:row inSection:0];
     NSArray *indexArray=[NSArray arrayWithObject:indexPath_1];
-    [_goodthingTable reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationAutomatic];
+    [_badthingTable reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 - (void)getTaskString:(NSString *)inputText

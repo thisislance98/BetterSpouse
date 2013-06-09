@@ -15,11 +15,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    if ([PFUser currentUser]) {
-//        self.welcomeLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Welcome %@!", nil), [[PFUser currentUser] username]];
-//    } else {
-//        self.welcomeLabel.text = NSLocalizedString(@"Not logged in", nil);
-//    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -29,7 +24,7 @@
         // Customize the Log In View Controller
         PFLogInViewController *logInViewController = [[PFLogInViewController alloc] init];
         [logInViewController setDelegate:self];
-        [logInViewController setFacebookPermissions:[NSArray arrayWithObjects:@"friends_about_me", nil]];
+        [logInViewController setFacebookPermissions:[NSArray arrayWithObjects:@"user_about_me", nil]];
         [logInViewController setFields: PFLogInFieldsFacebook | PFLogInFieldsDismissButton];
         
         // Present Log In View Controller

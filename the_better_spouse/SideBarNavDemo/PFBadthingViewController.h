@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PFGoodCell.h"
 @interface PFBadthingViewController :UIViewController<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,goodCelldelegate>{
-    UITableView     *_goodthingTable;
+    UITableView     *_badthingTable;
     UITextField     *_inputTextfiled;
     UIButton        *_NumBtn;
     UIImageView     *_numberImage;

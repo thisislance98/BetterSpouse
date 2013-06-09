@@ -9,5 +9,4 @@
 #import <UIKit/UIKit.h>
 
 @interface FirstViewController : UIViewController
-@property (assign,nonatomic) int index;
 @end

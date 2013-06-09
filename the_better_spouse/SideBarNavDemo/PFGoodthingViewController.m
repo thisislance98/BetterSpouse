@@ -20,6 +20,7 @@
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) PFGoodCell *ce;
 @property (nonatomic, assign) NSInteger number;
+@property (nonatomic, assign) NSArray *indexArray;
 @end
 
 @implementation PFGoodthingViewController
@@ -29,8 +30,9 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _ce = [[PFGoodCell alloc] init];
-        _dataSourceArray = [NSMutableArray arrayWithCapacity:0];
-        _tagNum = 1;
+        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"rw"]];
+        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"ne"]];
+        _tagNum = _dataSourceArray.count;
     }
     return self;
 }
@@ -142,6 +144,9 @@
 #pragma tableView delegate---------------
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (_dataSourceArray.count == 0) {
+        return 1;
+    }else
     return _tagNum;
 }
 
@@ -159,7 +164,11 @@
         cell = [[PFGoodCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         cell.beDelegate = self;
     }
-    [cell setcontentWithImage:nil task:nil number:_number];
+    if (_dataSourceArray.count == 0 || _dataSourceArray.count == indexPath.row) {
+        [cell setcontentWithImage:nil task:nil number:nil];
+    }else{
+    [cell setcontentWithImage:[[_numberSourceArray objectAtIndex:indexPath.row] intValue] task:[_dataSourceArray objectAtIndex:indexPath.row] number:[[_numberSourceArray objectAtIndex:indexPath.row] intValue]];
+    }
     return cell;
 }
 
@@ -172,13 +181,15 @@
 
 - (void)buttonPressedAction
 {
-    _tagNum ++;
+    _tagNum = _dataSourceArray.count + 1;
    [_goodthingTable reloadData];
 }
 #pragma button cliecked
 
-- (void)showNumberImage:(int)btnTag{
-    NSLog(@"selectRoW:%d",selectRow);
+- (void)showNumberImage:(UIButton *)sender{
+    UITableViewCell* buttonCell = (UITableViewCell*)[sender superview].superview;
+    NSIndexPath *indexPath_1=[_goodthingTable indexPathForCell:buttonCell];
+    _indexArray=[NSArray arrayWithObject:indexPath_1];
     [UIView animateWithDuration:0.5f animations:^{
         _numberView.hidden = !_numberView.hidden;
     }];
@@ -211,20 +222,28 @@
 - (void)numberofButtonClicked:(id)sender
 {
     _number = ((UIButton *)sender).tag;
-    //UIButton* button = (UIButton*)sender;
-    UITableViewCell* buttonCell = (UITableViewCell*)[sender superview];
-    NSUInteger row = [[_goodthingTable indexPathForCell:buttonCell]row];
-        NSIndexPath *indexPath_1=[NSIndexPath indexPathForRow:row inSection:0];
-    NSArray *indexArray=[NSArray arrayWithObject:indexPath_1];
-    [_goodthingTable reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationAutomatic];
+    [_numberSourceArray addObject:[NSString stringWithFormat:@"%d",_number]];
+    NSLog(@"Nmudata:%@",_numberSourceArray);
+    [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:@"ne"];
     _numberView.hidden = YES;
+    [_goodthingTable reloadData];
+   // [_goodthingTable reloadRowsAtIndexPaths:_indexArray withRowAnimation:UITableViewRowAnimationAutomatic];
     _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    UITableViewCell *cell = (UITableViewCell *)[[textField superview] superview];
+    NSIndexPath *indexPath = [_goodthingTable indexPathForCell:cell];
+    NSLog(@"nsindex:%d",indexPath.row);
+    return YES;
 }
 
 - (void)getTaskString:(NSString *)inputText
 {
     [_dataSourceArray addObject:inputText];
-    NSLog(@"bad:%@",_dataSourceArray);
+    _tagNum = _dataSourceArray.count;
+    [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:@"rw"];
 }
 
 - (void)didReceiveMemoryWarning

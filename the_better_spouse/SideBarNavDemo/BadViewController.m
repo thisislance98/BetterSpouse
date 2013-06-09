@@ -90,13 +90,13 @@
     cell.imageView.image = [UIImage imageNamed:@"blank_list2.png"];
     
     UILabel *taskLabel = [[UILabel alloc] initWithFrame:CGRectMake(50.0f, 10.0f, 180.0f, 38.0f)];
-    taskLabel.backgroundColor = [UIColor grayColor];
+    taskLabel.backgroundColor = [UIColor clearColor];
     taskLabel.textAlignment = UITextAlignmentCenter;
     taskLabel.text = @"Much Rubish";
     [cell.contentView addSubview:taskLabel];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(272.0f, 11.0f, 38.0f, 40.0f)];
-    label.backgroundColor = [UIColor grayColor];
+    label.backgroundColor = [UIColor clearColor];
     label.textAlignment = UITextAlignmentCenter;
     label.text = @"-3";
     [cell.contentView addSubview:label];

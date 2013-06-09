@@ -10,14 +10,14 @@
 
 
 @protocol goodCelldelegate <NSObject>
-- (void)showNumberImage:(int)btnTag;
+- (void)showNumberImage:(UIButton *)sender;
 - (void)tableViewCGpointChange;
 - (void)tableViewCGpointNormal;
 - (void)buttonPressedAction;
 - (void)getTaskString:(NSString *)inputText;
 @end
 
-@interface PFGoodCell : UITableViewCell<UITextFieldDelegate>
+@interface PFGoodCell : UITableViewCell<UITextFieldDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, assign) id<goodCelldelegate> beDelegate;
 @property (nonatomic, strong) UIButton *NumBtn;
@@ -25,7 +25,5 @@
 @property (nonatomic, strong) NSMutableArray *imaegArray;
 @property (nonatomic, strong) UITextField *inputTextfiled;
 @property (nonatomic, strong) NSString *identifier;
-
-
-- (void)setcontentWithImage:(UIImage *)image task:(NSString *)task number:(int)number;
+- (void)setcontentWithImage:(int)imageNumber task:(NSString *)task number:(int)number;
 @end

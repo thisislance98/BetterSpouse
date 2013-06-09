@@ -95,54 +95,38 @@ const float MoveAnimationDuration = 0.3;
 
 - (void)panInContentView:(UIPanGestureRecognizer *)panGestureReconginzer
 {
-
-	if (panGestureReconginzer.state == UIGestureRecognizerStateChanged)
+    
+    if (panGestureReconginzer.state == UIGestureRecognizerStateChanged)
     {
         CGFloat translation = [panGestureReconginzer translationInView:self.contentView].x;
         self.contentView.transform = CGAffineTransformMakeTranslation(translation+currentTranslate, 0);
         UIView *view ;
-        if (translation+currentTranslate>0)
-        {
-            view = self.leftSideBarViewController.view;
-        }else
-        {
-          //  view = self.rightSideBarViewController.view;
-        }
+        
+        view = self.leftSideBarViewController.view;
+        
         [self.navBackView bringSubviewToFront:view];
         
-	} else if (panGestureReconginzer.state == UIGestureRecognizerStateEnded)
+    } else if (panGestureReconginzer.state == UIGestureRecognizerStateEnded)
     {
-		currentTranslate = self.contentView.transform.tx;
-        if (!sideBarShowing) {
-            if (fabs(currentTranslate)<ContentMinOffset) {
-                [self moveAnimationWithDirection:SideBarShowDirectionNone duration:MoveAnimationDuration];
-            }else if(currentTranslate>ContentMinOffset)
-            {
-                [self moveAnimationWithDirection:SideBarShowDirectionLeft duration:MoveAnimationDuration];
-            }else
-            {
-                [self moveAnimationWithDirection:SideBarShowDirectionRight duration:MoveAnimationDuration];
-            }
-        }else
+        currentTranslate = self.contentView.transform.tx;
+        if (!sideBarShowing)//开
         {
-            if (fabs(currentTranslate)<ContentOffset-ContentMinOffset) {
-                [self moveAnimationWithDirection:SideBarShowDirectionNone duration:MoveAnimationDuration];
-            
-            }else if(currentTranslate>ContentOffset-ContentMinOffset)
+            if (currentTranslate>ContentMinOffset)
             {
-                
                 [self moveAnimationWithDirection:SideBarShowDirectionLeft duration:MoveAnimationDuration];
-                            
-            }else
-            {
-                [self moveAnimationWithDirection:SideBarShowDirectionRight duration:MoveAnimationDuration];
             }
+            else
+            {
+                [self moveAnimationWithDirection:SideBarShowDirectionNone duration:MoveAnimationDuration];
+            }
+            
+        }
+        else //关
+        {
+            [self moveAnimationWithDirection:SideBarShowDirectionNone duration:MoveAnimationDuration];
         }
         
-        
-	}
-    
-   
+    }
 }
 
 #pragma mark - nav con delegate
@@ -230,8 +214,6 @@ const float MoveAnimationDuration = 0.3;
     [self moveAnimationWithDirection:direction duration:MoveAnimationDuration];
 }
 
-
-
 #pragma animation
 
 - (void)moveAnimationWithDirection:(SideBarShowDirection)direction duration:(float)duration
@@ -248,10 +230,10 @@ const float MoveAnimationDuration = 0.3;
                 self.contentView.transform  = CGAffineTransformMakeTranslation(ContentOffset, 0);
             }
                 break;
-            case SideBarShowDirectionRight:
-            {
-                self.contentView.transform  = CGAffineTransformMakeTranslation(0, 0);
-            }
+//            case SideBarShowDirectionRight:
+//            {
+//                self.contentView.transform  = CGAffineTransformMakeTranslation(0, 0);
+//            }
                 break;
             default:
                 break;

@@ -21,7 +21,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _identifier = reuseIdentifier;
-         
+        
         self.imageView.image = [UIImage imageNamed:@"blank_list2.png"];
         _inputTextfiled = [[UITextField alloc] initWithFrame:CGRectMake(50.0f, 10.0f, 180.0f, 38.0f)];
         _inputTextfiled.delegate = self;
@@ -33,9 +33,10 @@
         NumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [NumBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         NumBtn.frame = CGRectMake(272.0f, 11.0f, 38.0f, 40.0f);
+        NumBtn.tag = self.tag;
         [NumBtn addTarget:self action:@selector(buttonPressedAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:NumBtn];
-                
+        
         _smileImg = [[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 34, 34)];
         _smileImg.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:_smileImg];
@@ -49,15 +50,21 @@
     return self;
 }
 
-- (void)setcontentWithImage:(UIImage *)image task:(NSString *)task number:(int)number
+- (void)setcontentWithImage:(int)imageNumber task:(NSString *)task number:(int)number
 {
     [NumBtn setTitle:[NSString stringWithFormat:@"%d", number] forState:UIControlStateNormal];
-    _smileImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"smile%@.png",NumBtn.titleLabel.text]];
+    _smileImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"smile%d.png",imageNumber]];
+    _inputTextfiled.text = task;
 }
 
 - (void)buttonPressedClicked
 {
-    [beDelegate buttonPressedAction];
+    if (NumBtn.titleLabel.text == nil || _inputTextfiled.text == nil) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Input Error" message:@"Please input all text" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+    }else{
+        [beDelegate buttonPressedAction];
+    }
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
@@ -82,14 +89,13 @@
 
 - (void)buttonPressedAction:(UIButton *)sender
 {
-    int btnTag = ((UIButton *)sender).tag;
-    [beDelegate showNumberImage:btnTag];
+    [beDelegate showNumberImage:sender];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 

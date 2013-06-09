@@ -22,5 +22,7 @@
 
 @property (nonatomic, strong) UILabel *btnLabel;
 @property (nonatomic, strong) NSMutableArray *dataSourceArray;
+@property (nonatomic, strong) NSMutableArray *numberSourceArray;
+
 
 @end

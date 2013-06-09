@@ -43,7 +43,7 @@
         _selectIdnex = 0;
     }
     
-    UIImage *image = [UIImage imageNamed:@"daily_tracker_bg2.png"];
+    UIImage *image = [UIImage imageNamed:@"daily_tracker_bg.png"];
     _dailyBack = [[UIImageView alloc] initWithImage:image];//[image stretchableImageWithLeftCapWidth:14 topCapHeight:21]];
     //self.view.backgroundColor = [UIColor colorWithPatternImage:image];
     _dailyBack.Frame = CGRectMake(0, 0, _dailyBack.image.size.width, 460);
@@ -170,7 +170,6 @@
 {
     if (index == 0) {
         FirstViewController *con = [[FirstViewController alloc] initWithNibName:@"FirstViewController" bundle:nil];
-        con.index = index+1;
         UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
         nav.navigationBar.hidden = YES;
         return nav ;
