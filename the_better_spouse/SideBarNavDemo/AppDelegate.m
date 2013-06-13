@@ -20,11 +20,9 @@
      UIRemoteNotificationTypeBadge |
      UIRemoteNotificationTypeAlert |
      UIRemoteNotificationTypeSound];
- 
+    
     [Parse setApplicationId:@"GC8Zbs9bF8k7O1GUrLPf3tZUJXlNjrCV2FYpjtEK"
-clientKey:@"yPc5QFaUttLncyyhgSIxusL49M6cBGgklRBhk599"];
-//    [Parse setApplicationId:@"GC8Zbs9bF8k7O1GUrGC8Zbs9bF8k7O1GUrLPf3tZUJXlNjrCV2FYpjtEKLPf3tZUJXlNjrCV2FYpjtEK"
-//                  clientKey:@"yPc5QFaUttLncyyhgSIxusL49M6cBGgklRBhk599"];
+                  clientKey:@"yPc5QFaUttLncyyhgSIxusL49M6cBGgklRBhk599"];
     [PFFacebookUtils initializeFacebook];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
@@ -67,6 +65,21 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
     return [PFFacebookUtils handleOpenURL:url];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation==UIInterfaceOrientationMaskLandscape);
+}
+
+//for iOS6
+-(NSUInteger)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskLandscape;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

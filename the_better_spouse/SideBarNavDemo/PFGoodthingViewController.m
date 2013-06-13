@@ -9,6 +9,7 @@
 #import "PFGoodthingViewController.h"
 #import "PFBadthingViewController.h"
 #import "SidebarViewController.h"
+#import <Parse/PFObject.h>
 #import "PFGoodCell.h"
 #import "PointsModel.h"
 
@@ -30,8 +31,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _ce = [[PFGoodCell alloc] init];
-        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"rw"]];
-        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"ne"]];
+        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"Task"]];
+        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"Num"]];
         _tagNum = _dataSourceArray.count;
     }
     return self;
@@ -177,27 +178,28 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];  
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+   
 }
 
-- (void)buttonPressedAction
-{
-    _tagNum = _dataSourceArray.count + 1;
-   [_goodthingTable reloadData];
-}
-#pragma button cliecked
+#pragma PFGoodcell Delegate
 
 - (void)showNumberImage:(UIButton *)sender{
+    
     UITableViewCell* buttonCell = (UITableViewCell*)[sender superview].superview;
     NSIndexPath *indexPath_1=[_goodthingTable indexPathForCell:buttonCell];
-    _indexArray=[NSArray arrayWithObject:indexPath_1];
+    selectRow = indexPath_1.row;
     [UIView animateWithDuration:0.5f animations:^{
         _numberView.hidden = !_numberView.hidden;
     }];
 }
 
-- (void)tableViewCGpointChange;
+- (void)tableViewCGpointChange:(UITextField *)sender;
 {
+    UITableViewCell *cell = (UITableViewCell *)[[sender superview] superview];
+    NSIndexPath *indexPath = [_goodthingTable indexPathForCell:cell];
+    textRow = indexPath.row;
     _goodthingTable.frame = CGRectMake(0, _goodImage.frame.size.height+26 , 320, self.view.frame.size.height -_goodImage.frame.size.height - _remainPoints.frame.size.height-32- 160);
+    [_goodthingTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
 - (void)tableViewCGpointNormal
@@ -209,6 +211,28 @@
 {
     PFBadthingViewController *badView = [[PFBadthingViewController alloc] init];
     [self.navigationController pushViewController:badView animated:YES];
+    
+    PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
+    [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
+    [anotherPlayer setObject:[NSArray arrayWithArray:_dataSourceArray] forKey:@"task"];
+    [anotherPlayer setObject:[NSArray arrayWithArray:_numberSourceArray] forKey:@"score"];
+    [anotherPlayer saveInBackgroundWithBlock:^(BOOL succeeded,NSError *error){
+        if(succeeded){
+            NSLog(@"Object Uploaded");
+        }
+        else{
+            NSString *errorString = [[error userInfo] objectForKey:@"error"];
+            NSLog(@"Error:%@",errorString);
+        }
+    }];
+}
+
+#pragma button cliecked
+
+- (void)buttonPressedAction
+{
+    _tagNum = _dataSourceArray.count + 1;
+    [_goodthingTable reloadData];
 }
 
 - (void)dailyBtnClicked
@@ -222,28 +246,34 @@
 - (void)numberofButtonClicked:(id)sender
 {
     _number = ((UIButton *)sender).tag;
-    [_numberSourceArray addObject:[NSString stringWithFormat:@"%d",_number]];
+    if (_numberSourceArray.count >= selectRow +1) {
+        [_numberSourceArray replaceObjectAtIndex:selectRow withObject:[NSString stringWithFormat:@"%d",_number]];
+    }else{
+        [_numberSourceArray addObject:[NSString stringWithFormat:@"%d",_number]];
+    }
     NSLog(@"Nmudata:%@",_numberSourceArray);
-    [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:@"ne"];
+    [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:@"Num"];
     _numberView.hidden = YES;
     [_goodthingTable reloadData];
-   // [_goodthingTable reloadRowsAtIndexPaths:_indexArray withRowAnimation:UITableViewRowAnimationAutomatic];
     _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    UITableViewCell *cell = (UITableViewCell *)[[textField superview] superview];
-    NSIndexPath *indexPath = [_goodthingTable indexPathForCell:cell];
-    NSLog(@"nsindex:%d",indexPath.row);
+   
     return YES;
 }
 
 - (void)getTaskString:(NSString *)inputText
 {
-    [_dataSourceArray addObject:inputText];
+    if (_dataSourceArray.count >= textRow +1) {
+        [_dataSourceArray replaceObjectAtIndex:textRow withObject:inputText];
+        [_goodthingTable reloadData];
+    }else{
+        [_dataSourceArray addObject:inputText];
+    }
     _tagNum = _dataSourceArray.count;
-    [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:@"rw"];
+    [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:@"Task"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -251,6 +281,5 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 
 @end

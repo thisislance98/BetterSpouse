@@ -69,7 +69,7 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
 {
-    [beDelegate tableViewCGpointChange];
+    [beDelegate tableViewCGpointChange:textField];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -89,7 +89,12 @@
 
 - (void)buttonPressedAction:(UIButton *)sender
 {
+    if (_inputTextfiled.text == nil) {
+        UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"Input Error" message:@"Please input task first" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alertview show];
+    }else{
     [beDelegate showNumberImage:sender];
+    }
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

@@ -15,8 +15,10 @@
     UIImageView     *_numberImage;
     UILabel         *_pointLabel;
     NSInteger        _tagNum;
+    NSInteger       _row;
+    NSInteger       _text;
 
 }
 @property (nonatomic, strong) NSMutableArray *BadSourceArray;
-
+@property (nonatomic, strong) NSMutableArray *badNumberArray;
 @end

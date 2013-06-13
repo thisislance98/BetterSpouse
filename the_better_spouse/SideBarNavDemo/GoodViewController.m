@@ -7,7 +7,7 @@
 //
 
 #import "GoodViewController.h"
-
+#import "SidebarViewController.h"
 @interface GoodViewController ()
 @property (nonatomic, strong) NSMutableArray *dataSourceArray;
 @property (nonatomic, strong) NSMutableArray *numberSourceArray;
@@ -19,8 +19,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"rw"]];
-        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"ne"]];
+        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"Task"]];
+        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"Num"]];
     }
     return self;
 }
@@ -31,7 +31,7 @@
 	UIImage *image = [UIImage imageNamed:@"list_background.png"];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:image]];
     
-	_goodImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"good_things.png"]];
+	_goodImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"good_habits.png"]];
     _goodImage.Frame = (CGRect){CGPointZero, _goodImage.image.size};
     _goodImage.center = CGPointMake(_goodImage.image.size.width + 40 , _goodImage.image.size.height/1.4);
     [self.view addSubview:_goodImage];
@@ -54,13 +54,6 @@
     _goodthingTable.dataSource = self;
     [self.view addSubview:_goodthingTable];
     
-    UIButton *badBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    badBtn.frame = (CGRect){CGPointZero,_remainPoint.image.size.width/3,_remainPoint.image.size.height/1.5};
-    badBtn.center = CGPointMake(_remainPoint.image.size.width/4 - 10, self.view.frame.size.height-23);
-    [badBtn setTitle:@"bad" forState:UIControlStateNormal];
-    [badBtn addTarget:self action:@selector(badBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:badBtn];
-    
     UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     dailyBtn.frame = (CGRect){CGPointZero,_remainPoint.image.size.width/3,_remainPoint.image.size.height/1.5};
     dailyBtn.center = CGPointMake(_remainPoint.image.size.width/2+10, self.view.frame.size.height-23);
@@ -70,6 +63,7 @@
 }
 
 #pragma tableView delegate---------------
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return _dataSourceArray.count;
@@ -115,7 +109,23 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Make sure the task has done?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:nil, nil];
+    [alert show];
+    selectTask = indexPath.row;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [_dataSourceArray removeObjectAtIndex:selectTask];
+    [_numberSourceArray removeObjectAtIndex:selectTask];
+    [_goodthingTable reloadData];
+}
+- (void)dailyBtnClicked
+{
+    if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])
+    {
+        [[SidebarViewController share] showSideBarControllerWithDirection:SideBarShowDirectionLeft];
+    }
 }
 
 - (void)didReceiveMemoryWarning

@@ -18,6 +18,7 @@
     NSArray         *_tagArray;
     NSInteger        _tagNum;
     NSInteger       selectRow;
+    NSInteger       textRow;
 }
 
 @property (nonatomic, strong) UILabel *btnLabel;

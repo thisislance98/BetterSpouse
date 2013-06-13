@@ -89,7 +89,7 @@
     user.username = self.usernameField.text;
     user.password = self.passwordField.text;
     
-    if (_confirmTF.text == _passwordField.text) {
+    if ([_confirmTF.text isEqualToString:_passwordField.text]) {
         [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if(!error){
                 PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];

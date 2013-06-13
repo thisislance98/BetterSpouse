@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GoodViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
+@interface GoodViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
+{
+    NSInteger selectTask;
+}
 @property (nonatomic, strong) UIImageView *goodImage;
 @property (nonatomic, strong) UIImageView *remainPoint;
 @property (nonatomic, strong) UILabel     *point;

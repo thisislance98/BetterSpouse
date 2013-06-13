@@ -7,9 +7,10 @@
 //
 
 #import "BadViewController.h"
-
+#import "SidebarViewController.h"
 @interface BadViewController ()
-
+@property (nonatomic, strong) NSMutableArray *badDataSourceArray;
+@property (nonatomic, strong) NSMutableArray *badNumberSourceArray;
 @end
 
 @implementation BadViewController
@@ -18,7 +19,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        _badDataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"badtask"]];
+        _badNumberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"badNum"]];
     }
     return self;
 }
@@ -29,7 +31,7 @@
 	UIImage *image = [UIImage imageNamed:@"list_background.png"];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:image]];
     
-	_badimage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bad_things.png"]];
+	_badimage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bad_habits.png"]];
     _badimage.Frame = (CGRect){CGPointZero, _badimage.image.size};
     _badimage.center = CGPointMake(_badimage.image.size.width + 40 , _badimage.image.size.height/1.4);
     [self.view addSubview:_badimage];
@@ -52,25 +54,31 @@
     _badThingTable.dataSource = self;
     [self.view addSubview:_badThingTable];
     
-    UIButton *badBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    badBtn.frame = (CGRect){CGPointZero,_remain.image.size.width/3,_remain.image.size.height/1.5};
-    badBtn.center = CGPointMake(_remain.image.size.width/4 - 10, self.view.frame.size.height-23);
-    [badBtn setTitle:@"bad" forState:UIControlStateNormal];
-    [badBtn addTarget:self action:@selector(badBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:badBtn];
-    
-    UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    dailyBtn.frame = (CGRect){CGPointZero,_remain.image.size.width/3,_remain.image.size.height/1.5};
-    dailyBtn.center = CGPointMake(_remain.image.size.width/2+10, self.view.frame.size.height-23);
-    [dailyBtn setTitle:@"daily" forState:UIControlStateNormal];
+    UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    dailyBtn.Frame = (CGRect){CGPointZero, _badimage.image.size};
+    dailyBtn.center = CGPointMake(_badimage.image.size.width + 40 , _badimage.image.size.height/1.4);
     [dailyBtn addTarget:self action:@selector(dailyBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:dailyBtn];
+    
+//    UIButton *badBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    badBtn.frame = (CGRect){CGPointZero,_remain.image.size.width/3,_remain.image.size.height/1.5};
+//    badBtn.center = CGPointMake(_remain.image.size.width/4 - 10, self.view.frame.size.height-23);
+//    [badBtn setTitle:@"bad" forState:UIControlStateNormal];
+//    [badBtn addTarget:self action:@selector(badBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:badBtn];
+//    
+//    UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    dailyBtn.frame = (CGRect){CGPointZero,_remain.image.size.width/3,_remain.image.size.height/1.5};
+//    dailyBtn.center = CGPointMake(_remain.image.size.width/2+10, self.view.frame.size.height-23);
+//    [dailyBtn setTitle:@"daily" forState:UIControlStateNormal];
+//    [dailyBtn addTarget:self action:@selector(dailyBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:dailyBtn];
 }
 
 #pragma tableView delegate---------------
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    return _badDataSourceArray.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -92,15 +100,15 @@
     UILabel *taskLabel = [[UILabel alloc] initWithFrame:CGRectMake(50.0f, 10.0f, 180.0f, 38.0f)];
     taskLabel.backgroundColor = [UIColor clearColor];
     taskLabel.textAlignment = UITextAlignmentCenter;
-    taskLabel.text = @"Much Rubish";
+    taskLabel.text = [_badDataSourceArray objectAtIndex:indexPath.row];;
     [cell.contentView addSubview:taskLabel];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(272.0f, 11.0f, 38.0f, 40.0f)];
     label.backgroundColor = [UIColor clearColor];
     label.textAlignment = UITextAlignmentCenter;
-    label.text = @"-3";
+    label.text = [_badNumberSourceArray objectAtIndex:indexPath.row];
     [cell.contentView addSubview:label];
-    
+
     UIImageView *smileImg = [[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 34, 34)];
     smileImg.backgroundColor = [UIColor clearColor];
     smileImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"smile%@.png",label.text]];
@@ -113,6 +121,14 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+
+- (void)dailyBtnClicked
+{
+    if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])
+    {
+        [[SidebarViewController share] showSideBarControllerWithDirection:SideBarShowDirectionLeft];
+    }
 }
 
 - (void)didReceiveMemoryWarning

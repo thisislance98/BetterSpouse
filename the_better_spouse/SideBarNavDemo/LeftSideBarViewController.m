@@ -43,11 +43,11 @@
         _selectIdnex = 0;
     }
     
-    UIImage *image = [UIImage imageNamed:@"daily_tracker_bg.png"];
+    UIImage *image = [UIImage imageNamed:@"daily_tracker_bg2.png"];
     _dailyBack = [[UIImageView alloc] initWithImage:image];//[image stretchableImageWithLeftCapWidth:14 topCapHeight:21]];
     //self.view.backgroundColor = [UIColor colorWithPatternImage:image];
     _dailyBack.Frame = CGRectMake(0, 0, _dailyBack.image.size.width, 460);
-   //dailyBack.center = CGPointMake(dailyBack.image.size.width/2,self.view.frame.size.height/2);
+    //dailyBack.center = CGPointMake(dailyBack.image.size.width/2,self.view.frame.size.height/2);
     [self.view addSubview:_dailyBack];
     
     UILabel *youLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, self.view.frame.size.height - 190, 120, 25)];
@@ -143,8 +143,6 @@
 
 - (void)youBtnClicked
 {
-    UIImage *image = [UIImage imageNamed:@"daily_tracker_bg.png"];
-    _dailyBack.image = image;
     goodBtn.tag = 1;
     badBtn.tag = 2;
     rewardBtn.tag = 3;
@@ -152,8 +150,6 @@
 
 - (void)themBtnClicked
 {
-    UIImage *image = [UIImage imageNamed:@"daily_tracker_bg2.png"];
-    _dailyBack.image = image;
     goodBtn.tag = 4;
     badBtn.tag = 5;
 }
@@ -173,11 +169,11 @@
         UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
         nav.navigationBar.hidden = YES;
         return nav ;
-    }else
-        if (index == 1){
-    PFGoodthingViewController *con = [[PFGoodthingViewController alloc] initWithNibName:nil bundle:nil];
-    UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
-    nav.navigationBar.hidden = YES;
+    }
+    else if (index == 1){
+        PFGoodthingViewController *con = [[PFGoodthingViewController alloc] initWithNibName:nil bundle:nil];
+        UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
+        nav.navigationBar.hidden = YES;
         return nav ;
     }
     else if (index == 2){
@@ -201,7 +197,6 @@
         nav.navigationBar.hidden = YES;
         return nav ;
     }
-    
 }
 
 @end

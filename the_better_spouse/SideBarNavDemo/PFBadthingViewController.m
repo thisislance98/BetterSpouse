@@ -29,8 +29,9 @@
     if (self)
     {
         _ce = [[PFGoodCell alloc] init];
-        _tagNum = 1;
-        _BadSourceArray = [NSMutableArray arrayWithCapacity:0];
+        _BadSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"badtask"]];
+        _badNumberArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"badNum"]];
+        _tagNum = _BadSourceArray.count;
     }
     return self;
 }
@@ -129,7 +130,10 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _tagNum;
+    if (_BadSourceArray.count == 0) {
+        return 1;
+    }else
+        return _tagNum;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -141,14 +145,18 @@
         cell = [[PFGoodCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         cell.beDelegate = self;
     }
-    
-    [cell setcontentWithImage:nil task:nil number:_number];
+ 
+    if (_BadSourceArray.count == 0 || _BadSourceArray.count == indexPath.row) {
+        [cell setcontentWithImage:nil task:nil number:nil];
+    }else{
+        [cell setcontentWithImage:[[_badNumberArray objectAtIndex:indexPath.row] intValue] task:[_BadSourceArray objectAtIndex:indexPath.row] number:[[_badNumberArray objectAtIndex:indexPath.row] intValue]];
+    }
     return cell;
 }
 
 - (void)buttonPressedAction
 {
-    _tagNum ++;
+    _tagNum = _BadSourceArray.count + 1;
     [_badthingTable reloadData];
 }
 
@@ -165,15 +173,21 @@
     }
 }
 
-- (void)showNumberImage:(UIButton *)sender
-{
+- (void)showNumberImage:(UIButton *)sender{
+    
+    UITableViewCell* buttonCell = (UITableViewCell*)[sender superview].superview;
+    NSIndexPath *indexPath_1=[_badthingTable indexPathForCell:buttonCell];
+    _row = indexPath_1.row;
     [UIView animateWithDuration:0.5f animations:^{
         _numberView.hidden = !_numberView.hidden;
     }];
 }
 
-- (void)tableViewCGpointChange;
+- (void)tableViewCGpointChange:(UITextField *)sender;
 {
+    UITableViewCell *cell = (UITableViewCell *)[[sender superview] superview];
+    NSIndexPath *indexPath = [_badthingTable indexPathForCell:cell];
+    _text = indexPath.row;
     _badthingTable.frame = CGRectMake(0, _badImage.frame.size.height+26 , 320, self.view.frame.size.height -_badImage.frame.size.height - _remainPoint.frame.size.height-32- 160);
 }
 
@@ -185,20 +199,30 @@
 - (void)numberofButtonClicked:(id)sender
 {
     _number = ((UIButton *)sender).tag;
-    UITableViewCell* buttonCell = (UITableViewCell*)[sender superview];
-    NSUInteger row = [[_badthingTable indexPathForCell:buttonCell]row];
-    NSIndexPath *indexPath_1=[NSIndexPath indexPathForRow:row inSection:0];
-    NSArray *indexArray=[NSArray arrayWithObject:indexPath_1];
-    [_badthingTable reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationAutomatic];
+    if (_badNumberArray.count >= _row +1) {
+        [_badNumberArray replaceObjectAtIndex:_row withObject:[NSString stringWithFormat:@"%d",_number]];
+    }else{
+        [_badNumberArray addObject:[NSString stringWithFormat:@"%d",_number]];
+    }
+    NSLog(@"Nmudata:%@",_badNumberArray);
+    [[NSUserDefaults standardUserDefaults] setObject:_badNumberArray forKey:@"badNum"];
+    _numberView.hidden = YES;
+    [_badthingTable reloadData];
+    _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];
 }
 
 - (void)getTaskString:(NSString *)inputText
 {
-    [_BadSourceArray addObject:inputText];
-    NSLog(@"bad:%@",_BadSourceArray);
+    if (_BadSourceArray.count >= _text +1) {
+        [_BadSourceArray replaceObjectAtIndex:_text withObject:inputText];
+        [_badthingTable reloadData];
+    }else{
+        [_BadSourceArray addObject:inputText];
+    }
+    
+    _tagNum = _BadSourceArray.count;
+    [[NSUserDefaults standardUserDefaults] setObject:_BadSourceArray forKey:@"badtask"];
 }
-
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

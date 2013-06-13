@@ -9,7 +9,11 @@
 #import "PFRewardsViewController.h"
 #import "LeftSideBarViewController.h"
 #import "SidebarViewController.h"
+
 @interface PFRewardsViewController ()
+
+@property (nonatomic, strong) NSMutableArray *rewardsDataArray;
+@property (nonatomic, strong) NSMutableArray *rewardsNumberArray;
 
 @end
 
@@ -18,8 +22,11 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
+    if (self)
+    {
+        _rewardsDataArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"rew"]];
+        _rewardsNumberArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"rnum"]];
+        cellNumber = _rewardsDataArray.count;
     }
     return self;
 }
@@ -27,20 +34,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     UIImage *image = [UIImage imageNamed:@"list_background.png"];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:image]];
     
-	UIImageView *badImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rewards.png"]];
+	badImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rewards.png"]];
     badImage.Frame = (CGRect){CGPointZero, badImage.image.size};
     badImage.center = CGPointMake(badImage.image.size.width + 40 , badImage.image.size.height/1.4);
     [self.view addSubview:badImage];
     
-       _goodthingTable  = [[UITableView alloc] initWithFrame:CGRectMake(0, badImage.frame.size.height+26, 320, self.view.frame.size.height -badImage.frame.size.height) style:UITableViewStylePlain];
-    _goodthingTable.backgroundColor = [UIColor clearColor];
-    _goodthingTable.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _goodthingTable.delegate = self;
-    _goodthingTable.dataSource = self;
-    [self.view addSubview:_goodthingTable];
+    _rewardsTable  = [[UITableView alloc] initWithFrame:CGRectMake(0, badImage.frame.size.height+26, 320, self.view.frame.size.height -badImage.frame.size.height) style:UITableViewStylePlain];
+    _rewardsTable.backgroundColor = [UIColor clearColor];
+    _rewardsTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _rewardsTable.delegate = self;
+    _rewardsTable.dataSource = self;
+    [self.view addSubview:_rewardsTable];
     
     UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     dailyBtn.Frame = (CGRect){CGPointZero, badImage.image.size};
@@ -51,7 +59,11 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    if (_rewardsDataArray.count == 0) {
+        return 1;
+    }else{
+        return cellNumber;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -61,63 +73,112 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
+    cell.imageView.image = [UIImage imageNamed:@"reward_item1.png"];
     
-    cell.imageView.image = [UIImage imageNamed:@"blank_list2.png"];
-    
-    _inputTextfiled = [[UITextField alloc] initWithFrame:CGRectMake(50.0f, 10.0f, 210.0f, 38.0f)];
+    _inputTextfiled = [[UITextField alloc] initWithFrame:CGRectMake(50.0f, 10.0f, 168.0f, 38.0f)];
     _inputTextfiled.delegate = self;
     _inputTextfiled.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _inputTextfiled.borderStyle = UITableViewCellStyleDefault;
     _inputTextfiled.returnKeyType = UIReturnKeySend;
-    _inputTextfiled.text = @"Dinner date";
+    if (_rewardsDataArray.count == 0 || _rewardsDataArray.count == indexPath.row) {
+        _inputTextfiled.text =nil;
+    }else{
+        _inputTextfiled.text = [_rewardsDataArray objectAtIndex:indexPath.row];
+    }
+    _inputTextfiled.tag = 1;
     [cell.contentView addSubview:_inputTextfiled];
     
-    _NumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    _NumBtn.frame = CGRectMake(272.0f, 11.0f, 38.0f, 40.0f);
-    [_NumBtn addTarget:self action:@selector(numberButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-    [cell.contentView addSubview:_NumBtn];
+    _textFiled = [[UITextField alloc] init];
+    _textFiled.delegate = self;
+    _textFiled.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    _textFiled.borderStyle = UITableViewCellStyleDefault;
+    _textFiled.returnKeyType = UIReturnKeyDefault;
+    _textFiled.textAlignment = UITextAlignmentCenter;
+    _textFiled.frame = CGRectMake(256.0f, 10.0f, 53.0f, 40.0f);
+    _textFiled.tag = 2;
+    if (_rewardsDataArray.count == 0 || _rewardsDataArray.count == indexPath.row) {
+        _textFiled.text = nil;
+    }else{
+        _textFiled.text = [_rewardsNumberArray objectAtIndex:indexPath.row];
+    }
+    [cell.contentView addSubview:_textFiled];
     
-    UILabel *btnLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 38, 40)];
-    btnLabel.text = @"200";
-    btnLabel.backgroundColor = [UIColor clearColor];
-    btnLabel.textAlignment = UITextAlignmentCenter;
-    [_NumBtn addSubview:btnLabel];
+    UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    addBtn.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"plus_sign.png"]];
+    addBtn.frame = CGRectMake(218.0f, 17.0f, 25.0f, 25.0f);
+    [addBtn addTarget:self action:@selector(buttonPressedClicked) forControlEvents:UIControlEventTouchUpInside];
+    [cell.contentView addSubview: addBtn];
     
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     return 60.0;
+}
+
+- (void)buttonPressedClicked
+{
+    if (_inputTextfiled.text == nil || _textFiled.text == nil) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Input Error" message:@"Please input all text" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+    }else{
+        cellNumber= _rewardsDataArray.count + 1;
+        [_rewardsTable reloadData];
+    }
 }
 
 - (void)dailyBtnClicked
 {
-    if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)]) {
+    if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])
+    {
         [[SidebarViewController share] showSideBarControllerWithDirection:SideBarShowDirectionLeft];
     }
 }
 
-- (void)numberButtonClicked
-{
-    _numberImage.hidden = !_numberImage.hidden;
-}
-
-- (void)setIDText:(NSString*)idText
-{
-    _inputTextfiled.text = idText;
-}
-
 #pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    NSInteger textNum = ((UITextField *)textField).tag;
+    UITableViewCell *cell = (UITableViewCell *)[textField superview].superview;
+    NSIndexPath *indexPath = [_rewardsTable indexPathForCell:cell];
+    _selectTextRow = indexPath.row;
+    if (textNum == 2) {
+        if (_inputTextfiled.text == nil) {
+            UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"Input Error" message:@"Please input task first" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alertview show];
+        }else{
+            textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+        }
+    }
+    _rewardsTable.frame = CGRectMake(0, badImage.frame.size.height+26 , 320, self.view.frame.size.height -badImage.frame.size.height - 30- 190);
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    NSInteger textNum = ((UITextField *)textField).tag;
+    
+    if (textNum == 1) {
+        if (_rewardsDataArray.count >= _selectTextRow +1) {
+            [_rewardsDataArray replaceObjectAtIndex:_selectTextRow withObject:_inputTextfiled.text];
+        }else{
+            [_rewardsDataArray addObject:_inputTextfiled.text];
+        }
+         NSLog(@"_rewards:%@",_rewardsDataArray);
+        [[NSUserDefaults standardUserDefaults] setObject:_rewardsDataArray forKey:@"rew"];
+    }else{
+        if (_rewardsNumberArray.count >= _selectTextRow+1) {
+            [_rewardsNumberArray replaceObjectAtIndex:_selectTextRow withObject:_textFiled.text];
+        }else{
+            [_rewardsNumberArray addObject:_textFiled.text];
+        }
+        NSLog(@"_rewardNum:%@",_rewardsNumberArray);
+        [[NSUserDefaults standardUserDefaults] setObject:_rewardsNumberArray forKey:@"rnum"];
+    }
+    _rewardsTable.frame = CGRectMake(0, badImage.frame.size.height+26 , 320, self.view.frame.size.height -badImage.frame.size.height - 30);
     return YES;
-}
-
-#pragma mark - Touch
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [_inputTextfiled resignFirstResponder];
 }
 
 - (void)didReceiveMemoryWarning

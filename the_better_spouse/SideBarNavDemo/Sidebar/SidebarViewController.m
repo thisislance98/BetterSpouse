@@ -29,7 +29,7 @@
 static SidebarViewController *rootViewCon;
 const int ContentOffset=257;
 const int ContentMinOffset=33;
-const float MoveAnimationDuration = 0.3;
+const float MoveAnimationDuration = 0.1;
 
 - (void)didReceiveMemoryWarning
 {
@@ -95,7 +95,6 @@ const float MoveAnimationDuration = 0.3;
 
 - (void)panInContentView:(UIPanGestureRecognizer *)panGestureReconginzer
 {
-    
     if (panGestureReconginzer.state == UIGestureRecognizerStateChanged)
     {
         CGFloat translation = [panGestureReconginzer translationInView:self.contentView].x;
@@ -119,7 +118,6 @@ const float MoveAnimationDuration = 0.3;
             {
                 [self moveAnimationWithDirection:SideBarShowDirectionNone duration:MoveAnimationDuration];
             }
-            
         }
         else //关
         {

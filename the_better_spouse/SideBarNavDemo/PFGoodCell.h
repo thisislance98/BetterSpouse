@@ -11,7 +11,7 @@
 
 @protocol goodCelldelegate <NSObject>
 - (void)showNumberImage:(UIButton *)sender;
-- (void)tableViewCGpointChange;
+- (void)tableViewCGpointChange:(UITextField *)sender;
 - (void)tableViewCGpointNormal;
 - (void)buttonPressedAction;
 - (void)getTaskString:(NSString *)inputText;
