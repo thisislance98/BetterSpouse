@@ -73,8 +73,8 @@ const float MoveAnimationDuration = 0.1;
     [self.navBackView addSubview:self.leftSideBarViewController.view];
     //[self.navBackView addSubview:self.rightSideBarViewController.view];
     
-    _panGestureReconginzer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panInContentView:)];
-    [self.contentView addGestureRecognizer:_panGestureReconginzer];
+    //_panGestureReconginzer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panInContentView:)];
+    //[self.contentView addGestureRecognizer:_panGestureReconginzer];
 }
 
 - (void)contentViewAddTapGestures
@@ -84,26 +84,26 @@ const float MoveAnimationDuration = 0.1;
         _tapGestureRecognizer = nil;
     }
     
-    _tapGestureRecognizer = [[UITapGestureRecognizer  alloc] initWithTarget:self action:@selector(tapOnContentView:)];
-    [self.contentView addGestureRecognizer:_tapGestureRecognizer];
+    //_tapGestureRecognizer = [[UITapGestureRecognizer  alloc] initWithTarget:self action:@selector(tapOnContentView:)];
+    //[self.contentView addGestureRecognizer:_tapGestureRecognizer];
 }
 
-- (void)tapOnContentView:(UITapGestureRecognizer *)tapGestureRecognizer
-{
-    [self moveAnimationWithDirection:SideBarShowDirectionNone duration:MoveAnimationDuration];
-}
+//- (void)tapOnContentView:(UITapGestureRecognizer *)tapGestureRecognizer
+//{
+//    [self moveAnimationWithDirection:SideBarShowDirectionNone duration:MoveAnimationDuration];
+//}
 
 - (void)panInContentView:(UIPanGestureRecognizer *)panGestureReconginzer
 {
     if (panGestureReconginzer.state == UIGestureRecognizerStateChanged)
     {
-        CGFloat translation = [panGestureReconginzer translationInView:self.contentView].x;
-        self.contentView.transform = CGAffineTransformMakeTranslation(translation+currentTranslate, 0);
-        UIView *view ;
+        //CGFloat translation = [panGestureReconginzer translationInView:self.contentView].x;
+        //self.contentView.transform = CGAffineTransformMakeTranslation(translation+currentTranslate, 0);
+        //UIView *view ;
         
-        view = self.leftSideBarViewController.view;
+        //view = self.leftSideBarViewController.view;
         
-        [self.navBackView bringSubviewToFront:view];
+       // [self.navBackView bringSubviewToFront:view];
         
     } else if (panGestureReconginzer.state == UIGestureRecognizerStateEnded)
     {
@@ -112,7 +112,7 @@ const float MoveAnimationDuration = 0.1;
         {
             if (currentTranslate>ContentMinOffset)
             {
-                [self moveAnimationWithDirection:SideBarShowDirectionLeft duration:MoveAnimationDuration];
+               // [self moveAnimationWithDirection:SideBarShowDirectionLeft duration:MoveAnimationDuration];
             }
             else
             {
@@ -248,7 +248,6 @@ const float MoveAnimationDuration = 0.1;
                 _tapGestureRecognizer = nil;
             }
             sideBarShowing = NO;
-            
             
         }else
         {

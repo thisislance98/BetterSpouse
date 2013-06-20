@@ -8,9 +8,13 @@
 
 #import "GoodViewController.h"
 #import "SidebarViewController.h"
+#import "PointsModel.h"
+
 @interface GoodViewController ()
 @property (nonatomic, strong) NSMutableArray *dataSourceArray;
 @property (nonatomic, strong) NSMutableArray *numberSourceArray;
+@property (nonatomic, strong) PointsModel *goodModel;
+
 @end
 
 @implementation GoodViewController
@@ -19,8 +23,9 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"Task"]];
-        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"Num"]];
+        _goodModel = [[PointsModel alloc] init];
+        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"alltask"]];
+        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"allscore"]];
     }
     return self;
 }
@@ -47,12 +52,12 @@
     _point.textAlignment = UITextAlignmentCenter;
     [_remainPoint addSubview:_point];
     
-    _goodthingTable  = [[UITableView alloc] initWithFrame:CGRectMake(0, _goodImage.frame.size.height+26, 320, self.view.frame.size.height -_goodImage.frame.size.height - _remainPoint.frame.size.height-32) style:UITableViewStylePlain];
-    _goodthingTable.backgroundColor = [UIColor clearColor];
-    _goodthingTable.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _goodthingTable.delegate = self;
-    _goodthingTable.dataSource = self;
-    [self.view addSubview:_goodthingTable];
+    _goodTable  = [[UITableView alloc] initWithFrame:CGRectMake(0, _goodImage.frame.size.height+26, 320, self.view.frame.size.height -_goodImage.frame.size.height - _remainPoint.frame.size.height-32) style:UITableViewStylePlain];
+    _goodTable.backgroundColor = [UIColor clearColor];
+    _goodTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _goodTable.delegate = self;
+    _goodTable.dataSource = self;
+    [self.view addSubview:_goodTable];
     
     UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     dailyBtn.frame = (CGRect){CGPointZero,_remainPoint.image.size.width/3,_remainPoint.image.size.height/1.5};
@@ -109,17 +114,40 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Make sure the task has done?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:nil, nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Make sure the task has done?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"NO", nil];
     [alert show];
     selectTask = indexPath.row;
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    [_dataSourceArray removeObjectAtIndex:selectTask];
-    [_numberSourceArray removeObjectAtIndex:selectTask];
-    [_goodthingTable reloadData];
+    if (buttonIndex == 0) {
+        [_dataSourceArray removeObjectAtIndex:selectTask];
+        [_numberSourceArray removeObjectAtIndex:selectTask];
+        [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:@"allscore"];
+        [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:@"alltask"];
+        [_goodTable reloadData];
+        PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
+        [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
+        [anotherPlayer setObject:[NSArray arrayWithArray:_dataSourceArray] forKey:@"task"];
+        [anotherPlayer setObject:[NSArray arrayWithArray:_numberSourceArray] forKey:@"score"];
+        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"badtask"] forKey:@"badtask"];
+        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"badscore"] forKey:@"badscore"];
+        [anotherPlayer saveInBackgroundWithBlock:^(BOOL succeeded,NSError *error){
+            if(succeeded){
+                NSLog(@"Object Uploaded");
+            }
+            else{
+                NSString *errorString = [[error userInfo] objectForKey:@"error"];
+                NSLog(@"Error:%@",errorString);
+                UIAlertView *uploadAlert = [[UIAlertView alloc] initWithTitle:@"Upload Error" message:@"Upload is failed" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:nil, nil];
+                [uploadAlert show];
+            }
+        }];
+        
+    }
 }
+
 - (void)dailyBtnClicked
 {
     if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])

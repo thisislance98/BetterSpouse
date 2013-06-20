@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "PointsModel.h"
 @protocol SideBarSelectDelegate ;
 
 @interface LeftSideBarViewController : UIViewController
@@ -17,7 +17,7 @@
     UIButton *goodBtn;
     UIButton *badBtn;
     UIButton *rewardBtn;
-    
+    PointsModel *model;
 }
 
 @property (assign,nonatomic)id<SideBarSelectDelegate>delegate;

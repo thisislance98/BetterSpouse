@@ -28,11 +28,13 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _ce = [[PFGoodCell alloc] init];
-        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"Task"]];
-        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"Num"]];
+        
+        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"alltask"]];
+        NSLog(@"data:%@",_dataSourceArray);
+        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"allscore"]];
         _tagNum = _dataSourceArray.count;
     }
     return self;
@@ -43,6 +45,9 @@
     [super viewDidLoad];
     UIImage *image = [UIImage imageNamed:@"list_background.png"];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:image]];
+    
+//    _defaultView = [[DefaultSettingsViewController alloc] init];
+//    _defaultView.delegate = self;
     
 	_goodImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"good_things.png"]];
     _goodImage.Frame = (CGRect){CGPointZero, _goodImage.image.size};
@@ -55,7 +60,7 @@
     [self.view addSubview:_remainPoints];
     
     _pointLabel = [[UILabel alloc] initWithFrame:CGRectMake(134, 9, 35, 26)];
-    _pointLabel.text = @"25";
+    _pointLabel.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"remainpoint"];
     _pointLabel.backgroundColor = [UIColor clearColor];
     _pointLabel.textAlignment = UITextAlignmentCenter;
     [_remainPoints addSubview:_pointLabel];
@@ -67,19 +72,19 @@
     _goodthingTable.dataSource = self;
     [self.view addSubview:_goodthingTable];
     
-    UIButton *badBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    badBtn.frame = (CGRect){CGPointZero,_remainPoints.image.size.width/3,_remainPoints.image.size.height/1.5};
-    badBtn.center = CGPointMake(_remainPoints.image.size.width/4 - 10, self.view.frame.size.height-23);
-    [badBtn setTitle:@"bad" forState:UIControlStateNormal];
+    UIButton *badBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [badBtn setImage:[UIImage imageNamed:@"continue_btn.png"] forState:UIControlStateNormal];
+    [badBtn setImage:[UIImage imageNamed:@"continue_btn_down.png"] forState:UIControlStateHighlighted];
+    badBtn.frame = CGRectMake(5, self.view.frame.size.height - 35,131 , 43);
     [badBtn addTarget:self action:@selector(badBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:badBtn];
     
-    UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    dailyBtn.frame = (CGRect){CGPointZero,_remainPoints.image.size.width/3,_remainPoints.image.size.height/1.5};
-    dailyBtn.center = CGPointMake(_remainPoints.image.size.width/2+10, self.view.frame.size.height-23);
-    [dailyBtn setTitle:@"daily" forState:UIControlStateNormal];
-    [dailyBtn addTarget:self action:@selector(dailyBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:dailyBtn];
+    //    UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    //    dailyBtn.frame = (CGRect){CGPointZero,_remainPoints.image.size.width/3,_remainPoints.image.size.height/1.5};
+    //    dailyBtn.center = CGPointMake(_remainPoints.image.size.width/2+10, self.view.frame.size.height-23);
+    //    [dailyBtn setTitle:@"daily" forState:UIControlStateNormal];
+    //    [dailyBtn addTarget:self action:@selector(dailyBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    //    [self.view addSubview:dailyBtn];
     
     _numberImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"good_smiles_bg.png"]];
     _numberImage.Frame = (CGRect){CGPointZero, _numberImage.image.size};
@@ -148,7 +153,7 @@
     if (_dataSourceArray.count == 0) {
         return 1;
     }else
-    return _tagNum;
+        return _tagNum;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -168,7 +173,7 @@
     if (_dataSourceArray.count == 0 || _dataSourceArray.count == indexPath.row) {
         [cell setcontentWithImage:nil task:nil number:nil];
     }else{
-    [cell setcontentWithImage:[[_numberSourceArray objectAtIndex:indexPath.row] intValue] task:[_dataSourceArray objectAtIndex:indexPath.row] number:[[_numberSourceArray objectAtIndex:indexPath.row] intValue]];
+        [cell setcontentWithImage:[[_numberSourceArray objectAtIndex:indexPath.row] intValue] task:[_dataSourceArray objectAtIndex:indexPath.row] number:[[_numberSourceArray objectAtIndex:indexPath.row] intValue]];
     }
     return cell;
 }
@@ -176,9 +181,19 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];  
+    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-   
+}
+
+#pragma defaultSetting delegate
+
+- (void)goodTableViewReload:(PointsModel *)data{
+    _model = data;
+    [_dataSourceArray addObjectsFromArray:_model.taskArray];
+    NSLog(@"data:%@",_dataSourceArray);
+    [_numberSourceArray addObjectsFromArray:_model.scoreArray];
+    _tagNum = _dataSourceArray.count;
+    [_goodthingTable reloadData];
 }
 
 #pragma PFGoodcell Delegate
@@ -211,20 +226,6 @@
 {
     PFBadthingViewController *badView = [[PFBadthingViewController alloc] init];
     [self.navigationController pushViewController:badView animated:YES];
-    
-    PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
-    [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
-    [anotherPlayer setObject:[NSArray arrayWithArray:_dataSourceArray] forKey:@"task"];
-    [anotherPlayer setObject:[NSArray arrayWithArray:_numberSourceArray] forKey:@"score"];
-    [anotherPlayer saveInBackgroundWithBlock:^(BOOL succeeded,NSError *error){
-        if(succeeded){
-            NSLog(@"Object Uploaded");
-        }
-        else{
-            NSString *errorString = [[error userInfo] objectForKey:@"error"];
-            NSLog(@"Error:%@",errorString);
-        }
-    }];
 }
 
 #pragma button cliecked
@@ -235,13 +236,13 @@
     [_goodthingTable reloadData];
 }
 
-- (void)dailyBtnClicked
-{
-    if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])
-    {
-        [[SidebarViewController share] showSideBarControllerWithDirection:SideBarShowDirectionLeft];
-    }
-}
+//- (void)dailyBtnClicked
+//{
+//    if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])
+//    {
+//        [[SidebarViewController share] showSideBarControllerWithDirection:SideBarShowDirectionLeft];
+//    }
+//}
 
 - (void)numberofButtonClicked:(id)sender
 {
@@ -252,15 +253,16 @@
         [_numberSourceArray addObject:[NSString stringWithFormat:@"%d",_number]];
     }
     NSLog(@"Nmudata:%@",_numberSourceArray);
-    [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:@"Num"];
+    [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:@"allscore"];
     _numberView.hidden = YES;
     [_goodthingTable reloadData];
     _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];
+    [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:@"remainpoint"];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-   
+    
     return YES;
 }
 
@@ -272,8 +274,8 @@
     }else{
         [_dataSourceArray addObject:inputText];
     }
+    [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:@"alltask"];
     _tagNum = _dataSourceArray.count;
-    [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:@"Task"];
 }
 
 - (void)didReceiveMemoryWarning

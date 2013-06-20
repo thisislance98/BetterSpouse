@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "PFGoodCell.h"
-@interface PFGoodthingViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,goodCelldelegate>{
+#import "PointsModel.h"
+#import "DefaultSettingsViewController.h"
+
+@interface PFGoodthingViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,goodCelldelegate,downloadDataForReload>{
     UITableView     *_goodthingTable;
     UITextField     *_inputTextfiled;
     UIButton        *_NumBtn;
@@ -19,11 +22,13 @@
     NSInteger        _tagNum;
     NSInteger       selectRow;
     NSInteger       textRow;
+
 }
 
 @property (nonatomic, strong) UILabel *btnLabel;
 @property (nonatomic, strong) NSMutableArray *dataSourceArray;
 @property (nonatomic, strong) NSMutableArray *numberSourceArray;
-
+@property (nonatomic, strong) PointsModel *model;
+@property (nonatomic, strong) DefaultSettingsViewController *defaultView;
 
 @end

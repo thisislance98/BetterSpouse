@@ -27,6 +27,9 @@
 		077F25FA1678605C004908EB /* SecondViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 077F25F81678605C004908EB /* SecondViewController.xib */; };
 		077F260416786A00004908EB /* SidebarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 077F260216786A00004908EB /* SidebarViewController.m */; };
 		077F260516786A00004908EB /* SidebarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 077F260316786A00004908EB /* SidebarViewController.xib */; };
+		561016101772DBDF009442EB /* LoginScreen3_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 5610160F1772DBDF009442EB /* LoginScreen3_background.png */; };
+		561016121772DBF2009442EB /* LoginScreen3_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 561016111772DBF2009442EB /* LoginScreen3_background@2x.png */; };
+		561016151772DDF7009442EB /* PFAddSpouseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 561016141772DDF6009442EB /* PFAddSpouseViewController.m */; };
 		56126F27175F39C600142E5B /* GoodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56126F26175F39C600142E5B /* GoodViewController.m */; };
 		56126F2A175F3DDE00142E5B /* BadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56126F29175F3DDE00142E5B /* BadViewController.m */; };
 		5616C948175D891F00596113 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5616C82A175D891E00596113 /* FacebookSDK.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -210,6 +213,10 @@
 		077F260116786A00004908EB /* SidebarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidebarViewController.h; sourceTree = "<group>"; };
 		077F260216786A00004908EB /* SidebarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SidebarViewController.m; sourceTree = "<group>"; };
 		077F260316786A00004908EB /* SidebarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SidebarViewController.xib; sourceTree = "<group>"; };
+		5610160F1772DBDF009442EB /* LoginScreen3_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LoginScreen3_background.png; sourceTree = "<group>"; };
+		561016111772DBF2009442EB /* LoginScreen3_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LoginScreen3_background@2x.png"; sourceTree = "<group>"; };
+		561016131772DDF6009442EB /* PFAddSpouseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFAddSpouseViewController.h; sourceTree = "<group>"; };
+		561016141772DDF6009442EB /* PFAddSpouseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFAddSpouseViewController.m; sourceTree = "<group>"; };
 		56126F25175F39C600142E5B /* GoodViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoodViewController.h; sourceTree = "<group>"; };
 		56126F26175F39C600142E5B /* GoodViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoodViewController.m; sourceTree = "<group>"; };
 		56126F28175F3DDD00142E5B /* BadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BadViewController.h; sourceTree = "<group>"; };
@@ -562,6 +569,7 @@
 				56FC4D531758358300C06C41 /* smile4.png */,
 				56FC4D541758358300C06C41 /* smile5.png */,
 				56FC4D551758358300C06C41 /* smile-1.png */,
+				5610160F1772DBDF009442EB /* LoginScreen3_background.png */,
 				56FC4D561758358300C06C41 /* smile-2.png */,
 				56FC4D571758358300C06C41 /* smile-3.png */,
 				56FC4D581758358400C06C41 /* smile-4.png */,
@@ -582,6 +590,7 @@
 				561E02461769914500E275FC /* add_spouseBG01@2x.png */,
 				561E02471769914500E275FC /* add_spouseBtn@2x.png */,
 				561E02481769914500E275FC /* add_spouseBtn2@2x.png */,
+				561016111772DBF2009442EB /* LoginScreen3_background@2x.png */,
 				561E023517695FE700E275FC /* btn_done_down@2x.png */,
 				561E023617695FE700E275FC /* btn_done_up@2x.png */,
 				56FC4D601758358400C06C41 /* bad_habits@2x.png */,
@@ -691,6 +700,8 @@
 				56FC4D091758327D00C06C41 /* PFGoodthingViewController.m */,
 				56FC4D0A1758327D00C06C41 /* PFRewardsViewController.h */,
 				56FC4D0B1758327D00C06C41 /* PFRewardsViewController.m */,
+				561016131772DDF6009442EB /* PFAddSpouseViewController.h */,
+				561016141772DDF6009442EB /* PFAddSpouseViewController.m */,
 			);
 			name = You_Good_Bad_Rewards;
 			sourceTree = "<group>";
@@ -912,6 +923,8 @@
 				561E024B1769914500E275FC /* add_spouseBtn@2x.png in Resources */,
 				561E024C1769914500E275FC /* add_spouseBtn2@2x.png in Resources */,
 				561E024E1769915200E275FC /* add_spouseBG01.png in Resources */,
+				561016101772DBDF009442EB /* LoginScreen3_background.png in Resources */,
+				561016121772DBF2009442EB /* LoginScreen3_background@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -938,6 +951,7 @@
 				56B74374175DD32200D03931 /* PointsModel.m in Sources */,
 				56126F27175F39C600142E5B /* GoodViewController.m in Sources */,
 				56126F2A175F3DDE00142E5B /* BadViewController.m in Sources */,
+				561016151772DDF7009442EB /* PFAddSpouseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

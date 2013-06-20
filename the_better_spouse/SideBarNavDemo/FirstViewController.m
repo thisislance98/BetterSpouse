@@ -11,6 +11,8 @@
 #import "SidebarViewController.h"
 #import "SecondViewController.h"
 #import "MySignUpViewController.h"
+#import "PFAddSpouseViewController.h"
+
 @interface FirstViewController ()
 @property (nonatomic, retain) DefaultSettingsViewController *loginORsignController;
 
@@ -66,7 +68,7 @@
 
 - (void)newCountBtnClicked
 {
-    MySignUpViewController *signView= [[MySignUpViewController alloc] init];
+    PFAddSpouseViewController *signView= [[PFAddSpouseViewController alloc] init];
     [self.navigationController pushViewController:signView animated:YES];
 }
 

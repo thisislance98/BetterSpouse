@@ -21,6 +21,8 @@
      UIRemoteNotificationTypeAlert |
      UIRemoteNotificationTypeSound];
     
+   
+    
     [Parse setApplicationId:@"GC8Zbs9bF8k7O1GUrLPf3tZUJXlNjrCV2FYpjtEK"
                   clientKey:@"yPc5QFaUttLncyyhgSIxusL49M6cBGgklRBhk599"];
     [PFFacebookUtils initializeFacebook];
@@ -42,6 +44,15 @@
     self.viewController = [[SidebarViewController alloc] initWithNibName:@"SidebarViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+    
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation addUniqueObject:@"Giants" forKey:@"channels"];
+    [currentInstallation saveInBackground];
+    
+    PFPush *push = [[PFPush alloc] init];
+    [push setChannel:@"Giants"];
+    [push setMessage:@"The Giants just scored!"];
+    [push sendPushInBackground];
     return YES;
 }
 
@@ -53,9 +64,24 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
     [currentInstallation saveInBackground];
 }
 
-- (void)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSDictionary *)userInfo {
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
     [PFPush handlePush:userInfo];
+    if (application.applicationState == UIApplicationStateActive) {
+        // The application was already running.
+    } else {
+        // The application was just brought from the background to the foreground,
+        // so we consider the app as having been "opened by a push notification."
+        [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
+    }
+}
+
+
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    // ... other Parse setup logic here
+    [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:[aNotification userInfo]];
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
@@ -101,8 +127,12 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    
     [FBSession.activeSession handleDidBecomeActive];
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    if (currentInstallation.badge != 0) {
+        currentInstallation.badge = 0;
+        [currentInstallation saveEventually];
+    }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

@@ -20,7 +20,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _badDataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"badtask"]];
-        _badNumberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"badNum"]];
+        _badNumberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"badscore"]];
     }
     return self;
 }
@@ -60,19 +60,19 @@
     [dailyBtn addTarget:self action:@selector(dailyBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:dailyBtn];
     
-//    UIButton *badBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    badBtn.frame = (CGRect){CGPointZero,_remain.image.size.width/3,_remain.image.size.height/1.5};
-//    badBtn.center = CGPointMake(_remain.image.size.width/4 - 10, self.view.frame.size.height-23);
-//    [badBtn setTitle:@"bad" forState:UIControlStateNormal];
-//    [badBtn addTarget:self action:@selector(badBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:badBtn];
-//    
-//    UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    dailyBtn.frame = (CGRect){CGPointZero,_remain.image.size.width/3,_remain.image.size.height/1.5};
-//    dailyBtn.center = CGPointMake(_remain.image.size.width/2+10, self.view.frame.size.height-23);
-//    [dailyBtn setTitle:@"daily" forState:UIControlStateNormal];
-//    [dailyBtn addTarget:self action:@selector(dailyBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:dailyBtn];
+    //    UIButton *badBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    //    badBtn.frame = (CGRect){CGPointZero,_remain.image.size.width/3,_remain.image.size.height/1.5};
+    //    badBtn.center = CGPointMake(_remain.image.size.width/4 - 10, self.view.frame.size.height-23);
+    //    [badBtn setTitle:@"bad" forState:UIControlStateNormal];
+    //    [badBtn addTarget:self action:@selector(badBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    //    [self.view addSubview:badBtn];
+    //
+    //    UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    //    dailyBtn.frame = (CGRect){CGPointZero,_remain.image.size.width/3,_remain.image.size.height/1.5};
+    //    dailyBtn.center = CGPointMake(_remain.image.size.width/2+10, self.view.frame.size.height-23);
+    //    [dailyBtn setTitle:@"daily" forState:UIControlStateNormal];
+    //    [dailyBtn addTarget:self action:@selector(dailyBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    //    [self.view addSubview:dailyBtn];
 }
 
 #pragma tableView delegate---------------
@@ -108,7 +108,7 @@
     label.textAlignment = UITextAlignmentCenter;
     label.text = [_badNumberSourceArray objectAtIndex:indexPath.row];
     [cell.contentView addSubview:label];
-
+    
     UIImageView *smileImg = [[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 34, 34)];
     smileImg.backgroundColor = [UIColor clearColor];
     smileImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"smile%@.png",label.text]];
@@ -121,8 +121,38 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Make sure the task has done?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"NO", nil];
+    [alert show];
+    selectTask = indexPath.row;
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        [_badDataSourceArray removeObjectAtIndex:selectTask];
+        [_badNumberSourceArray removeObjectAtIndex:selectTask];
+        [[NSUserDefaults standardUserDefaults] setObject:_badNumberSourceArray forKey:@"badscore"];
+        [[NSUserDefaults standardUserDefaults] setObject:_badDataSourceArray forKey:@"badtask"];
+        [_badThingTable reloadData];
+        PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
+        [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
+        [anotherPlayer setObject:[NSArray arrayWithArray:_badDataSourceArray] forKey:@"badtask"];
+        [anotherPlayer setObject:[NSArray arrayWithArray:_badNumberSourceArray] forKey:@"badscore"];
+        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"alltask"] forKey:@"task"];
+        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"allscore"] forKey:@"score"];
+        [anotherPlayer saveInBackgroundWithBlock:^(BOOL succeeded,NSError *error){
+            if(succeeded){
+                NSLog(@"Object Uploaded");
+            }
+            else{
+                NSString *errorString = [[error userInfo] objectForKey:@"error"];
+                NSLog(@"Error:%@",errorString);
+                UIAlertView *uploadAlert = [[UIAlertView alloc] initWithTitle:@"Upload Error" message:@"Upload is failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [uploadAlert show];
+            }
+        }];
+    }
+}
 - (void)dailyBtnClicked
 {
     if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])

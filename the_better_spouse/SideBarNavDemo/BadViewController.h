@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BadViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
+@interface BadViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>{
+    NSInteger selectTask;
+}
 @property (nonatomic, strong) UIImageView *badimage;
 @property (nonatomic, strong) UIImageView *remain;
 @property (nonatomic, strong) UILabel     *points;

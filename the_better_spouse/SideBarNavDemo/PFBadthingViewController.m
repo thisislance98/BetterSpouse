@@ -30,7 +30,7 @@
     {
         _ce = [[PFGoodCell alloc] init];
         _BadSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"badtask"]];
-        _badNumberArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"badNum"]];
+        _badNumberArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"badscore"]];
         _tagNum = _BadSourceArray.count;
     }
     return self;
@@ -167,10 +167,28 @@
 
 - (void)dailyBtnClicked
 {
-    if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])
-    {
-        [[SidebarViewController share] showSideBarControllerWithDirection:SideBarShowDirectionLeft];
-    }
+    PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
+    [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
+    [anotherPlayer setObject:[NSArray arrayWithArray:_BadSourceArray] forKey:@"badtask"];
+    [anotherPlayer setObject:[NSArray arrayWithArray:_badNumberArray] forKey:@"badscore"];
+    [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"alltask"] forKey:@"task"];
+    [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"allscore"] forKey:@"score"];
+    [anotherPlayer saveInBackgroundWithBlock:^(BOOL succeeded,NSError *error){
+        if(succeeded){
+            NSLog(@"Object Uploaded");
+            if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])
+            {
+                [[SidebarViewController share] showSideBarControllerWithDirection:SideBarShowDirectionLeft];
+            }
+        }
+        else{
+            NSString *errorString = [[error userInfo] objectForKey:@"error"];
+            NSLog(@"Error:%@",errorString);
+            UIAlertView *uploadAlert = [[UIAlertView alloc] initWithTitle:@"Upload Error" message:@"Upload is failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [uploadAlert show];
+        }
+    }];
+    
 }
 
 - (void)showNumberImage:(UIButton *)sender{
@@ -205,7 +223,7 @@
         [_badNumberArray addObject:[NSString stringWithFormat:@"%d",_number]];
     }
     NSLog(@"Nmudata:%@",_badNumberArray);
-    [[NSUserDefaults standardUserDefaults] setObject:_badNumberArray forKey:@"badNum"];
+    [[NSUserDefaults standardUserDefaults] setObject:_badNumberArray forKey:@"badscore"];
     _numberView.hidden = YES;
     [_badthingTable reloadData];
     _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];

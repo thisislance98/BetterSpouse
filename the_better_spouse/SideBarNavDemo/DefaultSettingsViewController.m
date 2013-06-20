@@ -8,10 +8,11 @@
 #import "DefaultSettingsViewController.h"
 #import "PFGoodthingViewController.h"
 #import "MySignUpViewController.h"
+#import "PointsModel.h"
 #import <Parse/PFQuery.h>
 
 @implementation DefaultSettingsViewController
-
+@synthesize delegate;
 #pragma mark - UIViewController
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -30,25 +31,33 @@
         // Present Log In View Controller
         [self presentViewController:logInViewController animated:YES completion:NULL];
     }else{
-        PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
-        [self.navigationController pushViewController:googView animated:YES];
-        
         PFQuery *query = [PFQuery queryWithClassName:@"player"]; //1
-        
-//        [query getObjectInBackgroundWithId:[NSString stringWithFormat:@"%@",[PFUser currentUser]] block:^(PFObject *player, NSError *error) {
-//            // Do something with the returned PFObject in the gameScore variable.
-//            NSLog(@"%@", player);
-//            NSMutableArray *array = [NSMutableArray arrayWithArray:[player objectForKey:@"task"]];
-//            NSLog(@"task:%@",array);
-//        }];
-        
         [query whereKey:@"username" equalTo:[PFUser currentUser]]; //2
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){ //4
             if(!error){
-                NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"User"];
-                PFObject *ps = dic[@"User"];
-                NSArray *array = [NSArray arrayWithArray:[ps objectForKey:@"task"]];
-                NSArray *array1 = [NSArray arrayWithArray:[ps objectForKey:@"score"]];
+//                NSLog(@"Successfully retrieved: %@",objects);
+
+                if (objects.count == 0) {
+                    PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
+                    [self.navigationController pushViewController:googView animated:YES];
+                }else{
+                    NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
+                    NSLog(@"dic:%@",dic);
+                    PFObject *ps = dic[@"player"];
+                    PointsModel *points = [[PointsModel alloc] initWithTaskArray:[ps objectForKey:@"task"] andScoreArray:[ps objectForKey:@"score"]];
+                    points.userName = [ps objectForKey:@"username"];
+                    NSLog(@"username:%@",points.userName);
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"task"] forKey:@"alltask"];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"score"] forKey:@"allscore"];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badtask"] forKey:@"badtask"];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badscore"] forKey:@"badscore"];
+                    PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
+                    [self.navigationController pushViewController:googView animated:YES];
+                }
+                
+//                if (points) {
+//                    [delegate goodTableViewReload:points];
+//                }
             }else{
                 NSString *errorString = [[error userInfo]objectForKey:@"error"];
                 NSLog(@"Error:%@",errorString);
@@ -71,22 +80,9 @@
 }
 
 // Sent to the delegate when a PFUser is logged in.
-- (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user {
+- (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user
+{
     [self dismissViewControllerAnimated:YES completion:NULL];
-    PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
-    [self.navigationController pushViewController:googView animated:YES];
-    PFQuery *query = [PFQuery queryWithClassName:@"User"]; //1
-    [query whereKey:@"username" equalTo:[PFUser currentUser]]; //2
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){ //4
-        if(!error){
-            NSLog(@"Successfully retrieved: %@",objects);
-        }else{
-            
-            NSString *errorString = [[error userInfo]objectForKey:@"error"];
-            NSLog(@"Error:%@",errorString);
-        }
-        
-    }];
 }
 
 // Sent to the delegate when the log in attempt fails.
@@ -123,8 +119,6 @@
 // Sent to the delegate when a PFUser is signed up.
 - (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user {
     [self dismissViewControllerAnimated:YES completion:NULL];
-    PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
-    [self.navigationController pushViewController:googView animated:YES];
 }
 
 // Sent to the delegate when the sign up attempt fails.

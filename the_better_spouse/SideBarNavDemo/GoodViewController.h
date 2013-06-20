@@ -15,5 +15,5 @@
 @property (nonatomic, strong) UIImageView *goodImage;
 @property (nonatomic, strong) UIImageView *remainPoint;
 @property (nonatomic, strong) UILabel     *point;
-@property (nonatomic, strong) UITableView *goodthingTable;
+@property (nonatomic, strong) UITableView *goodTable;
 @end

@@ -10,4 +10,14 @@
 
 @implementation PointsModel
 
+- (id)initWithTaskArray:(NSMutableArray *)taskArray andScoreArray:(NSMutableArray *)scoreArray
+{
+    if (self = [super init]) {
+        _taskArray = taskArray;
+        _scoreArray = scoreArray;
+        NSLog(@"-------:%@---------:%@",_taskArray,_scoreArray);
+    }
+    return self;
+}
+
 @end

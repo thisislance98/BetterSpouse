@@ -21,17 +21,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"list_background.png"]]];
+    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"LoginScreen3_background.png"]]];
     
-    UIImageView *welcomeIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"welcome.png"]];
-    welcomeIcon.Frame = (CGRect){CGPointZero, welcomeIcon.image.size};
-    welcomeIcon.center = CGPointMake(welcomeIcon.image.size.width + 35 , self.view.frame.size.height / 13);
-    [self.view addSubview:welcomeIcon];
-    
-    UIImageView *betterIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"title.png"]];
-    betterIcon.frame = (CGRect){CGPointZero,betterIcon.image.size};
-    betterIcon.center = CGPointMake(betterIcon.image.size.width/2 + 3,self.view.frame.size.height / 6.5);
-    [self.view addSubview:betterIcon];
+    //    UIImageView *welcomeIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"welcome.png"]];
+    //    welcomeIcon.Frame = (CGRect){CGPointZero, welcomeIcon.image.size};
+    //    welcomeIcon.center = CGPointMake(welcomeIcon.image.size.width + 35 , self.view.frame.size.height / 13);
+    //    [self.view addSubview:welcomeIcon];
+    //
+    //    UIImageView *betterIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"title.png"]];
+    //    betterIcon.frame = (CGRect){CGPointZero,betterIcon.image.size};
+    //    betterIcon.center = CGPointMake(betterIcon.image.size.width/2 + 3,self.view.frame.size.height / 6.5);
+    //    [self.view addSubview:betterIcon];
     
     fieldsBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"user_info.png"]];
     fieldsBackground.backgroundColor = [UIColor clearColor];
@@ -81,33 +81,39 @@
 - (void)newCountBtnClicked
 {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setObject:_usernameField.text forKey:@"username"];
-    [dic setObject:_passwordField.text forKey:@"password"];
-    [self signUpViewController:(PFSignUpViewController *)self shouldBeginSignUp:dic];
-    
-    PFUser *user =[PFUser user];
-    user.username = self.usernameField.text;
-    user.password = self.passwordField.text;
-    
-    if ([_confirmTF.text isEqualToString:_passwordField.text]) {
-        [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if(!error){
-                PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
-                [self.navigationController pushViewController:googView animated:YES];
-            }
-        }];
+    if(_usernameField.text  && _passwordField.text &&_confirmTF.text)
+    {
+        [dic setObject:_usernameField.text forKey:@"username"];
+        [dic setObject:_passwordField.text forKey:@"password"];
+        [self signUpViewController:(PFSignUpViewController *)self shouldBeginSignUp:dic];
+        PFUser *user =[PFUser user];
+        user.username = self.usernameField.text;
+        user.password = self.passwordField.text;
+        
+        if ([_confirmTF.text isEqualToString:_passwordField.text]) {
+            [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if(!error){
+                    PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
+                    [self.navigationController pushViewController:googView animated:YES];
+                }
+            }];
+        }else{
+            UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:@"Error" message:@"Twice Password is different" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alertView show];
+        }
     }else{
-        UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:@"Error" message:@"Twice Password is different" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        UIAlertView *alertView =[[UIAlertView alloc] initWithTitle:@"Error" message:@"Please input all text" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alertView show];
     }
+    
 }
-     
+
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-
-     [_numCountBtn setFrame:CGRectMake(self.view.frame.size.width/7, self.view.frame.size.height / 1.3, 238, 41)];
+    
+    [_numCountBtn setFrame:CGRectMake(self.view.frame.size.width/7, self.view.frame.size.height / 1.3, 238, 41)];
     self.fieldsBackground.frame = CGRectMake(20, fieldsBackground.frame.size.height*2.3, 281, 98);
-   // self.fieldsBackground.center = CGPointMake(self.view.frame.size.width / 2, fieldsBackground.frame.size.height*2.8);
+    // self.fieldsBackground.center = CGPointMake(self.view.frame.size.width / 2, fieldsBackground.frame.size.height*2.8);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -116,13 +122,13 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
 {
-      self.fieldsBackground.frame = CGRectMake(20, self.view.frame.size.height/2 - 15 - 100, 281, 98);
+    self.view.frame = CGRectMake(0, -200 , self.view.frame.size.width, self.view.frame.size.height);
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-     self.fieldsBackground.frame = CGRectMake(20, self.view.frame.size.height/2 - 15, 281, 98);
+    self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     return YES;
 }
 
