@@ -14,6 +14,7 @@
 #import "PFBadthingViewController.h"
 #import "GoodViewController.h"
 #import "BadViewController.h"
+#import "RewardViewController.h"
 
 @interface LeftSideBarViewController ()
 {
@@ -30,11 +31,26 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        if([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]])
+        {
+            NSString *spouseString = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+            PFQuery *query = [PFQuery queryWithClassName:@"player"]; //1
+            [query whereKey:@"object" equalTo:spouseString]; //2
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){ //4
+                if(!error){
+                    NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
+                    PFObject *ps = dic[@"player"];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"task"] forKey:[NSString stringWithFormat:@"%@task",spouseString]];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"score"] forKey:[NSString stringWithFormat:@"%@score",spouseString]];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badtask"] forKey:[NSString stringWithFormat:@"%@badtask",spouseString]];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badscore"] forKey:[NSString stringWithFormat:@"%@badscore",spouseString]];
+                }
+            }];
+        }
     }
     return self;
 }
-
+    
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -62,14 +78,14 @@
     themLabel.textAlignment = UITextAlignmentCenter;
     [self.view addSubview:themLabel];
     
-    UILabel *youPointsLabel = [[UILabel alloc] initWithFrame:CGRectMake(140, self.view.frame.size.height - 190, 100, 25)];
-    youPointsLabel.text = @"400";
-    youPointsLabel.backgroundColor = [UIColor clearColor];
-    youPointsLabel.textAlignment = UITextAlignmentCenter;
-    [self.view addSubview:youPointsLabel];
+    _youPointsLabel = [[UILabel alloc] initWithFrame:CGRectMake(140, self.view.frame.size.height - 190, 100, 25)];
+    _youPointsLabel.text = @"400";
+    _youPointsLabel.backgroundColor = [UIColor clearColor];
+    _youPointsLabel.textAlignment = UITextAlignmentCenter;
+    [self.view addSubview:_youPointsLabel];
     
-    UILabel *themPointsLabel = [[UILabel alloc] initWithFrame:CGRectMake(140, self.view.frame.size.height - 132, 100, 25)];
-    themPointsLabel.text = @"625";
+    themPointsLabel = [[UILabel alloc] initWithFrame:CGRectMake(140, self.view.frame.size.height - 132, 100, 25)];
+    themPointsLabel.text = @"325";
     themPointsLabel.backgroundColor = [UIColor clearColor];
     themPointsLabel.textAlignment = UITextAlignmentCenter;
     [self.view addSubview:themPointsLabel];
@@ -119,6 +135,11 @@
     [rewardBtn addTarget:self action:@selector(rewardsBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     rewardBtn.tag = 3;
     [self.view addSubview:rewardBtn];
+    
+    winView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"winning.png"]];
+    [self.view addSubview:winView];
+    
+    [self showWinner];
 }
 
 - (void)rewardsBtnClicked:(id)sender
@@ -129,17 +150,31 @@
     }
 }
 
-- (void)goodBtnClicked
+- (void)showWinner
 {
-    PFGoodthingViewController *goodView = [[PFGoodthingViewController alloc] init];
-    [self.navigationController pushViewController:goodView animated:YES];
+    if ([_youPointsLabel.text intValue] > [themPointsLabel.text intValue])
+    {
+        [winView setFrame:CGRectMake(17, self.view.frame.size.height - 183- winView.image.size.height, winView.image.size.width, winView.image.size.height)];
+    }
+    else if([_youPointsLabel.text intValue] < [themPointsLabel.text intValue])
+    {
+        [winView setFrame:CGRectMake(17, self.view.frame.size.height -126  - winView.image.size.height, winView.image.size.width, winView.image.size.height)];
+    }else{
+        winView.hidden = YES;
+    }
 }
 
-- (void)badBtnClicked
-{
-    PFBadthingViewController *badView = [[PFBadthingViewController alloc] init];
-    [self.navigationController pushViewController:badView animated:YES];
-}
+//- (void)goodBtnClicked
+//{
+//    PFGoodthingViewController *goodView = [[PFGoodthingViewController alloc] init];
+//    [self.navigationController pushViewController:goodView animated:YES];
+//}
+//
+//- (void)badBtnClicked
+//{
+//    PFBadthingViewController *badView = [[PFBadthingViewController alloc] init];
+//    [self.navigationController pushViewController:badView animated:YES];
+//}
 
 - (void)youBtnClicked
 {
@@ -152,6 +187,7 @@
 {
     goodBtn.tag = 4;
     badBtn.tag = 5;
+    rewardBtn.tag = 6;
 }
 
 - (void)didReceiveMemoryWarning
@@ -171,28 +207,33 @@
         return nav ;
     }
     else if (index == 1){
-        PFGoodthingViewController *con = [[PFGoodthingViewController alloc] initWithNibName:nil bundle:nil];
+        GoodViewController *con = [[GoodViewController alloc] initWithNibName:nil bundle:nil viewNumber:index];
         UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
         nav.navigationBar.hidden = YES;
         return nav ;
     }
     else if (index == 2){
-        PFBadthingViewController *con = [[PFBadthingViewController alloc] initWithNibName:nil bundle:nil];
+        BadViewController *con = [[BadViewController alloc] initWithNibName:nil bundle:nil viewNumber:index];
         UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
         nav.navigationBar.hidden = YES;
         return nav ;
     }else if(index == 3){
-        PFRewardsViewController *con = [[PFRewardsViewController alloc] initWithNibName:nil bundle:nil];
+        RewardViewController *con = [[RewardViewController alloc] initWithNibName:nil bundle:nil viewNumber:index];
         UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
         nav.navigationBar.hidden = YES;
         return nav ;
     }else if(index == 4){
-        GoodViewController *con = [[GoodViewController alloc] initWithNibName:nil bundle:nil];
+        GoodViewController *con = [[GoodViewController alloc] initWithNibName:nil bundle:nil viewNumber:index];
         UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
         nav.navigationBar.hidden = YES;
         return nav ;
-    }else {
-        BadViewController *con = [[BadViewController alloc] initWithNibName:nil bundle:nil];
+    }else if (index == 5){
+        BadViewController *con = [[BadViewController alloc] initWithNibName:nil bundle:nil viewNumber:index];
+        UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
+        nav.navigationBar.hidden = YES;
+        return nav;
+    }else{
+        RewardViewController *con = [[RewardViewController alloc] initWithNibName:nil bundle:nil viewNumber:index];
         UINavigationController *nav= [[UINavigationController alloc] initWithRootViewController:con];
         nav.navigationBar.hidden = YES;
         return nav ;

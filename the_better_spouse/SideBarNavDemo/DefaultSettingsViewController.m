@@ -10,6 +10,7 @@
 #import "MySignUpViewController.h"
 #import "PointsModel.h"
 #import <Parse/PFQuery.h>
+#import "PFAddSpouseViewController.h"
 
 @implementation DefaultSettingsViewController
 @synthesize delegate;
@@ -42,17 +43,23 @@
                     [self.navigationController pushViewController:googView animated:YES];
                 }else{
                     NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
-                    NSLog(@"dic:%@",dic);
                     PFObject *ps = dic[@"player"];
                     PointsModel *points = [[PointsModel alloc] initWithTaskArray:[ps objectForKey:@"task"] andScoreArray:[ps objectForKey:@"score"]];
                     points.userName = [ps objectForKey:@"username"];
                     NSLog(@"username:%@",points.userName);
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"task"] forKey:@"alltask"];
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"score"] forKey:@"allscore"];
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badtask"] forKey:@"badtask"];
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badscore"] forKey:@"badscore"];
-                    PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
-                    [self.navigationController pushViewController:googView animated:YES];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"task"] forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"score"] forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badtask"] forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badscore"] forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];
+                    if (![[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]]) {
+                        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
+                        PFAddSpouseViewController *addView = [[PFAddSpouseViewController alloc] init];
+                        [self.navigationController pushViewController:addView animated:YES];
+                    }else{
+                        PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
+                        [self.navigationController pushViewController:googView animated:YES];
+                    }
+
                 }
                 
 //                if (points) {
@@ -82,7 +89,12 @@
 // Sent to the delegate when a PFUser is logged in.
 - (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user
 {
+    PFObject *query = [PFObject objectWithClassName:@"player"];
+    [query setObject:[PFUser currentUser].username forKey:@"userid"];
+    [query setObject:[PFUser currentUser].objectId forKey:@"object"];
+    [query saveInBackground];
     [self dismissViewControllerAnimated:YES completion:NULL];
+    
 }
 
 // Sent to the delegate when the log in attempt fails.

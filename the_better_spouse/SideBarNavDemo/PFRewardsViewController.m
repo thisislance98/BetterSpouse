@@ -24,8 +24,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self)
     {
-        _rewardsDataArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"rew"]];
-        _rewardsNumberArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"rnum"]];
+        _rewardsDataArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@reward",[PFUser currentUser]]]];
+        _rewardsNumberArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@rewardnum",[PFUser currentUser]]]];
         cellNumber = _rewardsDataArray.count;
     }
     return self;
@@ -159,15 +159,17 @@
 {
     [textField resignFirstResponder];
     NSInteger textNum = ((UITextField *)textField).tag;
-    
+    NSLog(@"%d",_selectTextRow);
     if (textNum == 1) {
         if (_rewardsDataArray.count >= _selectTextRow +1) {
             [_rewardsDataArray replaceObjectAtIndex:_selectTextRow withObject:_inputTextfiled.text];
+             [_rewardsTable reloadData];
         }else{
             [_rewardsDataArray addObject:_inputTextfiled.text];
         }
          NSLog(@"_rewards:%@",_rewardsDataArray);
-        [[NSUserDefaults standardUserDefaults] setObject:_rewardsDataArray forKey:@"rew"];
+        cellNumber = _rewardsDataArray.count;
+        [[NSUserDefaults standardUserDefaults] setObject:_rewardsDataArray forKey:[NSString stringWithFormat:@"%@reward",[PFUser currentUser]]];
     }else{
         if (_rewardsNumberArray.count >= _selectTextRow+1) {
             [_rewardsNumberArray replaceObjectAtIndex:_selectTextRow withObject:_textFiled.text];
@@ -175,7 +177,8 @@
             [_rewardsNumberArray addObject:_textFiled.text];
         }
         NSLog(@"_rewardNum:%@",_rewardsNumberArray);
-        [[NSUserDefaults standardUserDefaults] setObject:_rewardsNumberArray forKey:@"rnum"];
+        [[NSUserDefaults standardUserDefaults] setObject:_rewardsNumberArray forKey:[NSString stringWithFormat:@"%@rewardnum",[PFUser currentUser]]];
+        [_rewardsTable reloadData];
     }
     _rewardsTable.frame = CGRectMake(0, badImage.frame.size.height+26 , 320, self.view.frame.size.height -badImage.frame.size.height - 30);
     return YES;

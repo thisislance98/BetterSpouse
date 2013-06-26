@@ -8,6 +8,7 @@
 
 #import "PFAddSpouseViewController.h"
 #import "PFGoodthingViewController.h"
+
 @interface PFAddSpouseViewController ()
 
 @end
@@ -58,23 +59,38 @@
     [addSpouseBtn setFrame:CGRectMake(46, self.view.frame.size.height - 60, 237, 51)];
     [addSpouseBtn addTarget:self action:@selector(addSpouseBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:addSpouseBtn];
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [button setFrame:CGRectMake(100, 41, 100, 30)];
+    [button addTarget:self action:@selector(showMeLaterClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+}
+
+- (void)showMeLaterClicked
+{
+    PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
+    [self.navigationController pushViewController:googView animated:YES];
 }
 
 - (void)addSpouseBtnClicked
 {
     if (_userText.text != nil) {
-        PFQuery *query = [PFQuery queryWithClassName:@"User"]; //1
-        
-        [query whereKey:@"username" equalTo:_userText.text]; //2
+        PFQuery *query = [PFQuery queryWithClassName:@"player"]; //1
+        [query whereKey:@"userid" equalTo:_userText.text]; //2
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){ //4
             if(!error){
-                NSLog(@"Successfully retrieved: %@",objects);
-//                    NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"User"];
-//                    PFObject *ps = dic[@"User"];
-//                    NSString *username = [ps objectForKey:@"username"];
-//                    NSLog(@"username:%@",username);
-//                    PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
-//                    [self.navigationController pushViewController:googView animated:YES];
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
+                    NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
+                    PFObject *ps = dic[@"player"];
+                NSString *spouseName = [ps objectForKey:@"object"];
+                [[NSUserDefaults standardUserDefaults] setObject:spouseName forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+                [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"task"] forKey:[NSString stringWithFormat:@"%@task",spouseName]];
+                [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"score"] forKey:[NSString stringWithFormat:@"%@score",spouseName]];
+                [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badtask"] forKey:[NSString stringWithFormat:@"%@badtask",spouseName]];
+                [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badscore"] forKey:[NSString stringWithFormat:@"%@badscore",spouseName]];
+    
+                PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
+                [self.navigationController pushViewController:googView animated:YES];
             }else{
                 NSString *errorString = [[error userInfo]objectForKey:@"error"];
                 NSLog(@"Error:%@",errorString);

@@ -18,8 +18,11 @@
     UIButton *badBtn;
     UIButton *rewardBtn;
     PointsModel *model;
+    UILabel *themPointsLabel;
+    UIImageView *winView;
 }
 
 @property (assign,nonatomic)id<SideBarSelectDelegate>delegate;
+@property (nonatomic, strong) UILabel *youPointsLabel;
 @end
 

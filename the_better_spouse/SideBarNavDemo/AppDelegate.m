@@ -45,25 +45,26 @@
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation addUniqueObject:@"Giants" forKey:@"channels"];
-    [currentInstallation saveInBackground];
-    
-    PFPush *push = [[PFPush alloc] init];
-    [push setChannel:@"Giants"];
-    [push setMessage:@"The Giants just scored!"];
-    [push sendPushInBackground];
+//    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+//    [currentInstallation addUniqueObject:@"Giants" forKey:@"channels"];
+//    [currentInstallation saveInBackground];
+//    
+//    PFPush *push = [[PFPush alloc] init];
+//    [push setChannel:@"Giants"];
+//    [push setMessage:@"The Giants just scored!"];
+//    [push sendPushInBackground];
     return YES;
 }
 
 - (void)application:(UIApplication *)application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
     // Store the deviceToken in the current installation and save it to Parse.
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation setDeviceTokenFromData:newDeviceToken];
-    [currentInstallation saveInBackground];
+    [PFPush storeDeviceToken:newDeviceToken];
+   
+    [[PFInstallation currentInstallation] addUniqueObject:@""forKey:@"channels"];
+    [[PFInstallation currentInstallation] saveEventually];
 }
-
+    
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
@@ -76,8 +77,6 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
         [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
     }
 }
-
-
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     // ... other Parse setup logic here

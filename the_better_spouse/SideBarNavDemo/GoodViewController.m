@@ -19,13 +19,20 @@
 
 @implementation GoodViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil viewNumber:(int)number
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        _goodModel = [[PointsModel alloc] init];
-        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"alltask"]];
-        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"allscore"]];
+        viewNumber = number;
+        if (number == 1) {
+            _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]]];
+            _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]]];
+        }else{
+            NSString *spouse = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+            _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@task",spouse]]];
+            _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@score",spouse]]];
+        }
+        
     }
     return self;
 }
@@ -106,17 +113,24 @@
     smileImg.backgroundColor = [UIColor clearColor];
     smileImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"smile%d.png",[[_numberSourceArray objectAtIndex:indexPath.row] intValue]]];
     [cell.contentView addSubview:smileImg];
+    if (viewNumber !=1) {
+        cell.selectionStyle = NO;
+    }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Make sure the task has done?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"NO", nil];
-    [alert show];
-    selectTask = indexPath.row;
+    if (viewNumber == 1) {
+        [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Make sure the task has done?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"NO", nil];
+        [alert show];
+        selectTask = indexPath.row;
+    }else{
+        UITableViewCell *cell = [_goodTable cellForRowAtIndexPath:indexPath];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    }
+    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -124,15 +138,22 @@
     if (buttonIndex == 0) {
         [_dataSourceArray removeObjectAtIndex:selectTask];
         [_numberSourceArray removeObjectAtIndex:selectTask];
-        [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:@"allscore"];
-        [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:@"alltask"];
+        [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
+        [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
         [_goodTable reloadData];
+        
         PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
+        [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
+        [anotherPlayer setObject:[PFUser currentUser].objectId forKey:@"object"];
+        if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]]) {
+            [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] forKey:@"spouse"];
+        }
         [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
         [anotherPlayer setObject:[NSArray arrayWithArray:_dataSourceArray] forKey:@"task"];
         [anotherPlayer setObject:[NSArray arrayWithArray:_numberSourceArray] forKey:@"score"];
-        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"badtask"] forKey:@"badtask"];
-        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"badscore"] forKey:@"badscore"];
+        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]] forKey:@"badtask"];
+        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]] forKey:@"badscore"];
+        
         [anotherPlayer saveInBackgroundWithBlock:^(BOOL succeeded,NSError *error){
             if(succeeded){
                 NSLog(@"Object Uploaded");

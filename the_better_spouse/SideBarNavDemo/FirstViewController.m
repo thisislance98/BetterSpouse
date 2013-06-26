@@ -68,7 +68,7 @@
 
 - (void)newCountBtnClicked
 {
-    PFAddSpouseViewController *signView= [[PFAddSpouseViewController alloc] init];
+    MySignUpViewController *signView= [[MySignUpViewController alloc] init];
     [self.navigationController pushViewController:signView animated:YES];
 }
 

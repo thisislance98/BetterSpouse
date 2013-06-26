@@ -29,8 +29,8 @@
     if (self)
     {
         _ce = [[PFGoodCell alloc] init];
-        _BadSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"badtask"]];
-        _badNumberArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"badscore"]];
+        _BadSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]]];
+        _badNumberArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]]];
         _tagNum = _BadSourceArray.count;
     }
     return self;
@@ -53,9 +53,15 @@
     [self.view addSubview:_remainPoint];
     
     _pointLabel = [[UILabel alloc] initWithFrame:CGRectMake(134, 9, 35, 26)];
-    _pointLabel.text = @"25";
     _pointLabel.backgroundColor = [UIColor clearColor];
     _pointLabel.textAlignment = UITextAlignmentCenter;
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat: @"%@badremain",[PFUser currentUser]]]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat: @"%@badremain",[PFUser currentUser]]];
+        _pointLabel.text = @"-50";
+        [[NSUserDefaults standardUserDefaults] setObject:@"-50" forKey:[NSString stringWithFormat: @"%@badremainpoint",[PFUser currentUser]]];
+    }else{
+        _pointLabel.text = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat: @"%@badremainpoint",[PFUser currentUser]]];
+    }
     [_remainPoint addSubview:_pointLabel];
     
     _badthingTable  = [[UITableView alloc] initWithFrame:CGRectMake(0, _badImage.frame.size.height+26, 320, self.view.frame.size.height -_badImage.frame.size.height - _remainPoint.frame.size.height-32) style:UITableViewStylePlain];
@@ -145,7 +151,7 @@
         cell = [[PFGoodCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
         cell.beDelegate = self;
     }
- 
+    
     if (_BadSourceArray.count == 0 || _BadSourceArray.count == indexPath.row) {
         [cell setcontentWithImage:nil task:nil number:nil];
     }else{
@@ -169,28 +175,47 @@
 {
     PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
     [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
-    [anotherPlayer setObject:[NSArray arrayWithArray:_BadSourceArray] forKey:@"badtask"];
-    [anotherPlayer setObject:[NSArray arrayWithArray:_badNumberArray] forKey:@"badscore"];
-    [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"alltask"] forKey:@"task"];
-    [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"allscore"] forKey:@"score"];
-    [anotherPlayer saveInBackgroundWithBlock:^(BOOL succeeded,NSError *error){
-        if(succeeded){
-            NSLog(@"Object Uploaded");
-            if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])
-            {
-                [[SidebarViewController share] showSideBarControllerWithDirection:SideBarShowDirectionLeft];
+    if (_BadSourceArray.count == 0) {
+  
+        [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
+        
+        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]] forKey:@"task"];
+        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]] forKey:@"score"];
+        [anotherPlayer save];
+        if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]]) {
+            [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] forKey:@"spouse"];
+        }
+        if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])
+        {
+            [[SidebarViewController share] showSideBarControllerWithDirection:SideBarShowDirectionLeft];
+        }
+    }else{
+        [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
+        [anotherPlayer setObject:[PFUser currentUser].objectId forKey:@"object"];
+        if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]]) {
+            [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] forKey:@"spouse"];
+        }
+        [anotherPlayer setObject:[NSArray arrayWithArray:_BadSourceArray] forKey:@"badtask"];
+        [anotherPlayer setObject:[NSArray arrayWithArray:_badNumberArray] forKey:@"badscore"];
+        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]] forKey:@"task"];
+        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]] forKey:@"score"];
+        [anotherPlayer saveInBackgroundWithBlock:^(BOOL succeeded,NSError *error){
+            if(succeeded){
+                NSLog(@"Object Uploaded");
+                if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])
+                {
+                    [[SidebarViewController share] showSideBarControllerWithDirection:SideBarShowDirectionLeft];
+                }
             }
-        }
-        else{
-            NSString *errorString = [[error userInfo] objectForKey:@"error"];
-            NSLog(@"Error:%@",errorString);
-            UIAlertView *uploadAlert = [[UIAlertView alloc] initWithTitle:@"Upload Error" message:@"Upload is failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [uploadAlert show];
-        }
-    }];
-    
+            else{
+                NSString *errorString = [[error userInfo] objectForKey:@"error"];
+                NSLog(@"Error:%@",errorString);
+                UIAlertView *uploadAlert = [[UIAlertView alloc] initWithTitle:@"Upload Error" message:@"Upload is failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [uploadAlert show];
+            }
+        }];
+    }
 }
-
 - (void)showNumberImage:(UIButton *)sender{
     
     UITableViewCell* buttonCell = (UITableViewCell*)[sender superview].superview;
@@ -218,15 +243,20 @@
 {
     _number = ((UIButton *)sender).tag;
     if (_badNumberArray.count >= _row +1) {
+        NSString *remberNum = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] + [[_badNumberArray objectAtIndex:_row] intValue]];
         [_badNumberArray replaceObjectAtIndex:_row withObject:[NSString stringWithFormat:@"%d",_number]];
+        _pointLabel.text = [NSString stringWithFormat:@"%d",[remberNum intValue] - _number];
+        [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:@"badremainpoint"];
     }else{
         [_badNumberArray addObject:[NSString stringWithFormat:@"%d",_number]];
+        _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];
+        [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat: @"%@badremainpoint",[PFUser currentUser]]];
     }
     NSLog(@"Nmudata:%@",_badNumberArray);
-    [[NSUserDefaults standardUserDefaults] setObject:_badNumberArray forKey:@"badscore"];
+    [[NSUserDefaults standardUserDefaults] setObject:_badNumberArray forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];
     _numberView.hidden = YES;
     [_badthingTable reloadData];
-    _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];
+    
 }
 
 - (void)getTaskString:(NSString *)inputText
@@ -239,7 +269,7 @@
     }
     
     _tagNum = _BadSourceArray.count;
-    [[NSUserDefaults standardUserDefaults] setObject:_BadSourceArray forKey:@"badtask"];
+    [[NSUserDefaults standardUserDefaults] setObject:_BadSourceArray forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
 }
 - (void)didReceiveMemoryWarning
 {

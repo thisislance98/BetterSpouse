@@ -32,9 +32,9 @@
     if (self) {
         _ce = [[PFGoodCell alloc] init];
         
-        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"alltask"]];
+        _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]]];
         NSLog(@"data:%@",_dataSourceArray);
-        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"allscore"]];
+        _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]]];
         _tagNum = _dataSourceArray.count;
     }
     return self;
@@ -60,8 +60,14 @@
     [self.view addSubview:_remainPoints];
     
     _pointLabel = [[UILabel alloc] initWithFrame:CGRectMake(134, 9, 35, 26)];
-    _pointLabel.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"remainpoint"];
     _pointLabel.backgroundColor = [UIColor clearColor];
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@point",[PFUser currentUser]]]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@point",[PFUser currentUser]]];
+        _pointLabel.text = @"50";
+        [[NSUserDefaults standardUserDefaults] setObject:@"50" forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
+    }else{
+        _pointLabel.text = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
+    }
     _pointLabel.textAlignment = UITextAlignmentCenter;
     [_remainPoints addSubview:_pointLabel];
     
@@ -183,6 +189,7 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
 }
 
 #pragma defaultSetting delegate
@@ -248,16 +255,20 @@
 {
     _number = ((UIButton *)sender).tag;
     if (_numberSourceArray.count >= selectRow +1) {
+        NSString *remberNum = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] + [[_numberSourceArray objectAtIndex:selectRow] intValue]];
         [_numberSourceArray replaceObjectAtIndex:selectRow withObject:[NSString stringWithFormat:@"%d",_number]];
+        _pointLabel.text = [NSString stringWithFormat:@"%d",[remberNum intValue] - _number];
+        [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
     }else{
         [_numberSourceArray addObject:[NSString stringWithFormat:@"%d",_number]];
+        _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];
+        [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
     }
     NSLog(@"Nmudata:%@",_numberSourceArray);
-    [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:@"allscore"];
+    [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
     _numberView.hidden = YES;
     [_goodthingTable reloadData];
-    _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];
-    [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:@"remainpoint"];
+    [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -274,7 +285,7 @@
     }else{
         [_dataSourceArray addObject:inputText];
     }
-    [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:@"alltask"];
+    [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
     _tagNum = _dataSourceArray.count;
 }
 

@@ -15,7 +15,6 @@
     if (self = [super init]) {
         _taskArray = taskArray;
         _scoreArray = scoreArray;
-        NSLog(@"-------:%@---------:%@",_taskArray,_scoreArray);
     }
     return self;
 }

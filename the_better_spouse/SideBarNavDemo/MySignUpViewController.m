@@ -10,6 +10,8 @@
 #import "PFGoodthingViewController.h"
 #import <Parse/PFUser.h>
 #import "FirstViewController.h"
+#import "PFAddSpouseViewController.h"
+
 @interface MySignUpViewController ()
 @property (nonatomic, strong) UIImageView *fieldsBackground;
 @end
@@ -86,15 +88,22 @@
         [dic setObject:_usernameField.text forKey:@"username"];
         [dic setObject:_passwordField.text forKey:@"password"];
         [self signUpViewController:(PFSignUpViewController *)self shouldBeginSignUp:dic];
-        PFUser *user =[PFUser user];
-        user.username = self.usernameField.text;
-        user.password = self.passwordField.text;
-        
         if ([_confirmTF.text isEqualToString:_passwordField.text]) {
+            PFUser *user =[PFUser user];
+            user.username = self.usernameField.text;
+            user.password = self.passwordField.text;
+            PFObject *query = [PFObject objectWithClassName:@"player"];
+            [query setObject:_usernameField.text forKey:@"userid"];
+            [query saveInBackground];
             [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if(!error){
-                    PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
-                    [self.navigationController pushViewController:googView animated:YES];
+                    if (![[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]]) {
+                        PFAddSpouseViewController *addView = [[PFAddSpouseViewController alloc] init];
+                        [self.navigationController pushViewController:addView animated:YES];
+                    }else{
+                        PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
+                        [self.navigationController pushViewController:googView animated:YES];
+                    }
                 }
             }];
         }else{
