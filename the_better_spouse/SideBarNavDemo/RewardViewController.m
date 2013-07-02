@@ -26,7 +26,6 @@
             _rewardDataArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@reward",[PFUser currentUser]]]];
             _rewardNumberArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@rewardnum",[PFUser currentUser]]]];
         }
-        
     }
     return self;
 }
@@ -107,7 +106,6 @@
         UITableViewCell *cell = [_rewardsTable cellForRowAtIndexPath:indexPath];
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
-    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

@@ -54,7 +54,7 @@
     [self.view addSubview:_remainPoint];
     
     _point = [[UILabel alloc] initWithFrame:CGRectMake(134, 9, 35, 26)];
-    _point.text = @"25";
+    _point.text = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
     _point.backgroundColor = [UIColor clearColor];
     _point.textAlignment = UITextAlignmentCenter;
     [_remainPoint addSubview:_point];
@@ -136,8 +136,10 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0) {
+        [PFPush sendPushMessageToChannelInBackground:@"cccc" withMessage:[NSString stringWithFormat:@"%@has done,you get %@ points.",[_dataSourceArray objectAtIndex:selectTask],[_numberSourceArray objectAtIndex:selectTask]]];
         [_dataSourceArray removeObjectAtIndex:selectTask];
         [_numberSourceArray removeObjectAtIndex:selectTask];
+        
         [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
         [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
         [_goodTable reloadData];

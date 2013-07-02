@@ -95,6 +95,9 @@
             PFObject *query = [PFObject objectWithClassName:@"player"];
             [query setObject:_usernameField.text forKey:@"userid"];
             [query saveInBackground];
+            PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+            [currentInstallation addUniqueObject:_usernameField.text forKey:@"channels"];
+            [currentInstallation saveInBackground];
             [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if(!error){
                     if (![[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]]) {

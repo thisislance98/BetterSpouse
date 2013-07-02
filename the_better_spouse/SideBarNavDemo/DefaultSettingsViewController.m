@@ -36,35 +36,33 @@
         [query whereKey:@"username" equalTo:[PFUser currentUser]]; //2
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){ //4
             if(!error){
-//                NSLog(@"Successfully retrieved: %@",objects);
-
                 if (objects.count == 0) {
-                    PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
-                    [self.navigationController pushViewController:googView animated:YES];
+//                    PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
+//                    [self.navigationController pushViewController:googView animated:YES];
                 }else{
-                    NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
-                    PFObject *ps = dic[@"player"];
-                    PointsModel *points = [[PointsModel alloc] initWithTaskArray:[ps objectForKey:@"task"] andScoreArray:[ps objectForKey:@"score"]];
-                    points.userName = [ps objectForKey:@"username"];
-                    NSLog(@"username:%@",points.userName);
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"task"] forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"score"] forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badtask"] forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badscore"] forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];
+                    
                     if (![[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]]) {
-                        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
                         PFAddSpouseViewController *addView = [[PFAddSpouseViewController alloc] init];
                         [self.navigationController pushViewController:addView animated:YES];
                     }else{
                         PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
                         [self.navigationController pushViewController:googView animated:YES];
                     }
-
+                    
+                    NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
+                    NSLog(@"dic:%@",dic);
+                    PFObject *ps = dic[@"player"];
+                    PointsModel *points = [[PointsModel alloc] init];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"task"] forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"score"] forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badtask"] forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
+                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badscore"] forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];
+                    if (points) {
+                        points.taskArray = [ps objectForKey:@"task"];
+                        points.scoreArray = [ps objectForKey:@"score"];
+                        [delegate goodTableViewReload:points];
+                    }
                 }
-                
-//                if (points) {
-//                    [delegate goodTableViewReload:points];
-//                }
             }else{
                 NSString *errorString = [[error userInfo]objectForKey:@"error"];
                 NSLog(@"Error:%@",errorString);
@@ -93,6 +91,9 @@
     [query setObject:[PFUser currentUser].username forKey:@"userid"];
     [query setObject:[PFUser currentUser].objectId forKey:@"object"];
     [query saveInBackground];
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation addUniqueObject:[PFUser currentUser].username forKey:@"channels"];
+    [currentInstallation saveInBackground];
     [self dismissViewControllerAnimated:YES completion:NULL];
     
 }

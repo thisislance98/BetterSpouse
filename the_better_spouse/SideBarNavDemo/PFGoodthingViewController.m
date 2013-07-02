@@ -12,6 +12,7 @@
 #import <Parse/PFObject.h>
 #import "PFGoodCell.h"
 #import "PointsModel.h"
+#import "DefaultSettingsViewController.h"
 
 @interface PFGoodthingViewController ()
 @property (nonatomic, strong) UIButton *goBadBtn;
@@ -31,7 +32,8 @@
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         _ce = [[PFGoodCell alloc] init];
-        
+        DefaultSettingsViewController *defaultView = [[DefaultSettingsViewController alloc] init];
+        [defaultView setDelegate:self];
         _dataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]]];
         NSLog(@"data:%@",_dataSourceArray);
         _numberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]]];
@@ -231,6 +233,7 @@
 
 - (void)badBtnClicked
 {
+    [PFPush sendPushMessageToChannelInBackground:@"cccc" withMessage:@"Hello World!"];
     PFBadthingViewController *badView = [[PFBadthingViewController alloc] init];
     [self.navigationController pushViewController:badView animated:YES];
 }

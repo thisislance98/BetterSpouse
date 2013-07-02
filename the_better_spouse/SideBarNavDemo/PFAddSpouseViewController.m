@@ -36,12 +36,12 @@
     spouseInfo.userInteractionEnabled = YES;
     [self.view addSubview:spouseInfo];
     
-
+    
     _userText = [[UITextField alloc] initWithFrame:CGRectMake(93, 2, spouseInfo.frame.size.width - 95, spouseInfo.frame.size.height / 4)];
     [_userText setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     _userText.returnKeyType = UIReturnKeyDone;
     _userText.backgroundColor = [UIColor clearColor];
-//  _userText.secureTextEntry = YES;
+    //  _userText.secureTextEntry = YES;
     _userText.delegate = self;
     [spouseInfo addSubview:_userText];
     
@@ -49,7 +49,7 @@
     _emailText.backgroundColor = [UIColor clearColor];
     [_emailText setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     _emailText.returnKeyType = UIReturnKeyDone;
-//    _emailText.secureTextEntry = YES;
+    //    _emailText.secureTextEntry = YES;
     _emailText.delegate = self;
     [spouseInfo addSubview:_emailText];
     
@@ -75,20 +75,21 @@
 - (void)addSpouseBtnClicked
 {
     if (_userText.text != nil) {
+        [PFPush sendPushMessageToChannelInBackground:_userText.text withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",[PFUser currentUser].username]];
         PFQuery *query = [PFQuery queryWithClassName:@"player"]; //1
         [query whereKey:@"userid" equalTo:_userText.text]; //2
         [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){ //4
             if(!error){
                 [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
-                    NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
-                    PFObject *ps = dic[@"player"];
+                NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
+                PFObject *ps = dic[@"player"];
                 NSString *spouseName = [ps objectForKey:@"object"];
                 [[NSUserDefaults standardUserDefaults] setObject:spouseName forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
                 [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"task"] forKey:[NSString stringWithFormat:@"%@task",spouseName]];
                 [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"score"] forKey:[NSString stringWithFormat:@"%@score",spouseName]];
                 [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badtask"] forKey:[NSString stringWithFormat:@"%@badtask",spouseName]];
                 [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badscore"] forKey:[NSString stringWithFormat:@"%@badscore",spouseName]];
-    
+                
                 PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
                 [self.navigationController pushViewController:googView animated:YES];
             }else{

@@ -1029,7 +1029,7 @@
 		07472F1C1677260E00BB51EA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jack zhang (8MEEFR4MSJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Lance Hughes (EFS3233WW9)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -1046,7 +1046,7 @@
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/Frameworks\"",
 				);
 				PRODUCT_NAME = the_better_spouse;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F4695580-7DC0-4689-9A96-1125FA41491A";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "28CF7195-F8C5-4591-819C-EFE1B5A6FAE6";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

@@ -50,7 +50,7 @@
     [self.view addSubview:_remain];
     
     _points = [[UILabel alloc] initWithFrame:CGRectMake(134, 9, 35, 26)];
-    _points.text = @"25";
+    _points.text = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat: @"%@badremainpoint",[PFUser currentUser]]];
     _points.backgroundColor = [UIColor clearColor];
     _points.textAlignment = UITextAlignmentCenter;
     [_remain addSubview:_points];
@@ -143,7 +143,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0) {
-        
+        [PFPush sendPushMessageToChannelInBackground:@"cccc" withMessage:[NSString stringWithFormat:@"you left the %@ out and lost %@ points",[_badDataSourceArray objectAtIndex:selectTask],[_badNumberSourceArray objectAtIndex:selectTask]]];
         [_badDataSourceArray removeObjectAtIndex:selectTask];
         [_badNumberSourceArray removeObjectAtIndex:selectTask];
         [[NSUserDefaults standardUserDefaults] setObject:_badNumberSourceArray forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];

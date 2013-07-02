@@ -21,8 +21,8 @@
      UIRemoteNotificationTypeAlert |
      UIRemoteNotificationTypeSound];
     
+  // NSString *notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
    
-    
     [Parse setApplicationId:@"GC8Zbs9bF8k7O1GUrLPf3tZUJXlNjrCV2FYpjtEK"
                   clientKey:@"yPc5QFaUttLncyyhgSIxusL49M6cBGgklRBhk599"];
     [PFFacebookUtils initializeFacebook];
@@ -60,15 +60,17 @@
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
     // Store the deviceToken in the current installation and save it to Parse.
     [PFPush storeDeviceToken:newDeviceToken];
-   
-    [[PFInstallation currentInstallation] addUniqueObject:@""forKey:@"channels"];
-    [[PFInstallation currentInstallation] saveEventually];
 }
-    
+
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     [PFPush handlePush:userInfo];
+    NSLog(@"userInfo:%@",userInfo);
+    NSString *message = [[userInfo objectForKey:@"aps"] objectForKey:@"alert"];
+    
+    
+    NSLog(@"message:%@",message);
     if (application.applicationState == UIApplicationStateActive) {
         // The application was already running.
     } else {
