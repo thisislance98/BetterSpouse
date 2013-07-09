@@ -7,6 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AppDelegate.h"
+@protocol changeThemLabelTextNum <NSObject>
+
+- (void)changeSpouseTextfieldNumber:(NSString *)number;
+
+@end
 
 @interface GoodViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
 {
@@ -17,6 +23,7 @@
 @property (nonatomic, strong) UIImageView *remainPoint;
 @property (nonatomic, strong) UILabel     *point;
 @property (nonatomic, strong) UITableView *goodTable;
+@property (nonatomic, strong) id<changeThemLabelTextNum>delegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil viewNumber:(int)number;
 @end

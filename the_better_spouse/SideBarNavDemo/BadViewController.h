@@ -7,6 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AppDelegate.h"
+@protocol changeYouLabelTextNum <NSObject>
+
+- (void)changeTextfieldNumber:(NSString *)number;
+
+@end
 
 @interface BadViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>{
     NSInteger selectTask;
@@ -16,5 +22,7 @@
 @property (nonatomic, strong) UIImageView *remain;
 @property (nonatomic, strong) UILabel     *points;
 @property (nonatomic, strong) UITableView *badThingTable;
+@property (nonatomic, strong) id<changeYouLabelTextNum>delegate;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil viewNumber:(int)number;
 @end

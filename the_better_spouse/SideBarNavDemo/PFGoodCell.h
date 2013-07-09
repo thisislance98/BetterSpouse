@@ -14,6 +14,7 @@
 - (void)tableViewCGpointChange:(UITextField *)sender;
 - (void)tableViewCGpointNormal;
 - (void)buttonPressedAction;
+- (void)buttonPressedClicked;
 - (void)getTaskString:(NSString *)inputText;
 @end
 
@@ -25,5 +26,7 @@
 @property (nonatomic, strong) NSMutableArray *imaegArray;
 @property (nonatomic, strong) UITextField *inputTextfiled;
 @property (nonatomic, strong) NSString *identifier;
-- (void)setcontentWithImage:(int)imageNumber task:(NSString *)task number:(int)number;
+@property (nonatomic, strong) UIButton *addBtn;
+@property (nonatomic, strong) UIButton *minusBtn;
+- (void)setcontentWithImage:(int)imageNumber task:(NSString *)task number:(int)number totalCount:(int)count;
 @end

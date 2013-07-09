@@ -22,7 +22,7 @@
     NSInteger        _tagNum;
     NSInteger       selectRow;
     NSInteger       textRow;
-
+    NSInteger       deleteRow;
 }
 
 @property (nonatomic, strong) UILabel *btnLabel;

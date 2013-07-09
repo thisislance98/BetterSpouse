@@ -22,9 +22,21 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         viewNumber = number;
-        if (number == 3) {
-            _rewardDataArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@reward",[PFUser currentUser]]]];
-            _rewardNumberArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@rewardnum",[PFUser currentUser]]]];
+        _rewardDataArray = [NSMutableArray arrayWithCapacity:0];
+        _rewardNumberArray = [NSMutableArray arrayWithCapacity:0];
+        
+        NSMutableArray *currentArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@rewards",[PFUser currentUser]]]];
+        NSMutableArray *spouseArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@reward",[PFUser currentUser]]]];
+        for (int i = 0; i < currentArray.count; i++) {
+            [_rewardDataArray addObject:[currentArray objectAtIndex:i]];
+            [_rewardNumberArray addObject:[[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@rewardsNum",[PFUser currentUser]]] objectAtIndex:i]];
+        }
+        
+        for (int j = 0; j < spouseArray.count; j++) {
+            if (![_rewardDataArray containsObject:[spouseArray objectAtIndex:j]]) {
+                [_rewardDataArray addObject:[spouseArray objectAtIndex:j]];
+                [_rewardNumberArray addObject:[[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@rewardNum",[PFUser currentUser]]] objectAtIndex:j]];
+            }
         }
     }
     return self;
@@ -80,7 +92,7 @@
     rewardLabel.text = [_rewardDataArray objectAtIndex:indexPath.row];
     [cell.contentView addSubview:rewardLabel];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(272.0f, 11.0f, 38.0f, 40.0f)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(256.0f, 10.0f, 52.0f, 40.0f)];
     label.backgroundColor = [UIColor clearColor];
     label.textAlignment = UITextAlignmentCenter;
     label.text = [_rewardNumberArray objectAtIndex:indexPath.row];
@@ -111,8 +123,13 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0) {
-        [PFPush sendPushDataToChannel:@"Gaint" withData:[NSDictionary dictionaryWithObjectsAndKeys:@"Your spouse buy the reward",@"notification" ,nil] error:nil];
-        lastNumber = [_rewardNumberArray objectAtIndex:selectRow];
+        NSString *string = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+        if (string != nil) {
+            [PFPush sendPushMessageToChannelInBackground:string withMessage:[NSString stringWithFormat:@"Your spouse spend %@ buy the reward of %@",[_rewardNumberArray objectAtIndex:selectRow],[_rewardDataArray objectAtIndex:selectRow]]];
+        }else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You has not a friend" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert show];
+        }
     }
 }
 

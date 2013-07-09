@@ -13,6 +13,8 @@
 #import "MySignUpViewController.h"
 #import "PFAddSpouseViewController.h"
 
+#define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
+
 @interface FirstViewController ()
 @property (nonatomic, retain) DefaultSettingsViewController *loginORsignController;
 
@@ -32,8 +34,15 @@
 {
     [super viewDidLoad];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"login_screen.png"]]];
-    
+    if (iPhone5) {
+        UIImage *image = [UIImage imageNamed:@"login_screen.png"];
+        UIImageView *countView = [[UIImageView alloc] initWithImage:[image stretchableImageWithLeftCapWidth:14 topCapHeight:21]];
+        countView.Frame = CGRectMake(0, 0, countView.image.size.width, self.view.frame.size.height);
+        [self.view addSubview:countView];
+    }else{
+        [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"login_screen.png"]]];
+    }
+        
     UIImageView *welcomeIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"welcome.png"]];
     welcomeIcon.Frame = (CGRect){CGPointZero, welcomeIcon.image.size};
     welcomeIcon.center = CGPointMake(welcomeIcon.image.size.width + 35 , self.view.frame.size.height / 13);
@@ -47,14 +56,14 @@
     UIButton *faceBookBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [faceBookBtn setImage:[UIImage imageNamed:@"fblog0.png"] forState:UIControlStateNormal];
     [faceBookBtn setImage:[UIImage imageNamed:@"fblog1.png"] forState:UIControlStateHighlighted];
-    [faceBookBtn setFrame:CGRectMake(self.view.frame.size.width/7, self.view.frame.size.height / 1.78, 238, 41)];
+    [faceBookBtn setFrame:CGRectMake(self.view.frame.size.width/7, self.view.frame.size.height / 1.78+(iPhone5?88:0), 238, 41)];
     [faceBookBtn addTarget:self action:@selector(faceBookBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:faceBookBtn];
     
     UIButton *newCountBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [newCountBtn setImage:[UIImage imageNamed:@"new_account0.png"] forState:UIControlStateNormal];
     [newCountBtn setImage:[UIImage imageNamed:@"new_account1.png"] forState:UIControlStateHighlighted];
-    [newCountBtn setFrame:CGRectMake(self.view.frame.size.width/7, self.view.frame.size.height / 1.45, 238, 41)];
+    [newCountBtn setFrame:CGRectMake(self.view.frame.size.width/7, self.view.frame.size.height / 1.45+(iPhone5?88:0), 238, 41)];
     [newCountBtn addTarget:self action:@selector(newCountBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:newCountBtn];
     

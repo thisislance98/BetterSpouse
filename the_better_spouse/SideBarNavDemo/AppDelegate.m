@@ -12,7 +12,7 @@
 #import <FacebookSDK/FacebookSDK.h>
 
 @implementation AppDelegate
-
+@synthesize delegate;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -25,6 +25,7 @@
    
     [Parse setApplicationId:@"GC8Zbs9bF8k7O1GUrLPf3tZUJXlNjrCV2FYpjtEK"
                   clientKey:@"yPc5QFaUttLncyyhgSIxusL49M6cBGgklRBhk599"];
+    
     [PFFacebookUtils initializeFacebook];
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
@@ -41,43 +42,66 @@
     //    Website with Facebook Login， App on Facebook
     
     // Override point for customization after application launch.
+    
+    NSLog(@"here1");
     self.viewController = [[SidebarViewController alloc] initWithNibName:@"SidebarViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     
-//    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-//    [currentInstallation addUniqueObject:@"Giants" forKey:@"channels"];
-//    [currentInstallation saveInBackground];
-//    
-//    PFPush *push = [[PFPush alloc] init];
-//    [push setChannel:@"Giants"];
-//    [push setMessage:@"The Giants just scored!"];
-//    [push sendPushInBackground];
     return YES;
 }
 
 - (void)application:(UIApplication *)application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
     // Store the deviceToken in the current installation and save it to Parse.
-    [PFPush storeDeviceToken:newDeviceToken];
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:newDeviceToken];
+    [currentInstallation saveInBackground];
 }
 
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     [PFPush handlePush:userInfo];
-    NSLog(@"userInfo:%@",userInfo);
     NSString *message = [[userInfo objectForKey:@"aps"] objectForKey:@"alert"];
-    
-    
     NSLog(@"message:%@",message);
-    if (application.applicationState == UIApplicationStateActive) {
-        // The application was already running.
-    } else {
-        // The application was just brought from the background to the foreground,
-        // so we consider the app as having been "opened by a push notification."
-        [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
-    }
+    
+    NSRange lostRange = [message rangeOfString:@"-"];
+    NSRange getRange = [message rangeOfString:@"get"];
+    NSRange addRange = [message rangeOfString:@"Add"];
+//       if (application.applicationState == UIApplicationStateActive) {
+    
+           if (lostRange.length > 0) {
+               NSString *temp = [message substringFromIndex:lostRange.location+1];
+               NSString *lostnumber = [temp substringToIndex:1];
+               NSLog(@"message:%@",lostnumber);
+               [delegate changeThemTextfieldNumber:lostnumber];
+               // [delegate changeBadTextfieldNumber:lostnumber];
+           }
+           
+           if (getRange.length >0 ) {
+               NSString *temp = [message substringFromIndex:getRange.location+4];
+               NSString *getnumber = [temp substringToIndex:1];
+               NSLog(@"message:%@",getnumber);
+               [delegate changeYouTextfieldNumber:getnumber];
+               //[delegate changeGoodTextfieldNumber:getnumber];
+           }
+           
+           if (addRange.length > 0) {
+               NSString *addnumber = [message substringToIndex:addRange.location-1];
+               NSString *spouseName = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+               if (spouseName == nil) {
+                   [PFPush sendPushMessageToChannelInBackground:addnumber withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",[PFUser currentUser].username]];
+                   [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
+                   [[NSUserDefaults standardUserDefaults] setObject:addnumber forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+               }
+           }
+//
+//    } else {
+//        // The application was just brought from the background to the foreground,
+//        // so we consider the app as having been "opened by a push notification."
+//        [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
+//    }
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {

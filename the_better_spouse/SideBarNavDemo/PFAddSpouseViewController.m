@@ -27,8 +27,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	UIImage *image = [UIImage imageNamed:@"add_spouseBG01.png"];
-    [self.view setBackgroundColor:[UIColor colorWithPatternImage:image]];
+    
+    UIImage *image = [UIImage imageNamed:@"add_spouseBG01.png"];
+    UIImageView *addView = [[UIImageView alloc] initWithImage:[image stretchableImageWithLeftCapWidth:14 topCapHeight:21]];
+    addView.Frame = CGRectMake(0, 0, addView.image.size.width, self.view.frame.size.height);
+    [self.view addSubview:addView];
+    
+//	UIImage *image = [UIImage imageNamed:@"add_spouseBG01.png"];
+//    [self.view setBackgroundColor:[UIColor colorWithPatternImage:image]];
     
     spouseInfo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"add_spouse_form.png"]];
     spouseInfo.backgroundColor = [UIColor clearColor];
@@ -75,6 +81,7 @@
 - (void)addSpouseBtnClicked
 {
     if (_userText.text != nil) {
+        [[NSUserDefaults standardUserDefaults] setObject:_userText.text forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
         [PFPush sendPushMessageToChannelInBackground:_userText.text withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",[PFUser currentUser].username]];
         PFQuery *query = [PFQuery queryWithClassName:@"player"]; //1
         [query whereKey:@"userid" equalTo:_userText.text]; //2

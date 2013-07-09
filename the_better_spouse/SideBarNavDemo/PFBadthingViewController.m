@@ -71,11 +71,12 @@
     _badthingTable.dataSource = self;
     [self.view addSubview:_badthingTable];
     
-    UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    dailyBtn.Frame = (CGRect){CGPointZero, _badImage.image.size};
-    dailyBtn.center = CGPointMake(_badImage.image.size.width + 40 , _badImage.image.size.height/1.4);
-    [dailyBtn addTarget:self action:@selector(dailyBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:dailyBtn];
+    UIButton *badBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [badBtn setImage:[UIImage imageNamed:@"continue_btn.png"] forState:UIControlStateNormal];
+    [badBtn setImage:[UIImage imageNamed:@"continue_btn_down.png"] forState:UIControlStateHighlighted];
+    badBtn.frame = CGRectMake(3, self.view.frame.size.height - 35,131 , 43);
+    [badBtn addTarget:self action:@selector(dailyBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:badBtn];
     
     UIImageView *numberImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bad_smiles_bg.png"]];
     numberImage.Frame = (CGRect){CGPointZero, numberImage.image.size};
@@ -132,6 +133,8 @@
     [fifthBtn addSubview:choiceImage5];
     [fifthBtn setTag:-5];
     [_numberView addSubview:fifthBtn];
+    
+    NSLog(@"-----2-----:%f",self.view.frame.size.height);
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -153,9 +156,9 @@
     }
     
     if (_BadSourceArray.count == 0 || _BadSourceArray.count == indexPath.row) {
-        [cell setcontentWithImage:nil task:nil number:nil];
+        [cell setcontentWithImage:nil task:nil number:nil totalCount:nil];
     }else{
-        [cell setcontentWithImage:[[_badNumberArray objectAtIndex:indexPath.row] intValue] task:[_BadSourceArray objectAtIndex:indexPath.row] number:[[_badNumberArray objectAtIndex:indexPath.row] intValue]];
+        [cell setcontentWithImage:[[_badNumberArray objectAtIndex:indexPath.row] intValue] task:[_BadSourceArray objectAtIndex:indexPath.row] number:[[_badNumberArray objectAtIndex:indexPath.row] intValue] totalCount:indexPath.row];
     }
     return cell;
 }
@@ -169,6 +172,22 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 60.0;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [_BadSourceArray removeObjectAtIndex:indexPath.row];
+        [_badNumberArray removeObjectAtIndex:indexPath.row];
+        [[NSUserDefaults standardUserDefaults] setObject:_BadSourceArray forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
+        [[NSUserDefaults standardUserDefaults] setObject:_badNumberArray forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];
+        [_badthingTable reloadData];
+    }
 }
 
 - (void)dailyBtnClicked
@@ -216,6 +235,7 @@
         }];
     }
 }
+
 - (void)showNumberImage:(UIButton *)sender{
     
     UITableViewCell* buttonCell = (UITableViewCell*)[sender superview].superview;
@@ -232,6 +252,7 @@
     NSIndexPath *indexPath = [_badthingTable indexPathForCell:cell];
     _text = indexPath.row;
     _badthingTable.frame = CGRectMake(0, _badImage.frame.size.height+26 , 320, self.view.frame.size.height -_badImage.frame.size.height - _remainPoint.frame.size.height-32- 160);
+    [_badthingTable scrollToRowAtIndexPath:indexPath atScrollPosition:0 animated:YES];
 }
 
 - (void)tableViewCGpointNormal

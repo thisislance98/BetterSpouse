@@ -12,6 +12,8 @@
 #import "FirstViewController.h"
 #import "PFAddSpouseViewController.h"
 
+#define iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
+
 @interface MySignUpViewController ()
 @property (nonatomic, strong) UIImageView *fieldsBackground;
 @end
@@ -22,8 +24,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"LoginScreen3_background.png"]]];
+    if (iPhone5) {
+        UIImage *image = [UIImage imageNamed:@"LoginScreen3_background.png"];
+        UIImageView *countView = [[UIImageView alloc] initWithImage:[image stretchableImageWithLeftCapWidth:14 topCapHeight:21]];
+        countView.Frame = CGRectMake(0, 0, countView.image.size.width, self.view.frame.size.height);
+        [self.view addSubview:countView];
+    }else{
+        [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"LoginScreen3_background.png"]]];
+    }
     
     //    UIImageView *welcomeIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"welcome.png"]];
     //    welcomeIcon.Frame = (CGRect){CGPointZero, welcomeIcon.image.size};
@@ -92,12 +100,16 @@
             PFUser *user =[PFUser user];
             user.username = self.usernameField.text;
             user.password = self.passwordField.text;
+            
             PFObject *query = [PFObject objectWithClassName:@"player"];
             [query setObject:_usernameField.text forKey:@"userid"];
+            [[NSUserDefaults standardUserDefaults] setObject:_usernameField.text forKey:@"user"];
             [query saveInBackground];
+            
             PFInstallation *currentInstallation = [PFInstallation currentInstallation];
             [currentInstallation addUniqueObject:_usernameField.text forKey:@"channels"];
             [currentInstallation saveInBackground];
+            
             [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if(!error){
                     if (![[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]]) {
@@ -123,8 +135,8 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
-    [_numCountBtn setFrame:CGRectMake(self.view.frame.size.width/7, self.view.frame.size.height / 1.3, 238, 41)];
-    self.fieldsBackground.frame = CGRectMake(20, fieldsBackground.frame.size.height*2.3, 281, 98);
+    [_numCountBtn setFrame:CGRectMake(self.view.frame.size.width/7, self.view.frame.size.height / 1.3 + (iPhone5?30:0), 238, 41)];
+    self.fieldsBackground.frame = CGRectMake(20, fieldsBackground.frame.size.height*2.3+(iPhone5?88:0), 281, 98);
     // self.fieldsBackground.center = CGPointMake(self.view.frame.size.width / 2, fieldsBackground.frame.size.height*2.8);
 }
 

@@ -41,20 +41,33 @@
         _smileImg.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:_smileImg];
         
-        UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        addBtn.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"plus_sign.png"]];
-        addBtn.frame = CGRectMake(228.0f, 17.0f, 25.0f, 25.0f);
-        [addBtn addTarget:self action:@selector(buttonPressedClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview: addBtn];
+        _addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _addBtn.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"plus_sign.png"]];
+        _addBtn.frame = CGRectMake(228.0f, 17.0f, 25.0f, 25.0f);
+        _addBtn.hidden = NO;
+        [_addBtn addTarget:self action:@selector(buttonPressedClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview: _addBtn];
+        
+        _minusBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _minusBtn.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"minus_sign.png"]];
+        _minusBtn.frame = CGRectMake(228.0f, 17.0f, 25.0f, 25.0f);
+        _minusBtn.hidden = YES;
+        [_minusBtn addTarget:self action:@selector(minusbuttonPressedClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview: _minusBtn];
     }
     return self;
 }
 
-- (void)setcontentWithImage:(int)imageNumber task:(NSString *)task number:(int)number
+- (void)setcontentWithImage:(int)imageNumber task:(NSString *)task number:(int)number totalCount:(int)count
 {
     [NumBtn setTitle:[NSString stringWithFormat:@"%d", number] forState:UIControlStateNormal];
     _smileImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"smile%d.png",imageNumber]];
     _inputTextfiled.text = task;
+}
+
+- (void)minusbuttonPressedClicked
+{
+    [beDelegate buttonPressedClicked];
 }
 
 - (void)buttonPressedClicked

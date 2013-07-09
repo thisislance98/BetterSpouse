@@ -40,6 +40,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [app setDelegate:self];
+    
 	UIImage *image = [UIImage imageNamed:@"list_background.png"];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:image]];
     
@@ -65,13 +69,13 @@
     _goodTable.delegate = self;
     _goodTable.dataSource = self;
     [self.view addSubview:_goodTable];
-    
-    UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    dailyBtn.frame = (CGRect){CGPointZero,_remainPoint.image.size.width/3,_remainPoint.image.size.height/1.5};
-    dailyBtn.center = CGPointMake(_remainPoint.image.size.width/2+10, self.view.frame.size.height-23);
-    [dailyBtn setTitle:@"daily" forState:UIControlStateNormal];
-    [dailyBtn addTarget:self action:@selector(dailyBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:dailyBtn];
+   
+    UIButton *badBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [badBtn setImage:[UIImage imageNamed:@"continue_btn.png"] forState:UIControlStateNormal];
+    [badBtn setImage:[UIImage imageNamed:@"continue_btn_down.png"] forState:UIControlStateHighlighted];
+    badBtn.frame = CGRectMake(3, self.view.frame.size.height - 35,131 , 43);
+    [badBtn addTarget:self action:@selector(dailyBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:badBtn];
 }
 
 #pragma tableView delegate---------------
@@ -90,29 +94,45 @@
 {
     static NSString *identifier = @"ID";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    
+    
+    UILabel *taskLabel = nil;
+    UILabel *label = nil;
+    UIImageView *smileImg = nil;
+
     if (!cell)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        taskLabel = [[UILabel alloc] initWithFrame:CGRectMake(50.0f, 10.0f, 180.0f, 38.0f)];
+        taskLabel.backgroundColor = [UIColor clearColor];
+        taskLabel.textAlignment = UITextAlignmentCenter;
+
+        taskLabel.tag = 1;
+        [cell addSubview:taskLabel];
+        
+        label = [[UILabel alloc] initWithFrame:CGRectMake(272.0f, 11.0f, 38.0f, 40.0f)];
+        label.backgroundColor = [UIColor clearColor];
+        label.textAlignment = UITextAlignmentCenter;
+
+        label.tag = 2;
+        [cell addSubview:label];
+        
+        smileImg = [[UIImageView alloc] initWithFrame:CGRectMake(11, 12, 35, 35)];
+        smileImg.backgroundColor = [UIColor clearColor];
+        smileImg.tag = 3;
+        [cell addSubview:smileImg];
+    } else {
+        taskLabel = (UILabel *)[cell viewWithTag:1];
+        label = (UILabel *)[cell viewWithTag:2];
+        smileImg = (UIImageView *)[cell viewWithTag:3];
     }
     
     cell.imageView.image = [UIImage imageNamed:@"blank_list2.png"];
     
-    UILabel *taskLabel = [[UILabel alloc] initWithFrame:CGRectMake(50.0f, 10.0f, 180.0f, 38.0f)];
-    taskLabel.backgroundColor = [UIColor clearColor];
-    taskLabel.textAlignment = UITextAlignmentCenter;
     taskLabel.text = [_dataSourceArray objectAtIndex:indexPath.row];
-    [cell.contentView addSubview:taskLabel];
-    
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(272.0f, 11.0f, 38.0f, 40.0f)];
-    label.backgroundColor = [UIColor clearColor];
-    label.textAlignment = UITextAlignmentCenter;
     label.text = [_numberSourceArray objectAtIndex:indexPath.row];
-    [cell.contentView addSubview:label];
-    
-    UIImageView *smileImg = [[UIImageView alloc] initWithFrame:CGRectMake(11, 12, 35, 35)];
-    smileImg.backgroundColor = [UIColor clearColor];
     smileImg.image = [UIImage imageNamed:[NSString stringWithFormat:@"smile%d.png",[[_numberSourceArray objectAtIndex:indexPath.row] intValue]]];
-    [cell.contentView addSubview:smileImg];
+
     if (viewNumber !=1) {
         cell.selectionStyle = NO;
     }
@@ -136,39 +156,57 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0) {
-        [PFPush sendPushMessageToChannelInBackground:@"cccc" withMessage:[NSString stringWithFormat:@"%@has done,you get %@ points.",[_dataSourceArray objectAtIndex:selectTask],[_numberSourceArray objectAtIndex:selectTask]]];
-        [_dataSourceArray removeObjectAtIndex:selectTask];
-        [_numberSourceArray removeObjectAtIndex:selectTask];
-        
-        [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
-        [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
-        [_goodTable reloadData];
-        
-        PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
-        [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
-        [anotherPlayer setObject:[PFUser currentUser].objectId forKey:@"object"];
-        if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]]) {
-            [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] forKey:@"spouse"];
+        NSString *string = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+        if (string != nil) {
+            [PFPush sendPushMessageToChannelInBackground:string withMessage:[NSString stringWithFormat:@"%@has done,you get %@ points.",[_dataSourceArray objectAtIndex:selectTask],[_numberSourceArray objectAtIndex:selectTask]]];
+            
+            //[_delegate changeSpouseTextfieldNumber:[_numberSourceArray objectAtIndex:selectTask]];
+            
+            [_dataSourceArray removeObjectAtIndex:selectTask];
+            [_numberSourceArray removeObjectAtIndex:selectTask];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
+            [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
+            [_goodTable reloadData];
+            
+            PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
+            [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
+            [anotherPlayer setObject:[PFUser currentUser].objectId forKey:@"object"];
+            if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]]) {
+                [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] forKey:@"spouse"];
+            }
+            [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
+            [anotherPlayer setObject:[NSArray arrayWithArray:_dataSourceArray] forKey:@"task"];
+            [anotherPlayer setObject:[NSArray arrayWithArray:_numberSourceArray] forKey:@"score"];
+            [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]] forKey:@"badtask"];
+            [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]] forKey:@"badscore"];
+            
+            [anotherPlayer saveInBackgroundWithBlock:^(BOOL succeeded,NSError *error){
+                if(succeeded){
+                    NSLog(@"Object Uploaded");
+                }
+                else{
+                    NSString *errorString = [[error userInfo] objectForKey:@"error"];
+                    NSLog(@"Error:%@",errorString);
+                    UIAlertView *uploadAlert = [[UIAlertView alloc] initWithTitle:@"Upload Error" message:@"Upload is failed" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:nil, nil];
+                    [uploadAlert show];
+                }
+            }];
+            
+        }else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You has not a friend" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert show];
         }
-        [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
-        [anotherPlayer setObject:[NSArray arrayWithArray:_dataSourceArray] forKey:@"task"];
-        [anotherPlayer setObject:[NSArray arrayWithArray:_numberSourceArray] forKey:@"score"];
-        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]] forKey:@"badtask"];
-        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]] forKey:@"badscore"];
-        
-        [anotherPlayer saveInBackgroundWithBlock:^(BOOL succeeded,NSError *error){
-            if(succeeded){
-                NSLog(@"Object Uploaded");
-            }
-            else{
-                NSString *errorString = [[error userInfo] objectForKey:@"error"];
-                NSLog(@"Error:%@",errorString);
-                UIAlertView *uploadAlert = [[UIAlertView alloc] initWithTitle:@"Upload Error" message:@"Upload is failed" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:nil, nil];
-                [uploadAlert show];
-            }
-        }];
-        
     }
+}
+
+- (void)changeGoodTextfieldNumber:(NSString *)number
+{
+    int  tempNum = [number intValue];
+    NSLog(@"tempNum = %d",tempNum);
+    int  nativeNum =[[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]] intValue];
+    _point.text = [NSString stringWithFormat:@"%d",nativeNum-tempNum];
+    [[NSUserDefaults standardUserDefaults] setObject:_point.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
 }
 
 - (void)dailyBtnClicked

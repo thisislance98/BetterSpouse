@@ -8,9 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "PointsModel.h"
-@protocol SideBarSelectDelegate ;
+#import "AppDelegate.h"
+#import "GoodViewController.h"
+#import "BadViewController.h"
 
-@interface LeftSideBarViewController : UIViewController
+@protocol SideBarSelectDelegate;
+
+@interface LeftSideBarViewController : UIViewController<notificationDelegate>
 {
     UIButton *_themBtn;
     UIImageView *_dailyBack;
@@ -18,11 +22,11 @@
     UIButton *badBtn;
     UIButton *rewardBtn;
     PointsModel *model;
-    UILabel *themPointsLabel;
     UIImageView *winView;
 }
 
 @property (assign,nonatomic)id<SideBarSelectDelegate>delegate;
 @property (nonatomic, strong) UILabel *youPointsLabel;
+@property (nonatomic, strong) UILabel *themPointsLabel;
 @end
 

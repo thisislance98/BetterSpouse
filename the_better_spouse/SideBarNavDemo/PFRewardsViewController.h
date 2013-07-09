@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface PFRewardsViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIAlertViewDelegate>{
+#import "PFRewardsCell.h"
+@interface PFRewardsViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIAlertViewDelegate,rewardsCelldelegate>{
     UITableView     *_rewardsTable;
-    UITextField     *_inputTextfiled;
     UIButton        *_NumBtn;
     UIImageView     *_numberImage;
     UILabel         *_pointLabel;
@@ -18,7 +17,5 @@
     UIImageView     *badImage;
     UIButton        * _doneInKeyboardButton;
     NSInteger       cellNumber;
-    UITextField     *_textFiled;
-
 }
 @end

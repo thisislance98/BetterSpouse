@@ -48,8 +48,8 @@
     UIImage *image = [UIImage imageNamed:@"list_background.png"];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:image]];
     
-//    _defaultView = [[DefaultSettingsViewController alloc] init];
-//    _defaultView.delegate = self;
+    //    _defaultView = [[DefaultSettingsViewController alloc] init];
+    //    _defaultView.delegate = self;
     
 	_goodImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"good_things.png"]];
     _goodImage.Frame = (CGRect){CGPointZero, _goodImage.image.size};
@@ -61,7 +61,7 @@
     _remainPoints.center = CGPointMake(_remainPoints.image.size.width+47, self.view.frame.size.height-23);
     [self.view addSubview:_remainPoints];
     
-    _pointLabel = [[UILabel alloc] initWithFrame:CGRectMake(134, 9, 35, 26)];
+    _pointLabel = [[UILabel alloc] initWithFrame:CGRectMake(134, 10, 35, 26)];
     _pointLabel.backgroundColor = [UIColor clearColor];
     if (![[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@point",[PFUser currentUser]]]) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@point",[PFUser currentUser]]];
@@ -83,7 +83,7 @@
     UIButton *badBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [badBtn setImage:[UIImage imageNamed:@"continue_btn.png"] forState:UIControlStateNormal];
     [badBtn setImage:[UIImage imageNamed:@"continue_btn_down.png"] forState:UIControlStateHighlighted];
-    badBtn.frame = CGRectMake(5, self.view.frame.size.height - 35,131 , 43);
+    badBtn.frame = CGRectMake(3, self.view.frame.size.height - 35,131 , 43);
     [badBtn addTarget:self action:@selector(badBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:badBtn];
     
@@ -153,6 +153,7 @@
     _inputView = [[UIView alloc] initWithFrame:CGRectMake(0.0f,self.view.frame.size.height - 50.0f,320.0f, 1.0f)];
     _inputView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"底部工具栏.png"]];
     [self.view addSubview:_inputView];
+    
 }
 
 #pragma tableView delegate---------------
@@ -179,9 +180,9 @@
         cell.beDelegate = self;
     }
     if (_dataSourceArray.count == 0 || _dataSourceArray.count == indexPath.row) {
-        [cell setcontentWithImage:nil task:nil number:nil];
+        [cell setcontentWithImage:nil task:nil number:nil totalCount:nil];
     }else{
-        [cell setcontentWithImage:[[_numberSourceArray objectAtIndex:indexPath.row] intValue] task:[_dataSourceArray objectAtIndex:indexPath.row] number:[[_numberSourceArray objectAtIndex:indexPath.row] intValue]];
+        [cell setcontentWithImage:[[_numberSourceArray objectAtIndex:indexPath.row] intValue] task:[_dataSourceArray objectAtIndex:indexPath.row] number:[[_numberSourceArray objectAtIndex:indexPath.row] intValue] totalCount:indexPath.row];
     }
     return cell;
 }
@@ -193,6 +194,38 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
 }
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [_dataSourceArray removeObjectAtIndex:indexPath.row];
+        [_numberSourceArray removeObjectAtIndex:indexPath.row];
+        [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
+        [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
+        [_goodthingTable reloadData];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete Task" message:@"Are you sure delete this task?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil];
+//        alert.tag = 10;
+//        [alert show];
+//        deleteRow = indexPath.row;
+    }
+}
+
+//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    if (buttonIndex == 10) {
+//        [_dataSourceArray removeObjectAtIndex:deleteRow];
+//        [_numberSourceArray removeObjectAtIndex:deleteRow];
+//        [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
+//        [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
+//        [_goodthingTable reloadData];
+//    }
+//}
 
 #pragma defaultSetting delegate
 
@@ -224,6 +257,8 @@
     textRow = indexPath.row;
     _goodthingTable.frame = CGRectMake(0, _goodImage.frame.size.height+26 , 320, self.view.frame.size.height -_goodImage.frame.size.height - _remainPoints.frame.size.height-32- 160);
     [_goodthingTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    [_goodthingTable scrollToRowAtIndexPath:indexPath atScrollPosition:0 animated:YES];
+    
 }
 
 - (void)tableViewCGpointNormal
@@ -233,9 +268,14 @@
 
 - (void)badBtnClicked
 {
-    [PFPush sendPushMessageToChannelInBackground:@"cccc" withMessage:@"Hello World!"];
-    PFBadthingViewController *badView = [[PFBadthingViewController alloc] init];
-    [self.navigationController pushViewController:badView animated:YES];
+    if (_dataSourceArray.count == _numberSourceArray.count && _dataSourceArray.count != 0) {
+        PFBadthingViewController *badView = [[PFBadthingViewController alloc] init];
+        [self.navigationController pushViewController:badView animated:YES];
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Input Error" message:@"Please make sure your task or number is correct" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    
 }
 
 #pragma button cliecked
@@ -246,26 +286,23 @@
     [_goodthingTable reloadData];
 }
 
-//- (void)dailyBtnClicked
-//{
-//    if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])
-//    {
-//        [[SidebarViewController share] showSideBarControllerWithDirection:SideBarShowDirectionLeft];
-//    }
-//}
 
 - (void)numberofButtonClicked:(id)sender
 {
     _number = ((UIButton *)sender).tag;
-    if (_numberSourceArray.count >= selectRow +1) {
-        NSString *remberNum = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] + [[_numberSourceArray objectAtIndex:selectRow] intValue]];
-        [_numberSourceArray replaceObjectAtIndex:selectRow withObject:[NSString stringWithFormat:@"%d",_number]];
-        _pointLabel.text = [NSString stringWithFormat:@"%d",[remberNum intValue] - _number];
-        [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
-    }else{
-        [_numberSourceArray addObject:[NSString stringWithFormat:@"%d",_number]];
-        _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];
-        [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
+    
+    if ([_pointLabel.text intValue] > 0){
+        
+        if (_numberSourceArray.count >= selectRow +1) {
+            NSString *remberNum = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] + [[_numberSourceArray objectAtIndex:selectRow] intValue]];
+            [_numberSourceArray replaceObjectAtIndex:selectRow withObject:[NSString stringWithFormat:@"%d",_number]];
+            _pointLabel.text = [NSString stringWithFormat:@"%d",[remberNum intValue] - _number];
+            [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
+        }else{
+            [_numberSourceArray addObject:[NSString stringWithFormat:@"%d",_number]];
+            _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];
+            [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
+        }
     }
     NSLog(@"Nmudata:%@",_numberSourceArray);
     [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
@@ -290,6 +327,15 @@
     }
     [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
     _tagNum = _dataSourceArray.count;
+}
+
+- (void)buttonPressedClicked
+{
+    [_dataSourceArray removeObjectAtIndex:textRow];
+    [_numberSourceArray removeObjectAtIndex:textRow];
+    [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
+    [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
+    [_goodthingTable reloadData];
 }
 
 - (void)didReceiveMemoryWarning

@@ -51,6 +51,7 @@
 		561E024C1769914500E275FC /* add_spouseBtn2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 561E02481769914500E275FC /* add_spouseBtn2@2x.png */; };
 		561E024E1769915200E275FC /* add_spouseBG01.png in Resources */ = {isa = PBXBuildFile; fileRef = 561E024D1769915100E275FC /* add_spouseBG01.png */; };
 		56B74374175DD32200D03931 /* PointsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B74373175DD32200D03931 /* PointsModel.m */; };
+		56FA30FB178A91DE009DD139 /* PFRewardsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 56FA30FA178A91DE009DD139 /* PFRewardsCell.m */; };
 		56FC4D0C1758327D00C06C41 /* DefaultSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56FC4D011758327D00C06C41 /* DefaultSettingsViewController.m */; };
 		56FC4D0D1758327D00C06C41 /* MySignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56FC4D031758327D00C06C41 /* MySignUpViewController.m */; };
 		56FC4D0E1758327D00C06C41 /* PFBadthingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56FC4D051758327D00C06C41 /* PFBadthingViewController.m */; };
@@ -242,6 +243,8 @@
 		561E024D1769915100E275FC /* add_spouseBG01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_spouseBG01.png; sourceTree = "<group>"; };
 		56B74372175DD32200D03931 /* PointsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointsModel.h; sourceTree = "<group>"; };
 		56B74373175DD32200D03931 /* PointsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointsModel.m; sourceTree = "<group>"; };
+		56FA30F9178A91DD009DD139 /* PFRewardsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFRewardsCell.h; sourceTree = "<group>"; };
+		56FA30FA178A91DE009DD139 /* PFRewardsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFRewardsCell.m; sourceTree = "<group>"; };
 		56FC4D001758327D00C06C41 /* DefaultSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultSettingsViewController.h; sourceTree = "<group>"; };
 		56FC4D011758327D00C06C41 /* DefaultSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DefaultSettingsViewController.m; sourceTree = "<group>"; };
 		56FC4D021758327D00C06C41 /* MySignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MySignUpViewController.h; sourceTree = "<group>"; };
@@ -694,6 +697,8 @@
 		56FC4E0F17586A2C00C06C41 /* You_Good_Bad_Rewards */ = {
 			isa = PBXGroup;
 			children = (
+				56FA30F9178A91DD009DD139 /* PFRewardsCell.h */,
+				56FA30FA178A91DE009DD139 /* PFRewardsCell.m */,
 				56FC4E1217586C8800C06C41 /* PFGoodCell.h */,
 				56FC4E1317586C8800C06C41 /* PFGoodCell.m */,
 				07770B7D167727BE00B984AD /* LeftSideBarViewController.h */,
@@ -958,6 +963,7 @@
 				56126F2A175F3DDE00142E5B /* BadViewController.m in Sources */,
 				561016151772DDF7009442EB /* PFAddSpouseViewController.m in Sources */,
 				56FE217917743507002A2CA3 /* RewardViewController.m in Sources */,
+				56FA30FB178A91DE009DD139 /* PFRewardsCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1054,6 +1060,7 @@
 		07472F1D1677260E00BB51EA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Lance Hughes (EFS3233WW9)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -1070,6 +1077,7 @@
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/Frameworks\"",
 				);
 				PRODUCT_NAME = the_better_spouse;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "28CF7195-F8C5-4591-819C-EFE1B5A6FAE6";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
