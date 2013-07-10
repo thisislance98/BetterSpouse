@@ -134,7 +134,6 @@
     [fifthBtn setTag:-5];
     [_numberView addSubview:fifthBtn];
     
-    NSLog(@"-----2-----:%f",self.view.frame.size.height);
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -292,6 +291,8 @@
     [_badthingTable reloadData];
     
 }
+
+
 
 - (void)getTaskString:(NSString *)inputText
 {

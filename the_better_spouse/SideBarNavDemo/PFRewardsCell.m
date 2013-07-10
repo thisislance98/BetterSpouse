@@ -47,8 +47,6 @@
 {
     _inputTextfiled.text = rewards;
     _textFiled.text = [NSString stringWithFormat:@"%d",number];
-    NSLog(@"********:%@",rewards);
-    NSLog(@"********:%d",number);
 }
 
 - (void)rewardsButtonPressedClicked

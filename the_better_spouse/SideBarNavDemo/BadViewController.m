@@ -154,6 +154,7 @@
     if (viewNumber == 2) {
         [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notification" message:@"Make sure the task has done?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"NO", nil];
+        alert.tag = 20;
         [alert show];
         selectTask = indexPath.row;
     }else{
@@ -164,45 +165,47 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 0) {
-        
-        NSString *spouse = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
-        if (spouse != nil) {
-            [PFPush sendPushMessageToChannelInBackground:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] withMessage:[NSString stringWithFormat:@"you left the %@ out and lost %@ points",[_badDataSourceArray objectAtIndex:selectTask],[_badNumberSourceArray objectAtIndex:selectTask]]];
-            [_delegate changeTextfieldNumber:[_badNumberSourceArray objectAtIndex:selectTask]];
-            [_badDataSourceArray removeObjectAtIndex:selectTask];
-            [_badNumberSourceArray removeObjectAtIndex:selectTask];
-            [[NSUserDefaults standardUserDefaults] setObject:_badNumberSourceArray forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];
-            [[NSUserDefaults standardUserDefaults] setObject:_badDataSourceArray forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
-            [_badThingTable reloadData];
+    if (alertView.tag == 20) {
+        if (buttonIndex == 0) {
             
-            PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
-            if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]]) {
-                [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] forKey:@"spouse"];
+            NSString *spouse = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+            if (spouse != nil) {
+                [PFPush sendPushMessageToChannelInBackground:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] withMessage:[NSString stringWithFormat:@"you left the %@ out and lost %@ points",[_badDataSourceArray objectAtIndex:selectTask],[_badNumberSourceArray objectAtIndex:selectTask]]];
+                [_delegate changeTextfieldNumber:[_badNumberSourceArray objectAtIndex:selectTask]];
+                [_badDataSourceArray removeObjectAtIndex:selectTask];
+                [_badNumberSourceArray removeObjectAtIndex:selectTask];
+                [[NSUserDefaults standardUserDefaults] setObject:_badNumberSourceArray forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];
+                [[NSUserDefaults standardUserDefaults] setObject:_badDataSourceArray forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
+                [_badThingTable reloadData];
+                
+                PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
+                if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]]) {
+                    [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] forKey:@"spouse"];
+                }
+                [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
+                [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
+                [anotherPlayer setObject:[PFUser currentUser].objectId forKey:@"object"];
+                [anotherPlayer setObject:[NSArray arrayWithArray:_badDataSourceArray] forKey:@"badtask"];
+                [anotherPlayer setObject:[NSArray arrayWithArray:_badNumberSourceArray] forKey:@"badscore"];
+                [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]] forKey:@"task"];
+                [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]] forKey:@"score"];
+                
+                [anotherPlayer saveInBackgroundWithBlock:^(BOOL succeeded,NSError *error){
+                    if(succeeded){
+                        NSLog(@"Object Uploaded");
+                    }
+                    else{
+                        NSString *errorString = [[error userInfo] objectForKey:@"error"];
+                        NSLog(@"Error:%@",errorString);
+                        UIAlertView *uploadAlert = [[UIAlertView alloc] initWithTitle:@"Upload Error" message:@"Upload is failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                        [uploadAlert show];
+                    }
+                }];
+                
+            }else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You has not a friend" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [alert show];
             }
-            [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
-            [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
-            [anotherPlayer setObject:[PFUser currentUser].objectId forKey:@"object"];
-            [anotherPlayer setObject:[NSArray arrayWithArray:_badDataSourceArray] forKey:@"badtask"];
-            [anotherPlayer setObject:[NSArray arrayWithArray:_badNumberSourceArray] forKey:@"badscore"];
-            [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]] forKey:@"task"];
-            [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]] forKey:@"score"];
-            
-            [anotherPlayer saveInBackgroundWithBlock:^(BOOL succeeded,NSError *error){
-                if(succeeded){
-                    NSLog(@"Object Uploaded");
-                }
-                else{
-                    NSString *errorString = [[error userInfo] objectForKey:@"error"];
-                    NSLog(@"Error:%@",errorString);
-                    UIAlertView *uploadAlert = [[UIAlertView alloc] initWithTitle:@"Upload Error" message:@"Upload is failed" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-                    [uploadAlert show];
-                }
-            }];
-            
-        }else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You has not a friend" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [alert show];
         }
     }
 }

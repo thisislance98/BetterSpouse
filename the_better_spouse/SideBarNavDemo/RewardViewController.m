@@ -112,6 +112,7 @@
         [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message" message:@"Are you sure you will buy this reward?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"NO", nil];
+        alert.tag = 30;
         [alert show];
         selectRow = indexPath.row;
     }else{
@@ -122,22 +123,24 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 0) {
-        NSString *string = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
-        if (string != nil) {
-            [PFPush sendPushMessageToChannelInBackground:string withMessage:[NSString stringWithFormat:@"Your spouse spend %@ buy the reward of %@",[_rewardNumberArray objectAtIndex:selectRow],[_rewardDataArray objectAtIndex:selectRow]]];
-            int tempNum = [[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]] integerValue];
-            tempNum = tempNum - 50;
-            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",tempNum] forKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]];
-            LeftSideBarViewController *left = [[LeftSideBarViewController alloc] init];
-            left.youPointsLabel.text = [NSString stringWithFormat:@"%d",tempNum];
-        }else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You has not a friend" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [alert show];
+    if (alertView.tag == 30) {
+        
+        if (buttonIndex == 0) {
+            NSString *string = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+            if (string != nil) {
+                [PFPush sendPushMessageToChannelInBackground:string withMessage:[NSString stringWithFormat:@"Your spouse spend %@ buy the reward of %@",[_rewardNumberArray objectAtIndex:selectRow],[_rewardDataArray objectAtIndex:selectRow]]];
+                int tempNum = [[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]] integerValue];
+                tempNum = tempNum - 50;
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",tempNum] forKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]];
+                LeftSideBarViewController *left = [[LeftSideBarViewController alloc] init];
+                left.youPointsLabel.text = [NSString stringWithFormat:@"%d",tempNum];
+            }else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You has not a friend" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [alert show];
+            }
         }
     }
 }
-
 - (void)dailyBtnClicked
 {
     if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])

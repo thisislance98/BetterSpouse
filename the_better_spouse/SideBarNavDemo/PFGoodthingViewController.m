@@ -49,9 +49,6 @@
     UIImage *image = [UIImage imageNamed:@"list_background.png"];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:image]];
     
-    //    _defaultView = [[DefaultSettingsViewController alloc] init];
-    //    _defaultView.delegate = self;
-    
 	_goodImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"good_things.png"]];
     _goodImage.Frame = (CGRect){CGPointZero, _goodImage.image.size};
     _goodImage.center = CGPointMake(_goodImage.image.size.width + 40 , _goodImage.image.size.height/1.4);
@@ -87,13 +84,6 @@
     badBtn.frame = CGRectMake(3, self.view.frame.size.height - 35,131 , 43);
     [badBtn addTarget:self action:@selector(badBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:badBtn];
-    
-    //    UIButton *dailyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    //    dailyBtn.frame = (CGRect){CGPointZero,_remainPoints.image.size.width/3,_remainPoints.image.size.height/1.5};
-    //    dailyBtn.center = CGPointMake(_remainPoints.image.size.width/2+10, self.view.frame.size.height-23);
-    //    [dailyBtn setTitle:@"daily" forState:UIControlStateNormal];
-    //    [dailyBtn addTarget:self action:@selector(dailyBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    //    [self.view addSubview:dailyBtn];
     
     _numberImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"good_smiles_bg.png"]];
     _numberImage.Frame = (CGRect){CGPointZero, _numberImage.image.size};
@@ -189,12 +179,6 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-}
-
-
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
     return YES;
@@ -218,24 +202,9 @@
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Index" message:@"There is no task to delete" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             [alert show];
         }
-      
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete Task" message:@"Are you sure delete this task?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil];
-//        alert.tag = 10;
-//        [alert show];
-//        deleteRow = indexPath.row;
+
     }
 }
-
-//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-//{
-//    if (buttonIndex == 10) {
-//        [_dataSourceArray removeObjectAtIndex:deleteRow];
-//        [_numberSourceArray removeObjectAtIndex:deleteRow];
-//        [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
-//        [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
-//        [_goodthingTable reloadData];
-//    }
-//}
 
 #pragma defaultSetting delegate
 
@@ -268,7 +237,6 @@
     _goodthingTable.frame = CGRectMake(0, _goodImage.frame.size.height+26 , 320, self.view.frame.size.height -_goodImage.frame.size.height - _remainPoints.frame.size.height-32- 160);
     [_goodthingTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
     [_goodthingTable scrollToRowAtIndexPath:indexPath atScrollPosition:0 animated:YES];
-    
 }
 
 - (void)tableViewCGpointNormal
@@ -298,9 +266,7 @@
 - (void)numberofButtonClicked:(id)sender
 {
     _number = ((UIButton *)sender).tag;
-    
     if ([_pointLabel.text intValue]-_number > 0){
-        
         if (_numberSourceArray.count >= selectRow +1) {
             NSString *remberNum = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] + [[_numberSourceArray objectAtIndex:selectRow] intValue]];
             [_numberSourceArray replaceObjectAtIndex:selectRow withObject:[NSString stringWithFormat:@"%d",_number]];
@@ -324,14 +290,16 @@
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == 10) {
-        _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text integerValue] + 50];
-        [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
-        int tempNum = [[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]] integerValue];
-        tempNum = tempNum - 50;
-        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",tempNum] forKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]];
-        LeftSideBarViewController *left = [[LeftSideBarViewController alloc] init];
-        left.youPointsLabel.text = [NSString stringWithFormat:@"%d",tempNum];
+    if (alertView.tag == 10) {
+        if (buttonIndex == 0) {
+            _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text integerValue] + 50];
+            [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
+            int tempNum = [[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]] integerValue];
+            tempNum = tempNum - 50;
+            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",tempNum] forKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]];
+            LeftSideBarViewController *left = [[LeftSideBarViewController alloc] init];
+            left.youPointsLabel.text = [NSString stringWithFormat:@"%d",tempNum];
+        }
     }
 }
 
