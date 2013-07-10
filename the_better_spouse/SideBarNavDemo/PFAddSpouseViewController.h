@@ -10,6 +10,7 @@
 
 @interface PFAddSpouseViewController : UIViewController<UITextFieldDelegate>{
     UIImageView *spouseInfo;
+    NSString *tempString;
 }
 
 @property (nonatomic, strong) UITextField *userText;

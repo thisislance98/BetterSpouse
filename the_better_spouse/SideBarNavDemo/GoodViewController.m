@@ -37,12 +37,22 @@
     return self;
 }
 
+//- (void)changeYouTextfieldNumber:(NSString *)number
+//{
+//
+//}
+//
+//- (void)changeThemTextfieldNumber:(NSString *)number
+//{
+//
+//}
+//- (void)changeGoodTextfieldNumber:(NSString *)number;
+//- (void)changeBadTextfieldNumber:(NSString *)number;
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [app setDelegate:self];
+
     
 	UIImage *image = [UIImage imageNamed:@"list_background.png"];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:image]];
@@ -160,7 +170,7 @@
         if (string != nil) {
             [PFPush sendPushMessageToChannelInBackground:string withMessage:[NSString stringWithFormat:@"%@has done,you get %@ points.",[_dataSourceArray objectAtIndex:selectTask],[_numberSourceArray objectAtIndex:selectTask]]];
             
-            //[_delegate changeSpouseTextfieldNumber:[_numberSourceArray objectAtIndex:selectTask]];
+            [_delegate changeSpouseTextfieldNumber:[_numberSourceArray objectAtIndex:selectTask]];
             
             [_dataSourceArray removeObjectAtIndex:selectTask];
             [_numberSourceArray removeObjectAtIndex:selectTask];
@@ -208,6 +218,7 @@
     _point.text = [NSString stringWithFormat:@"%d",nativeNum-tempNum];
     [[NSUserDefaults standardUserDefaults] setObject:_point.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
 }
+
 
 - (void)dailyBtnClicked
 {

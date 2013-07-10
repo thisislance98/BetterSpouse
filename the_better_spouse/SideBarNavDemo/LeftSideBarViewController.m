@@ -58,6 +58,7 @@
                 if(!error){
                     if (objects.count != 0) {
                         NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"rewards"];
+                        NSLog(@"rewards:%@",dic);
                         PFObject *ps = dic[@"rewards"];
                         [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"rewards"] forKey:[NSString stringWithFormat:@"%@reward",[PFUser currentUser]]];
                         [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"rewardsNum"] forKey:[NSString stringWithFormat:@"%@rewardNum",[PFUser currentUser]]];
@@ -80,11 +81,11 @@
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [app setDelegate:self];
     
-    //    GoodViewController *good = [[GoodViewController alloc] init];
-    //    [good setDelegate:self];
-    //
-    //    BadViewController *bad = [[BadViewController alloc] init];
-    //    [bad setDelegate:self];
+        GoodViewController *good = [[GoodViewController alloc] init];
+        [good setDelegate:self];
+    
+        BadViewController *bad = [[BadViewController alloc] init];
+        [bad setDelegate:self];
     
     UIImage *image = [UIImage imageNamed:@"daily_tracker_bg2.png"];
     _dailyBack = [[UIImageView alloc] initWithImage:image];//[image stretchableImageWithLeftCapWidth:14 topCapHeight:21]];
@@ -174,8 +175,6 @@
     rewardBtn.tag = 3;
     [self.view addSubview:rewardBtn];
     
-    
-    
     winView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"winning.png"]];
     [winView setFrame:CGRectMake(17, self.view.frame.size.height - 98- 43-(iPhone5?20:88), winView.image.size.width, 43)];
     [self.view addSubview:winView];
@@ -230,7 +229,6 @@
 
 - (void)showWinner
 {
-    NSLog(@"-----:%f",self.view.frame.size.height);
     if ([_youPointsLabel.text intValue] >= [_themPointsLabel.text intValue])
     {
         [winView setFrame:CGRectMake(17, self.view.frame.size.height - 98- 43-(iPhone5?20:88), winView.image.size.width, 43)];

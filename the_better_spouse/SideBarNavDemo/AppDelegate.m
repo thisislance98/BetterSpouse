@@ -21,8 +21,8 @@
      UIRemoteNotificationTypeAlert |
      UIRemoteNotificationTypeSound];
     
-  // NSString *notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-   
+    // NSString *notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+    
     [Parse setApplicationId:@"GC8Zbs9bF8k7O1GUrLPf3tZUJXlNjrCV2FYpjtEK"
                   clientKey:@"yPc5QFaUttLncyyhgSIxusL49M6cBGgklRBhk599"];
     
@@ -43,7 +43,6 @@
     
     // Override point for customization after application launch.
     
-    NSLog(@"here1");
     self.viewController = [[SidebarViewController alloc] initWithNibName:@"SidebarViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
@@ -69,39 +68,47 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
     NSRange lostRange = [message rangeOfString:@"-"];
     NSRange getRange = [message rangeOfString:@"get"];
     NSRange addRange = [message rangeOfString:@"Add"];
-//       if (application.applicationState == UIApplicationStateActive) {
+    //       if (application.applicationState == UIApplicationStateActive) {
     
-           if (lostRange.length > 0) {
-               NSString *temp = [message substringFromIndex:lostRange.location+1];
-               NSString *lostnumber = [temp substringToIndex:1];
-               NSLog(@"message:%@",lostnumber);
-               [delegate changeThemTextfieldNumber:lostnumber];
-               // [delegate changeBadTextfieldNumber:lostnumber];
-           }
-           
-           if (getRange.length >0 ) {
-               NSString *temp = [message substringFromIndex:getRange.location+4];
-               NSString *getnumber = [temp substringToIndex:1];
-               NSLog(@"message:%@",getnumber);
-               [delegate changeYouTextfieldNumber:getnumber];
-               //[delegate changeGoodTextfieldNumber:getnumber];
-           }
-           
-           if (addRange.length > 0) {
-               NSString *addnumber = [message substringToIndex:addRange.location-1];
-               NSString *spouseName = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
-               if (spouseName == nil) {
-                   [PFPush sendPushMessageToChannelInBackground:addnumber withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",[PFUser currentUser].username]];
-                   [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
-                   [[NSUserDefaults standardUserDefaults] setObject:addnumber forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
-               }
-           }
-//
-//    } else {
-//        // The application was just brought from the background to the foreground,
-//        // so we consider the app as having been "opened by a push notification."
-//        [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
-//    }
+    if (lostRange.length > 0) {
+        NSString *temp = [message substringFromIndex:lostRange.location+1];
+        NSString *lostnumber = [temp substringToIndex:1];
+        NSLog(@"message:%@",lostnumber);
+        [delegate changeThemTextfieldNumber:lostnumber];
+    }
+    
+    if (getRange.length >0 ) {
+        NSString *temp = [message substringFromIndex:getRange.location+4];
+        NSString *getnumber = [temp substringToIndex:1];
+        NSLog(@"message:%@",getnumber);
+        [delegate changeYouTextfieldNumber:getnumber];
+    }
+    
+    if (addRange.length > 0) {
+        NSString *addnumber = [message substringToIndex:addRange.location-1];
+        NSString *spouseName = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+        if (spouseName != nil) {
+            NSRange range = [addnumber rangeOfString:@"@"];
+            if (range.location > 0 && range.location < 100) {
+                NSString *tempString = [addnumber substringToIndex:range.location];
+                if (tempString != nil && tempString.length > 0) {
+                    [PFPush sendPushMessageToChannelInBackground:[NSString stringWithFormat:@"tbs%@",tempString] withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",addnumber]];
+                    [[NSUserDefaults standardUserDefaults] setObject:tempString forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+                }
+            }else{
+                [PFPush sendPushMessageToChannelInBackground:addnumber withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",[PFUser currentUser].username]];
+                [[NSUserDefaults standardUserDefaults] setObject:addnumber forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+            }
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
+            
+        }
+    }
+    
+    //    } else {
+    //        // The application was just brought from the background to the foreground,
+    //        // so we consider the app as having been "opened by a push notification."
+    //        [PFAnalytics trackAppOpenedWithRemoteNotificationPayload:userInfo];
+    //    }
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {

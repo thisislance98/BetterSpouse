@@ -157,9 +157,11 @@
     
     if (_BadSourceArray.count == 0 || _BadSourceArray.count == indexPath.row) {
         [cell setcontentWithImage:nil task:nil number:nil totalCount:nil];
-    }else{
+    }else if (_BadSourceArray.count == _badNumberArray.count){
         [cell setcontentWithImage:[[_badNumberArray objectAtIndex:indexPath.row] intValue] task:[_BadSourceArray objectAtIndex:indexPath.row] number:[[_badNumberArray objectAtIndex:indexPath.row] intValue] totalCount:indexPath.row];
     }
+    
+     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
@@ -182,11 +184,22 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [_BadSourceArray removeObjectAtIndex:indexPath.row];
-        [_badNumberArray removeObjectAtIndex:indexPath.row];
-        [[NSUserDefaults standardUserDefaults] setObject:_BadSourceArray forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
-        [[NSUserDefaults standardUserDefaults] setObject:_badNumberArray forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];
-        [_badthingTable reloadData];
+        
+        if (_BadSourceArray.count != 0) {
+            
+            _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - [[_badNumberArray objectAtIndex:indexPath.row] intValue]];
+            [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat: @"%@badremainpoint",[PFUser currentUser]]];
+            
+            [_BadSourceArray removeObjectAtIndex:indexPath.row];
+            [_badNumberArray removeObjectAtIndex:indexPath.row];
+            [[NSUserDefaults standardUserDefaults] setObject:_BadSourceArray forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
+            [[NSUserDefaults standardUserDefaults] setObject:_badNumberArray forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];
+            _tagNum = _BadSourceArray.count;
+            [_badthingTable reloadData];
+        }else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Index" message:@"There is no task to delete" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert show];
+        }
     }
 }
 
@@ -195,7 +208,7 @@
     PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
     [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
     if (_BadSourceArray.count == 0) {
-  
+        
         [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
         
         [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]] forKey:@"task"];
@@ -282,15 +295,19 @@
 
 - (void)getTaskString:(NSString *)inputText
 {
-    if (_BadSourceArray.count >= _text +1) {
-        [_BadSourceArray replaceObjectAtIndex:_text withObject:inputText];
-        [_badthingTable reloadData];
+    if (inputText.length > 0) {
+        if (_BadSourceArray.count >= _text +1) {
+            [_BadSourceArray replaceObjectAtIndex:_text withObject:inputText];
+            [_badthingTable reloadData];
+        }else{
+            [_BadSourceArray addObject:inputText];
+        }
+        _tagNum = _BadSourceArray.count;
+        [[NSUserDefaults standardUserDefaults] setObject:_BadSourceArray forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
     }else{
-        [_BadSourceArray addObject:inputText];
+        UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"Input Error" message:@"Please input badHabits" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alertview show];
     }
-    
-    _tagNum = _BadSourceArray.count;
-    [[NSUserDefaults standardUserDefaults] setObject:_BadSourceArray forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
 }
 - (void)didReceiveMemoryWarning
 {

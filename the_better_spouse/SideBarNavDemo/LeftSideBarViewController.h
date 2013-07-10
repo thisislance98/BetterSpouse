@@ -14,7 +14,7 @@
 
 @protocol SideBarSelectDelegate;
 
-@interface LeftSideBarViewController : UIViewController<notificationDelegate>
+@interface LeftSideBarViewController : UIViewController<notificationDelegate,changeYouLabelTextNum,changeThemLabelTextNum>
 {
     UIButton *_themBtn;
     UIImageView *_dailyBack;

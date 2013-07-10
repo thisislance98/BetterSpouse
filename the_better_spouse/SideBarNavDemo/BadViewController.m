@@ -28,7 +28,6 @@
             _badDataSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@badtask",spouse]]];
             _badNumberSourceArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@badscore",spouse]]];
         }
-        
     }
     return self;
 }
@@ -36,9 +35,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [app setDelegate:self];
     
 	UIImage *image = [UIImage imageNamed:@"list_background.png"];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:image]];
@@ -173,7 +169,7 @@
         NSString *spouse = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
         if (spouse != nil) {
             [PFPush sendPushMessageToChannelInBackground:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] withMessage:[NSString stringWithFormat:@"you left the %@ out and lost %@ points",[_badDataSourceArray objectAtIndex:selectTask],[_badNumberSourceArray objectAtIndex:selectTask]]];
-            //[_delegate changeTextfieldNumber:[_badNumberSourceArray objectAtIndex:selectTask]];
+            [_delegate changeTextfieldNumber:[_badNumberSourceArray objectAtIndex:selectTask]];
             [_badDataSourceArray removeObjectAtIndex:selectTask];
             [_badNumberSourceArray removeObjectAtIndex:selectTask];
             [[NSUserDefaults standardUserDefaults] setObject:_badNumberSourceArray forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];

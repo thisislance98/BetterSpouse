@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AppDelegate.h"
+
 @protocol changeThemLabelTextNum <NSObject>
 
 - (void)changeSpouseTextfieldNumber:(NSString *)number;

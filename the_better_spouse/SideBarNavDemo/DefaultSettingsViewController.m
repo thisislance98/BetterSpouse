@@ -34,7 +34,7 @@
         // Present Log In View Controller
         [self presentViewController:logInViewController animated:YES completion:NULL];
     }else{
-        
+
         NSString *username = [[NSUserDefaults standardUserDefaults] objectForKey:@"user"];
         PFQuery *rewardQuery = [PFQuery queryWithClassName:@"rewards"];
         [rewardQuery whereKey:@"userid" equalTo:username];
@@ -49,15 +49,16 @@
             }
         }];
         
-        PFQuery *query = [PFQuery queryWithClassName:@"player"]; 
-        [query whereKey:@"userid" equalTo:username]; 
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){ 
+        PFQuery *query = [PFQuery queryWithClassName:@"player"];
+        [query whereKey:@"userid" equalTo:username];
+        [query orderByAscending:@"createdAt"];
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){
             if(!error){
                 if (objects.count != 0) {
-                    
                     NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
+                    NSLog(@"dic:%@",dic);
                     PFObject *ps = dic[@"player"];
-//                    PointsModel *points = [[PointsModel alloc] init];
+                    //                    PointsModel *points = [[PointsModel alloc] init];
                     [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"task"] forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
                     [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"score"] forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
                     [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badtask"] forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
@@ -71,12 +72,6 @@
                         PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
                         [self.navigationController pushViewController:googView animated:YES];
                     }
-
-//                    if (points) {
-//                        points.taskArray = [ps objectForKey:@"task"];
-//                        points.scoreArray = [ps objectForKey:@"score"];
-//                        [delegate goodTableViewReload:points];
-//                    }
                 }
             }else{
                 NSString *errorString = [[error userInfo]objectForKey:@"error"];
@@ -102,16 +97,26 @@
 // Sent to the delegate when a PFUser is logged in.
 - (void)logInViewController:(PFLogInViewController *)logInController didLogInUser:(PFUser *)user
 {
-    PFObject *query = [PFObject objectWithClassName:@"player"];
-    [query setObject:[PFUser currentUser].username forKey:@"userid"];
-    [[NSUserDefaults standardUserDefaults] setObject:[PFUser currentUser].username forKey:@"user"];
-    [query setObject:[PFUser currentUser].objectId forKey:@"object"];
-    [query saveInBackground];
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation addUniqueObject:[PFUser currentUser].username forKey:@"channels"];
-    [currentInstallation saveInBackground];
-    [self dismissViewControllerAnimated:YES completion:NULL];
-    
+    [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        if (!error) {
+           NSString * facebookEmail = [result objectForKey:@"email"];
+            if (facebookEmail != nil && facebookEmail.length > 0) {
+                NSString *tempString = [facebookEmail substringToIndex:[facebookEmail rangeOfString:@"@"].location];
+                if (tempString != nil && tempString.length > 0) {
+                    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+                    [currentInstallation addUniqueObject:[NSString stringWithFormat:@"tbs%@",tempString] forKey:@"channels"];
+                    [currentInstallation saveInBackground];
+                    
+                    PFObject *query = [PFObject objectWithClassName:@"player"];
+                    [query setObject:tempString forKey:@"userid"];
+                    [[NSUserDefaults standardUserDefaults] setObject:tempString forKey:@"user"];
+                    [query setObject:[PFUser currentUser].objectId forKey:@"object"];
+                    [query saveInBackground];
+                }
+            }
+        }
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }];
 }
 
 // Sent to the delegate when the log in attempt fails.

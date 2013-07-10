@@ -13,6 +13,7 @@
 #import "PFGoodCell.h"
 #import "PointsModel.h"
 #import "DefaultSettingsViewController.h"
+#import "LeftSideBarViewController.h"
 
 @interface PFGoodthingViewController ()
 @property (nonatomic, strong) UIButton *goBadBtn;
@@ -181,18 +182,16 @@
     }
     if (_dataSourceArray.count == 0 || _dataSourceArray.count == indexPath.row) {
         [cell setcontentWithImage:nil task:nil number:nil totalCount:nil];
-    }else{
+    }else if (_dataSourceArray.count == _numberSourceArray.count){
         [cell setcontentWithImage:[[_numberSourceArray objectAtIndex:indexPath.row] intValue] task:[_dataSourceArray objectAtIndex:indexPath.row] number:[[_numberSourceArray objectAtIndex:indexPath.row] intValue] totalCount:indexPath.row];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
 }
 
 
@@ -204,11 +203,22 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [_dataSourceArray removeObjectAtIndex:indexPath.row];
-        [_numberSourceArray removeObjectAtIndex:indexPath.row];
-        [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
-        [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
-        [_goodthingTable reloadData];
+        if (_dataSourceArray.count != 0) {
+            
+           _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] + [[_numberSourceArray objectAtIndex:indexPath.row] intValue]];
+            [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
+            
+            [_dataSourceArray removeObjectAtIndex:indexPath.row];
+            [_numberSourceArray removeObjectAtIndex:indexPath.row];
+            [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
+            [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
+            _tagNum = _dataSourceArray.count;
+            [_goodthingTable reloadData];
+        }else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Index" message:@"There is no task to delete" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+      
 //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete Task" message:@"Are you sure delete this task?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil];
 //        alert.tag = 10;
 //        [alert show];
@@ -275,7 +285,6 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Input Error" message:@"Please make sure your task or number is correct" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
     }
-    
 }
 
 #pragma button cliecked
@@ -286,12 +295,11 @@
     [_goodthingTable reloadData];
 }
 
-
 - (void)numberofButtonClicked:(id)sender
 {
     _number = ((UIButton *)sender).tag;
     
-    if ([_pointLabel.text intValue] > 0){
+    if ([_pointLabel.text intValue]-_number > 0){
         
         if (_numberSourceArray.count >= selectRow +1) {
             NSString *remberNum = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] + [[_numberSourceArray objectAtIndex:selectRow] intValue]];
@@ -303,6 +311,10 @@
             _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text intValue] - _number];
             [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
         }
+    }else{
+        UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"Index" message:@"Your points less than 0,do you want to buy 50 points from rewards?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil];
+        alertview.tag = 10;
+        [alertview show];
     }
     NSLog(@"Nmudata:%@",_numberSourceArray);
     [[NSUserDefaults standardUserDefaults] setObject:_numberSourceArray forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
@@ -311,22 +323,39 @@
     [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 10) {
+        _pointLabel.text = [NSString stringWithFormat:@"%d",[_pointLabel.text integerValue] + 50];
+        [[NSUserDefaults standardUserDefaults] setObject:_pointLabel.text forKey:[NSString stringWithFormat:@"%@remainpoint",[PFUser currentUser]]];
+        int tempNum = [[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]] integerValue];
+        tempNum = tempNum - 50;
+        [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",tempNum] forKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]];
+        LeftSideBarViewController *left = [[LeftSideBarViewController alloc] init];
+        left.youPointsLabel.text = [NSString stringWithFormat:@"%d",tempNum];
+    }
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    
     return YES;
 }
 
 - (void)getTaskString:(NSString *)inputText
 {
-    if (_dataSourceArray.count >= textRow +1) {
-        [_dataSourceArray replaceObjectAtIndex:textRow withObject:inputText];
-        [_goodthingTable reloadData];
+    if (inputText.length > 0) {
+        if (_dataSourceArray.count >= textRow +1) {
+            [_dataSourceArray replaceObjectAtIndex:textRow withObject:inputText];
+            [_goodthingTable reloadData];
+        }else{
+            
+            [_dataSourceArray addObject:inputText];
+        }
+        [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
+        _tagNum = _dataSourceArray.count;
     }else{
-        [_dataSourceArray addObject:inputText];
+        UIAlertView *alertview = [[UIAlertView alloc] initWithTitle:@"Input Error" message:@"Please input goodHabits" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alertview show];
     }
-    [[NSUserDefaults standardUserDefaults] setObject:_dataSourceArray forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
-    _tagNum = _dataSourceArray.count;
 }
 
 - (void)buttonPressedClicked

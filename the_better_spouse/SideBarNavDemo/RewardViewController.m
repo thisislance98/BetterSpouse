@@ -126,6 +126,11 @@
         NSString *string = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
         if (string != nil) {
             [PFPush sendPushMessageToChannelInBackground:string withMessage:[NSString stringWithFormat:@"Your spouse spend %@ buy the reward of %@",[_rewardNumberArray objectAtIndex:selectRow],[_rewardDataArray objectAtIndex:selectRow]]];
+            int tempNum = [[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]] integerValue];
+            tempNum = tempNum - 50;
+            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",tempNum] forKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]];
+            LeftSideBarViewController *left = [[LeftSideBarViewController alloc] init];
+            left.youPointsLabel.text = [NSString stringWithFormat:@"%d",tempNum];
         }else{
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You has not a friend" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             [alert show];

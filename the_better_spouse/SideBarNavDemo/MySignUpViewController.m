@@ -78,7 +78,8 @@
     [self.view addSubview:_numCountBtn];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [button setFrame:CGRectMake(10, 5, 40, 40)];
+    [button setFrame:CGRectMake(10, 5, 50, 40)];
+    [button setTitle:@"Back" forState:UIControlStateNormal];
     [button addTarget:self action:@selector(comeBackClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
 }

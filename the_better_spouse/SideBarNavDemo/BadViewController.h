@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AppDelegate.h"
+
 @protocol changeYouLabelTextNum <NSObject>
 
 - (void)changeTextfieldNumber:(NSString *)number;

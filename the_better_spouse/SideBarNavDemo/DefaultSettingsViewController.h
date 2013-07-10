@@ -14,4 +14,5 @@
 
 @interface DefaultSettingsViewController : UIViewController <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>
 @property (nonatomic, assign) id<downloadDataForReload>delegate;
+@property (nonatomic, assign) NSString *tempString;
 @end

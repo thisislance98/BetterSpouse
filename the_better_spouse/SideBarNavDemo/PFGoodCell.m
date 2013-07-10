@@ -65,6 +65,7 @@
     _inputTextfiled.text = task;
 }
 
+//如果需要修改删除任务的话，这里就是入口
 - (void)minusbuttonPressedClicked
 {
     [beDelegate buttonPressedClicked];
