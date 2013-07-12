@@ -19,7 +19,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        array = [NSMutableArray arrayWithCapacity:0];
     }
     return self;
 }
@@ -62,6 +62,18 @@
     [addSpouseBtn addTarget:self action:@selector(addSpouseBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:addSpouseBtn];
     
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"player"];
+    [query whereKeyExists:@"userid"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        for (int i = 0; i < objects.count; i++) {
+            NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects objectAtIndex:i] forKey:@"player"];
+            PFObject *ps = dic[@"player"];
+            [array addObject:[ps objectForKey:@"userid"]];
+            NSLog(@"array:%@",array);
+        }
+    }];
+    
 }
 
 - (void)showMeLaterClicked
@@ -72,28 +84,22 @@
 
 - (void)addSpouseBtnClicked
 {
-    if (_userText.text .length > 0 || _userText.text.length > 0) {
-        
-        NSMutableArray *array = [NSMutableArray arrayWithCapacity:0];
+    if (_userText.text.length > 0 || _emailText.text.length > 0) {
         PFQuery *query = [PFQuery queryWithClassName:@"player"];
-        [query whereKeyExists:@"userid"];
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            for (int i = 0; i < objects.count; i++) {
-                NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects objectAtIndex:i] forKey:@"player"];
-                PFObject *ps = dic[@"player"];
-                [array addObject:[ps objectForKey:@"userid"]];
-            }
-        }];
-        
+
         if (_userText.text.length > 0) {
             if ([array containsObject:_userText.text]) {
+                
+                NSString *username = [[NSUserDefaults standardUserDefaults] objectForKey:@"user"];
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
+                [[NSUserDefaults standardUserDefaults] setObject:_userText.text forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
+                NSString *name = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
+                NSLog(@"---name:%@",name);
+               
+                [PFPush sendPushMessageToChannelInBackground:_userText.text withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",username]];
                 [query whereKey:@"userid" equalTo:_userText.text];
                 [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){ //4
                     if(!error){
-                        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
-                        [[NSUserDefaults standardUserDefaults] setObject:_userText.text forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
-                        [PFPush sendPushMessageToChannelInBackground:_userText.text withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",[PFUser currentUser].username]];
-                        
                         if (objects.count != 0) {
                             NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
                             PFObject *ps = dic[@"player"];
@@ -113,19 +119,19 @@
         }
         
         if (_emailText.text.length > 0) {
-           if ([array containsObject:_userText.text]) {
                NSRange range = [_emailText.text rangeOfString:@"@"];
             if (range.length > 0) {
                 tempString = [_emailText.text substringToIndex:range.location];
                 NSLog(@"message:%@",tempString);
                 if (tempString != nil && tempString.length > 0) {
+                    NSLog(@"tempString:%@",tempString);
+                     if ([array containsObject:tempString]) {
+                         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
+                         [[NSUserDefaults standardUserDefaults] setObject:tempString forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
+                         [PFPush sendPushMessageToChannelInBackground:[NSString stringWithFormat:@"tbs%@",tempString] withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",_emailText.text]];
                     [query whereKey:@"userid" equalTo:_emailText.text];
                     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){ //4
                         if(!error){
-                            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
-                            [[NSUserDefaults standardUserDefaults] setObject:tempString forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
-                            [PFPush sendPushMessageToChannelInBackground:[NSString stringWithFormat:@"tbs%@",tempString] withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",_emailText.text]];
-                            
                             if (objects.count != 0) {
                                 NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
                                 PFObject *ps = dic[@"player"];

@@ -153,7 +153,7 @@
 {
     if (alertView.tag == 100) {
         if (buttonIndex == 0) {
-            NSString *string = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+            NSString *string = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
             if (string != nil) {
                 [PFPush sendPushMessageToChannelInBackground:string withMessage:[NSString stringWithFormat:@"%@has done,you get %@ points.",[_dataSourceArray objectAtIndex:selectTask],[_numberSourceArray objectAtIndex:selectTask]]];
                 
@@ -169,8 +169,8 @@
                 PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
                 [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
                 [anotherPlayer setObject:[PFUser currentUser].objectId forKey:@"object"];
-                if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]]) {
-                    [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] forKey:@"spouse"];
+                if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]]) {
+                    [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]] forKey:@"spouse"];
                 }
                 [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
                 [anotherPlayer setObject:[NSArray arrayWithArray:_dataSourceArray] forKey:@"task"];

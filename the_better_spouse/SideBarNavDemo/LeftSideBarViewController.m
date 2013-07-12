@@ -35,9 +35,9 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
-        if([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]])
+        if([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]])
         {
-            NSString *spouseString = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+            NSString *spouseString = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
             PFQuery *query = [PFQuery queryWithClassName:@"player"];
             [query whereKey:@"userid" equalTo:spouseString];
             [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){
@@ -176,7 +176,6 @@
     [self.view addSubview:rewardBtn];
     
     winView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"winning.png"]];
-    [winView setFrame:CGRectMake(17, self.view.frame.size.height - 98- 43-(iPhone5?20:88), winView.image.size.width, 43)];
     [self.view addSubview:winView];
     [self showWinner];
 }
@@ -219,6 +218,7 @@
     [[NSUserDefaults standardUserDefaults] setObject:_themPointsLabel.text forKey:[NSString stringWithFormat:@"%@dayremainpoint",[PFUser currentUser]]];
     [self showWinner];
 }
+
 - (void)rewardsBtnClicked:(id)sender
 {
     int index = ((UIButton *)sender).tag;
@@ -231,24 +231,23 @@
 {
     if ([_youPointsLabel.text intValue] >= [_themPointsLabel.text intValue])
     {
-        [winView setFrame:CGRectMake(17, self.view.frame.size.height - 98- 43-(iPhone5?20:88), winView.image.size.width, 43)];
+        if (self.view.frame.size.height > 480) {
+            [winView setFrame:CGRectMake(17, self.view.frame.size.height - 98- 43-(iPhone5?20:88), winView.image.size.width, 43)];
+        }else{
+            [winView setFrame:CGRectMake(17, self.view.frame.size.height - 98- 43, winView.image.size.width, 43)];
+        }
+    
     }
     else if([_youPointsLabel.text intValue] < [_themPointsLabel.text intValue])
     {
-        [winView setFrame:CGRectMake(17, self.view.frame.size.height -41 - 43-(iPhone5?8:88), winView.image.size.width, 43)];
+        if (self.view.frame.size.height > 480) {
+            [winView setFrame:CGRectMake(17, self.view.frame.size.height -41 - 43-(iPhone5?8:88), winView.image.size.width, 43)];
+        }else{
+            [winView setFrame:CGRectMake(17, self.view.frame.size.height - 41- 43, winView.image.size.width, 43)];
+        }
+        
     }
 }
-//- (void)goodBtnClicked
-//{
-//    PFGoodthingViewController *goodView = [[PFGoodthingViewController alloc] init];
-//    [self.navigationController pushViewController:goodView animated:YES];
-//}
-//
-//- (void)badBtnClicked
-//{
-//    PFBadthingViewController *badView = [[PFBadthingViewController alloc] init];
-//    [self.navigationController pushViewController:badView animated:YES];
-//}
 
 - (void)youBtnClicked
 {

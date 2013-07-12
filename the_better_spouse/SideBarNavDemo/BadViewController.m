@@ -62,7 +62,6 @@
     _badThingTable.dataSource = self;
     [self.view addSubview:_badThingTable];
     
-    
     UIButton *badBtn1 = [UIButton buttonWithType:UIButtonTypeCustom];
     [badBtn1 setImage:[UIImage imageNamed:@"continue_btn.png"] forState:UIControlStateNormal];
     [badBtn1 setImage:[UIImage imageNamed:@"continue_btn_down.png"] forState:UIControlStateHighlighted];
@@ -168,9 +167,9 @@
     if (alertView.tag == 20) {
         if (buttonIndex == 0) {
             
-            NSString *spouse = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+            NSString *spouse = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
             if (spouse != nil) {
-                [PFPush sendPushMessageToChannelInBackground:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] withMessage:[NSString stringWithFormat:@"you left the %@ out and lost %@ points",[_badDataSourceArray objectAtIndex:selectTask],[_badNumberSourceArray objectAtIndex:selectTask]]];
+                [PFPush sendPushMessageToChannelInBackground:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]] withMessage:[NSString stringWithFormat:@"you left the %@ out and lost %@ points",[_badDataSourceArray objectAtIndex:selectTask],[_badNumberSourceArray objectAtIndex:selectTask]]];
                 [_delegate changeTextfieldNumber:[_badNumberSourceArray objectAtIndex:selectTask]];
                 [_badDataSourceArray removeObjectAtIndex:selectTask];
                 [_badNumberSourceArray removeObjectAtIndex:selectTask];
@@ -179,8 +178,8 @@
                 [_badThingTable reloadData];
                 
                 PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
-                if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]]) {
-                    [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] forKey:@"spouse"];
+                if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]]) {
+                    [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]] forKey:@"spouse"];
                 }
                 [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
                 [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];

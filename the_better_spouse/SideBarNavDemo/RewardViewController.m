@@ -126,7 +126,7 @@
     if (alertView.tag == 30) {
         
         if (buttonIndex == 0) {
-            NSString *string = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+            NSString *string = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
             if (string != nil) {
                 [PFPush sendPushMessageToChannelInBackground:string withMessage:[NSString stringWithFormat:@"Your spouse spend %@ buy the reward of %@",[_rewardNumberArray objectAtIndex:selectRow],[_rewardDataArray objectAtIndex:selectRow]]];
                 int tempNum = [[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@youremainpoint",[PFUser currentUser]]] integerValue];
@@ -141,6 +141,7 @@
         }
     }
 }
+
 - (void)dailyBtnClicked
 {
     if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])

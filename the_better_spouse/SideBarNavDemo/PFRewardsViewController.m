@@ -96,7 +96,6 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -180,8 +179,6 @@
     [_rewardsTable scrollToRowAtIndexPath:indexPath atScrollPosition:0 animated:YES];
 }
 
-
-
 - (void)tableCGpointNormal:(UITextField *)textField
 {
     [textField resignFirstResponder];
@@ -213,6 +210,7 @@
         [alertview show];
     }
 }
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

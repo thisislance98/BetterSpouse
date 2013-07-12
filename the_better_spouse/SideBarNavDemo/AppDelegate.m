@@ -84,25 +84,27 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
         [delegate changeYouTextfieldNumber:getnumber];
     }
     
-    if (addRange.length > 0) {
-        NSString *addnumber = [message substringToIndex:addRange.location-1];
-        NSString *spouseName = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
-        if (spouseName != nil) {
-            NSRange range = [addnumber rangeOfString:@"@"];
-            if (range.location > 0 && range.location < 100) {
-                NSString *tempString = [addnumber substringToIndex:range.location];
-                if (tempString != nil && tempString.length > 0) {
-                    [PFPush sendPushMessageToChannelInBackground:[NSString stringWithFormat:@"tbs%@",tempString] withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",addnumber]];
-                    [[NSUserDefaults standardUserDefaults] setObject:tempString forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
-                }
-            }else{
-                [PFPush sendPushMessageToChannelInBackground:addnumber withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",[PFUser currentUser].username]];
-                [[NSUserDefaults standardUserDefaults] setObject:addnumber forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
-            }
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
-            
-        }
-    }
+//    if (addRange.length > 0) {
+//        NSString *addnumber = [message substringToIndex:addRange.location-1];
+//        NSString *spouseName = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+//        if (spouseName == nil) {
+//            NSRange range = [addnumber rangeOfString:@"@"];
+//            if (range.location > 0 && range.location < 100) {
+//                NSString *tempString = [addnumber substringToIndex:range.location];
+//                if (tempString != nil && tempString.length > 0) {
+//                    [PFPush sendPushMessageToChannelInBackground:[NSString stringWithFormat:@"tbs%@",tempString] withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",addnumber]];
+//                    [[NSUserDefaults standardUserDefaults] setObject:tempString forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+//                    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
+//                }
+//            }else{
+//                [PFPush sendPushMessageToChannelInBackground:addnumber withMessage:[NSString stringWithFormat:@"%@ Add you as a friend",[PFUser currentUser].username]];
+//                [[NSUserDefaults standardUserDefaults] setObject:addnumber forKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]];
+//                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]];
+//            }
+//        }
+//    }else{
+//        
+//    }
     
     //    } else {
     //        // The application was just brought from the background to the foreground,

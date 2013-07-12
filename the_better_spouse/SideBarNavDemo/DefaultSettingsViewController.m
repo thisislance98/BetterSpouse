@@ -65,7 +65,7 @@
                     [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badscore"] forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];
                     
                     
-                    if (![[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@add",[PFUser currentUser]]]) {
+                    if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]] == nil) {
                         PFAddSpouseViewController *addView = [[PFAddSpouseViewController alloc] init];
                         [self.navigationController pushViewController:addView animated:YES];
                     }else{

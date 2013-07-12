@@ -133,7 +133,6 @@
     [fifthBtn addSubview:choiceImage5];
     [fifthBtn setTag:-5];
     [_numberView addSubview:fifthBtn];
-    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -213,18 +212,25 @@
         [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]] forKey:@"task"];
         [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]] forKey:@"score"];
         [anotherPlayer save];
-        if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]]) {
-            [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] forKey:@"spouse"];
+        NSString *name = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
+        NSLog(@"***name:%@",name);
+        if (name) {
+            [anotherPlayer setObject:name forKey:@"spouse"];
         }
         if ([[SidebarViewController share] respondsToSelector:@selector(showSideBarControllerWithDirection:)])
         {
             [[SidebarViewController share] showSideBarControllerWithDirection:SideBarShowDirectionLeft];
         }
     }else{
+        
         [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
         [anotherPlayer setObject:[PFUser currentUser].objectId forKey:@"object"];
-        if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]]) {
-            [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] forKey:@"spouse"];
+      
+        NSString *name = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
+        NSLog(@"---name:%@",name);
+        NSLog(@"current:%@",[PFUser currentUser]);
+        if (name) {
+            [anotherPlayer setObject:name forKey:@"spouse"];
         }
         [anotherPlayer setObject:[NSArray arrayWithArray:_BadSourceArray] forKey:@"badtask"];
         [anotherPlayer setObject:[NSArray arrayWithArray:_badNumberArray] forKey:@"badscore"];
