@@ -67,7 +67,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
     
     NSRange lostRange = [message rangeOfString:@"-"];
     NSRange getRange = [message rangeOfString:@"get"];
-    NSRange addRange = [message rangeOfString:@"Add"];
+//    NSRange addRange = [message rangeOfString:@"Add"];
     //       if (application.applicationState == UIApplicationStateActive) {
     
     if (lostRange.length > 0) {

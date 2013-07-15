@@ -34,50 +34,52 @@
         // Present Log In View Controller
         [self presentViewController:logInViewController animated:YES completion:NULL];
     }else{
-
-        NSString *username = [[NSUserDefaults standardUserDefaults] objectForKey:@"user"];
-        PFQuery *rewardQuery = [PFQuery queryWithClassName:@"rewards"];
-        [rewardQuery whereKey:@"userid" equalTo:username];
-        [rewardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                if (objects.count != 0) {
-                    NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"rewards"];
-                    PFObject *ps = dic[@"rewards"];
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"rewards"] forKey:[NSString stringWithFormat:@"%@tempReward",[PFUser currentUser]]];
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"rewardsNum"] forKey:[NSString stringWithFormat:@"%@tempRewardsNum",[PFUser currentUser]]];
-                }
-            }
-        }];
         
-        PFQuery *query = [PFQuery queryWithClassName:@"player"];
-        [query whereKey:@"userid" equalTo:username];
-        [query orderByAscending:@"createdAt"];
-        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){
-            if(!error){
-                if (objects.count != 0) {
-                    NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
-                    NSLog(@"dic:%@",dic);
-                    PFObject *ps = dic[@"player"];
-                    //                    PointsModel *points = [[PointsModel alloc] init];
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"task"] forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"score"] forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badtask"] forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
-                    [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badscore"] forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];
-                    
-                    
-                    if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]] == nil) {
-                        PFAddSpouseViewController *addView = [[PFAddSpouseViewController alloc] init];
-                        [self.navigationController pushViewController:addView animated:YES];
-                    }else{
-                        PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
-                        [self.navigationController pushViewController:googView animated:YES];
+        NSString *username = [[NSUserDefaults standardUserDefaults] objectForKey:@"user"];
+        if (username.length > 0) {
+            
+            PFQuery *rewardQuery = [PFQuery queryWithClassName:@"rewards"];
+            [rewardQuery whereKey:@"userid" equalTo:username];
+            [rewardQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error) {
+                    if (objects.count != 0) {
+                        NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"rewards"];
+                        PFObject *ps = dic[@"rewards"];
+                        [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"rewards"] forKey:[NSString stringWithFormat:@"%@tempReward",[PFUser currentUser]]];
+                        [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"rewardsNum"] forKey:[NSString stringWithFormat:@"%@tempRewardsNum",[PFUser currentUser]]];
                     }
                 }
-            }else{
-                NSString *errorString = [[error userInfo]objectForKey:@"error"];
-                NSLog(@"Error:%@",errorString);
-            }
-        }];
+            }];
+            
+            PFQuery *query = [PFQuery queryWithClassName:@"player"];
+            [query whereKey:@"userid" equalTo:username];
+            [query orderByAscending:@"createdAt"];
+            [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){
+                if(!error){
+                    if (objects.count != 0) {
+                        NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
+                        NSLog(@"dic:%@",dic);
+                        PFObject *ps = dic[@"player"];
+                        //                    PointsModel *points = [[PointsModel alloc] init];
+                        [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"task"] forKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]];
+                        [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"score"] forKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]];
+                        [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badtask"] forKey:[NSString stringWithFormat:@"%@badtask",[PFUser currentUser]]];
+                        [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badscore"] forKey:[NSString stringWithFormat:@"%@badscore",[PFUser currentUser]]];
+                        
+                        if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] == nil) {
+                            PFAddSpouseViewController *addView = [[PFAddSpouseViewController alloc] init];
+                            [self.navigationController pushViewController:addView animated:YES];
+                        }else{
+                            PFGoodthingViewController *googView = [[PFGoodthingViewController alloc] init];
+                            [self.navigationController pushViewController:googView animated:YES];
+                        }
+                    }
+                }else{
+                    NSString *errorString = [[error userInfo]objectForKey:@"error"];
+                    NSLog(@"Error:%@",errorString);
+                }
+            }];
+        }
     }
 }
 
@@ -99,7 +101,7 @@
 {
     [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         if (!error) {
-           NSString * facebookEmail = [result objectForKey:@"email"];
+            NSString * facebookEmail = [result objectForKey:@"email"];
             if (facebookEmail != nil && facebookEmail.length > 0) {
                 NSString *tempString = [facebookEmail substringToIndex:[facebookEmail rangeOfString:@"@"].location];
                 if (tempString != nil && tempString.length > 0) {
@@ -110,8 +112,15 @@
                     PFObject *query = [PFObject objectWithClassName:@"player"];
                     [query setObject:tempString forKey:@"userid"];
                     [[NSUserDefaults standardUserDefaults] setObject:tempString forKey:@"user"];
+                    [[NSUserDefaults standardUserDefaults]  setObject:facebookEmail forKey:@"email"];
                     [query setObject:[PFUser currentUser].objectId forKey:@"object"];
                     [query saveInBackground];
+                    
+                    PFObject *userQuery = [PFObject objectWithClassName:@"User"];
+                    [userQuery setObject:tempString forKey:@"userName"];
+                    [userQuery setObject:[PFUser currentUser].objectId forKey:@"object"];
+                    [userQuery saveInBackground];
+                    
                 }
             }
         }

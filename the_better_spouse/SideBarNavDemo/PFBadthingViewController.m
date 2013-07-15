@@ -205,14 +205,14 @@
 {
     PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
     [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
+    
     if (_BadSourceArray.count == 0) {
-        
-        [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
+               [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] forKey:@"userid"];
         
         [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@task",[PFUser currentUser]]] forKey:@"task"];
         [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@score",[PFUser currentUser]]] forKey:@"score"];
         [anotherPlayer save];
-        NSString *name = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
+        NSString *name = [[NSUserDefaults standardUserDefaults] objectForKey:@"spouseName"];
         NSLog(@"***name:%@",name);
         if (name) {
             [anotherPlayer setObject:name forKey:@"spouse"];
@@ -223,12 +223,11 @@
         }
     }else{
         
-        [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
+        [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] forKey:@"userid"];
         [anotherPlayer setObject:[PFUser currentUser].objectId forKey:@"object"];
       
-        NSString *name = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
+        NSString *name = [[NSUserDefaults standardUserDefaults] objectForKey:@"spouseName"];
         NSLog(@"---name:%@",name);
-        NSLog(@"current:%@",[PFUser currentUser]);
         if (name) {
             [anotherPlayer setObject:name forKey:@"spouse"];
         }

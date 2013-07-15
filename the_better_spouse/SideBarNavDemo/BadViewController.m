@@ -167,9 +167,9 @@
     if (alertView.tag == 20) {
         if (buttonIndex == 0) {
             
-            NSString *spouse = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
+            NSString *spouse = [[NSUserDefaults standardUserDefaults] objectForKey:@"spouseName"];
             if (spouse != nil) {
-                [PFPush sendPushMessageToChannelInBackground:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]] withMessage:[NSString stringWithFormat:@"you left the %@ out and lost %@ points",[_badDataSourceArray objectAtIndex:selectTask],[_badNumberSourceArray objectAtIndex:selectTask]]];
+                [PFPush sendPushMessageToChannelInBackground:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser]]] withMessage:[NSString stringWithFormat:@"you left the %@ out and lost %@ points",[_badDataSourceArray objectAtIndex:selectTask],[_badNumberSourceArray objectAtIndex:selectTask]]];
                 [_delegate changeTextfieldNumber:[_badNumberSourceArray objectAtIndex:selectTask]];
                 [_badDataSourceArray removeObjectAtIndex:selectTask];
                 [_badNumberSourceArray removeObjectAtIndex:selectTask];
@@ -178,11 +178,11 @@
                 [_badThingTable reloadData];
                 
                 PFObject *anotherPlayer = [PFObject objectWithClassName:@"player"];
-                if ([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]]) {
-                    [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]] forKey:@"spouse"];
+                if ([[NSUserDefaults standardUserDefaults] objectForKey:@"spouseName"]) {
+                    [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"spouseName"] forKey:@"spouse"];
                 }
                 [anotherPlayer setObject:[PFUser currentUser] forKey:@"username"];
-                [anotherPlayer setObject:[PFUser currentUser].username forKey:@"userid"];
+                [anotherPlayer setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"user"] forKey:@"userid"];
                 [anotherPlayer setObject:[PFUser currentUser].objectId forKey:@"object"];
                 [anotherPlayer setObject:[NSArray arrayWithArray:_badDataSourceArray] forKey:@"badtask"];
                 [anotherPlayer setObject:[NSArray arrayWithArray:_badNumberSourceArray] forKey:@"badscore"];

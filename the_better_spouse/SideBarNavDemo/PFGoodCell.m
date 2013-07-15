@@ -27,7 +27,7 @@
         _inputTextfiled.delegate = self;
         _inputTextfiled.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         _inputTextfiled.borderStyle = UITableViewCellStyleDefault;
-        _inputTextfiled.returnKeyType = UIReturnKeySend;
+        _inputTextfiled.returnKeyType = UIReturnKeyDone;
         [self.contentView addSubview:_inputTextfiled];
         
         NumBtn = [UIButton buttonWithType:UIButtonTypeCustom];

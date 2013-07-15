@@ -35,9 +35,10 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
-        if([[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]])
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"spouseName"])
         {
-            NSString *spouseString = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@spouse",[PFUser currentUser].username]];
+            NSString *spouseString = [[NSUserDefaults standardUserDefaults] objectForKey:@"spouseName"];
+            NSLog(@"spouseString:%@",spouseString);
             PFQuery *query = [PFQuery queryWithClassName:@"player"];
             [query whereKey:@"userid" equalTo:spouseString];
             [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){
@@ -45,6 +46,7 @@
                     if (objects.count != 0) {
                         NSDictionary *dic = [NSDictionary dictionaryWithObject:[objects lastObject] forKey:@"player"];
                         PFObject *ps = dic[@"player"];
+                        NSLog(@"ps:%@",ps);
                         [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"task"] forKey:[NSString stringWithFormat:@"%@task",spouseString]];
                         [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"score"] forKey:[NSString stringWithFormat:@"%@score",spouseString]];
                         [[NSUserDefaults standardUserDefaults] setObject:[ps objectForKey:@"badtask"] forKey:[NSString stringWithFormat:@"%@badtask",spouseString]];
@@ -53,7 +55,7 @@
                 }
             }];
             PFQuery *rewQuery = [PFQuery queryWithClassName:@"rewards"];
-            [rewQuery whereKey:@"userid" equalTo:spouseString];
+            [rewQuery whereKey:@"username" equalTo:spouseString];
             [rewQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){
                 if(!error){
                     if (objects.count != 0) {

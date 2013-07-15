@@ -107,6 +107,11 @@
             [[NSUserDefaults standardUserDefaults] setObject:_usernameField.text forKey:@"user"];
             [query saveInBackground];
             
+            PFObject *userQuery = [PFObject objectWithClassName:@"User"];
+            [userQuery setObject:_usernameField.text forKey:@"userName"];
+            [userQuery setObject:[PFUser currentUser].objectId forKey:@"object"];
+            [userQuery saveInBackground];
+            
             PFInstallation *currentInstallation = [PFInstallation currentInstallation];
             [currentInstallation addUniqueObject:_usernameField.text forKey:@"channels"];
             [currentInstallation saveInBackground];

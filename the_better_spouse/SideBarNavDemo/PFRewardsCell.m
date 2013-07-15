@@ -21,7 +21,7 @@
         _inputTextfiled.tag = 1;
         _inputTextfiled.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         _inputTextfiled.borderStyle = UITableViewCellStyleDefault;
-        _inputTextfiled.returnKeyType = UIReturnKeySend;
+        _inputTextfiled.returnKeyType = UIReturnKeyDone;
         [self.contentView addSubview:_inputTextfiled];
         
         _textFiled = [[UITextField alloc] init];
